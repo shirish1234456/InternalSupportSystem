@@ -1,0 +1,230 @@
+import { NextResponse, NextRequest } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { getSession } from '@/lib/auth';
+
+
+
+export async function GET(req: NextRequest) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const url = new URL(req.url);
+        const startDateParam = url.searchParams.get('startDate');
+        const endDateParam = url.searchParams.get('endDate');
+        const isAllTime = url.searchParams.get('allTime') === 'true';
+
+        let startDate = startDateParam ? new Date(startDateParam) : new Date();
+        let endDate = endDateParam ? new Date(endDateParam) : new Date();
+
+        if (isAllTime) {
+            const bounds = await prisma.chatSession.aggregate({
+                _min: { createdAt: true },
+                _max: { createdAt: true }
+            });
+            startDate = bounds._min.createdAt || new Date(2000, 0, 1);
+            endDate = bounds._max.createdAt || new Date();
+        } else if (!startDateParam) {
+            startDate.setDate(startDate.getDate() - 30);
+        }
+
+        const dateFilter = {
+            createdAt: {
+                gte: startDate,
+                lte: endDate
+            }
+        };
+
+        // 1. Top Level Metrics
+        const [
+            totalChats,
+            openChats,
+            resolvedChats,
+            escalatedChats,
+            totalEmailsRaw // this comes from EmailLogs - but we also want emails Sent from chat sessions
+        ] = await Promise.all([
+            prisma.chatSession.count({ where: dateFilter }),
+            prisma.chatSession.count({ where: { ...dateFilter, status: 'Open' } }),
+            prisma.chatSession.count({ where: { ...dateFilter, status: 'Resolved' } }),
+            prisma.chatSession.count({ where: { ...dateFilter, status: 'Escalated' } }),
+            prisma.emailLog.count({ where: { sentAt: { gte: startDate, lte: endDate } } })
+        ]);
+
+        // 2. Department Distribution
+        const deptDistribution = await prisma.chatSession.groupBy({
+            by: ['departmentId'],
+            where: dateFilter,
+            _count: { id: true },
+            orderBy: { _count: { id: 'desc' } }
+        });
+
+        // Enricht dept names
+        const depts = await prisma.department.findMany({ select: { id: true, name: true } });
+        const deptMap = new Map(depts.map((d: any) => [d.id, d.name]));
+        const departmentChart = deptDistribution.map((d: any) => ({
+            name: deptMap.get(d.departmentId) || 'Unknown',
+            value: d._count.id
+        }));
+
+        // 3. Top Issue Types
+        const issueDist = await prisma.chatSession.groupBy({
+            by: ['issueTypeId'],
+            where: dateFilter,
+            _count: { id: true },
+            orderBy: { _count: { id: 'desc' } },
+            take: 50
+        });
+
+        const issues = await prisma.issueType.findMany({ select: { id: true, name: true } });
+        const issueMap = new Map(issues.map((i: any) => [i.id, i.name]));
+        const topIssues = issueDist.map((i: any) => ({
+            name: issueMap.get(i.issueTypeId) || 'Unknown',
+            value: i._count.id
+        }));
+
+        // 4. Agent Performance (Top 50)
+        const agentDist = await prisma.chatSession.groupBy({
+            by: ['agentId'],
+            where: dateFilter,
+            _count: { id: true },
+            orderBy: { _count: { id: 'desc' } },
+            take: 50
+        });
+
+        const agents = await prisma.agent.findMany({ select: { id: true, name: true } });
+        const agentMap = new Map(agents.map((a: any) => [a.id, a.name]));
+        const topAgents = agentDist.map((a: any) => ({
+            name: agentMap.get(a.agentId) || 'Unknown',
+            chatsHandled: a._count.id
+        }));
+
+        // 5. Volume Trend by Department
+        const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const groupByMonth = diffDays > 60;
+
+        // Fetch chats for the whole selected date range to calculate hourly spikes, emails sent, and trends
+        const allPeriodChats = await prisma.chatSession.findMany({
+            where: dateFilter,
+            select: { createdAt: true, closedAt: true, status: true, emailSent: true, departmentId: true }
+        });
+
+        // Initialize maps for all departments + "All Departments" wrapper
+        const deptTrendMaps = new Map<string, Map<string, number>>();
+        deptTrendMaps.set('All Departments', new Map<string, number>());
+        depts.forEach((d: any) => {
+            deptTrendMaps.set(d.name, new Map<string, number>());
+        });
+
+        // Pre-fill time gaps based on grouping
+        const timeKeys: string[] = [];
+        if (groupByMonth) {
+            let curr = new Date(startDate);
+            curr.setDate(1); // align to month start
+            while (curr <= endDate) {
+                const key = `${curr.getFullYear()}-${String(curr.getMonth() + 1).padStart(2, '0')}`;
+                timeKeys.push(key);
+                curr.setMonth(curr.getMonth() + 1);
+            }
+        } else {
+            let curr = new Date(startDate);
+            while (curr <= endDate) {
+                const key = curr.toISOString().split('T')[0];
+                timeKeys.push(key);
+                curr.setDate(curr.getDate() + 1);
+            }
+        }
+
+        // Initialize 0s
+        for (const deptKeys of deptTrendMaps.values()) {
+            timeKeys.forEach(k => deptKeys.set(k, 0));
+        }
+
+        const hourlyMap = new Array(24).fill(0);
+
+        allPeriodChats.forEach((chat: any) => {
+            let dateKey = '';
+            if (groupByMonth) {
+                dateKey = `${chat.createdAt.getFullYear()}-${String(chat.createdAt.getMonth() + 1).padStart(2, '0')}`;
+            } else {
+                dateKey = chat.createdAt.toISOString().split('T')[0];
+            }
+
+            const deptName = deptMap.get(chat.departmentId) || 'Unknown';
+
+            // Increment All Departments
+            const allMap = deptTrendMaps.get('All Departments')!;
+            if (allMap.has(dateKey)) {
+                allMap.set(dateKey, allMap.get(dateKey)! + 1);
+            }
+
+            // Increment Specific Department
+            if (deptTrendMaps.has(deptName)) {
+                const specificMap = deptTrendMaps.get(deptName)!;
+                if (specificMap.has(dateKey)) {
+                    specificMap.set(dateKey, specificMap.get(dateKey)! + 1);
+                }
+            }
+
+            // Map hourly spike
+            const hour = chat.createdAt.getHours();
+            hourlyMap[hour]++;
+        });
+
+        // Convert Map entries to Final Array
+        const departmentTrends = Array.from(deptTrendMaps.entries()).map(([deptName, trendMap]) => ({
+            departmentName: deptName,
+            trend: Array.from(trendMap.entries()).map(([date, count]) => ({ date, count }))
+        })).filter(dept => dept.departmentName === 'All Departments' || dept.trend.some(t => t.count > 0)); // Filter empty departments
+
+        const chatSpikes = hourlyMap.map((count, index) => ({
+            hour: `${index.toString().padStart(2, '0')}:00`,
+            count
+        }));
+
+        // Calculate Emails Sent by Department
+        const emailSentByDeptMap = new Map<string, number>();
+        let totalEmailsSent = 0;
+
+        allPeriodChats.forEach((chat: any) => {
+            if (chat.emailSent) {
+                totalEmailsSent++;
+                const deptName = deptMap.get(chat.departmentId) || 'Unknown';
+                if (!emailSentByDeptMap.has(deptName)) {
+                    emailSentByDeptMap.set(deptName, 0);
+                }
+                emailSentByDeptMap.set(deptName, emailSentByDeptMap.get(deptName)! + 1);
+            }
+        });
+
+        const emailsSentByDept = Array.from(emailSentByDeptMap.entries())
+            .map(([name, value]) => ({ name, value }))
+            .sort((a, b) => b.value - a.value);
+
+        return NextResponse.json({
+            summary: {
+                totalChats,
+                openChats,
+                resolvedChats,
+                escalatedChats,
+                totalEmailsRaw,
+                totalEmailsSent,
+                resolutionRate: totalChats > 0 ? Math.round((resolvedChats / totalChats) * 100) : 0,
+            },
+            charts: {
+                departmentDistribution: departmentChart,
+                topIssues,
+                topAgents,
+                departmentTrends,
+                chatSpikes,
+                emailsSentByDept
+            }
+        });
+
+    } catch (error) {
+        console.error('Failed to fetch analytics:', error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    }
+}

@@ -1,0 +1,166 @@
+// 1. Database Connection
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 2. Client Generator
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "library"
+}
+
+// 3. Enums for Data Integrity
+enum Role {
+  SuperAdmin
+  Admin
+  DataEntry
+}
+
+enum Status {
+  Open
+  Resolved
+  Escalated
+}
+
+// 4. Tables / Models
+model User {
+  id           String   @id @default(uuid())
+  fullName     String   @map("full_name")
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         Role     @default(DataEntry)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  // Tracking who created/updated sessions
+  createdSessions ChatSession[] @relation("CreatedBy")
+  updatedSessions ChatSession[] @relation("UpdatedBy")
+
+  @@map("system_users")
+}
+
+model Department {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  
+  agents    Agent[]
+  sessions  ChatSession[]
+
+  @@map("departments")
+}
+
+model QueryType {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  sessions  ChatSession[]
+
+  @@map("query_types")
+}
+
+model IssueType {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  sessions  ChatSession[]
+
+  @@map("issue_types")
+}
+
+model Agent {
+  id           String     @id @default(uuid())
+  name         String
+  shift        String
+  createdAt    DateTime   @default(now()) @map("created_at")
+  
+  departmentId String?    @map("department_id")
+  department   Department? @relation(fields: [departmentId], references: [id])
+  sessions     ChatSession[]
+
+  @@map("agents")
+  @@index([departmentId])
+}
+
+model Customer {
+  id            String   @id @default(uuid())
+  visitorId     String?  @map("visitor_id")
+  fullName      String   @map("full_name")
+  email         String?
+  contactNumber String?  @map("contact_number")
+  school        String?
+  country       String?
+  role          String?
+  createdAt     DateTime @default(now()) @map("created_at")
+  sessions      ChatSession[]
+
+  @@map("customers")
+}
+
+model ChatSession {
+  id               String      @id @default(uuid())
+  chatCode         String      @unique @map("chat_code")
+  queryDescription String      @map("query_description") @db.Text
+  resolution       String?     @db.Text
+  status           Status      @default(Open)
+  
+  // Relations
+  customerId       String      @map("customer_id")
+  customer         Customer    @relation(fields: [customerId], references: [id])
+  
+  departmentId     String      @map("department_id")
+  department       Department  @relation(fields: [departmentId], references: [id])
+  
+  agentId          String      @map("agent_id")
+  agent            Agent       @relation(fields: [agentId], references: [id])
+  
+  queryTypeId      String      @map("query_type_id")
+  queryType        QueryType   @relation(fields: [queryTypeId], references: [id])
+  
+  issueTypeId      String      @map("issue_type_id")
+  issueType        IssueType   @relation(fields: [issueTypeId], references: [id])
+
+  // System Tracking
+  emailSent        Boolean     @default(false) @map("email_sent")
+  emailSentAt      DateTime?   @map("email_sent_at")
+  createdAt        DateTime    @default(now()) @map("created_at")
+  closedAt         DateTime?   @map("closed_at")
+  
+  createdById      String      @map("created_by")
+  createdBy        User        @relation("CreatedBy", fields: [createdById], references: [id])
+  
+  updatedById      String      @map("updated_by")
+  updatedBy        User        @relation("UpdatedBy", fields: [updatedById], references: [id])
+
+  // Email Logs
+  emailLogs        EmailLog[]
+
+  @@map("chat_sessions")
+  @@index([chatCode])
+  @@index([createdAt])
+  @@index([departmentId])
+  @@index([agentId])
+  @@index([queryTypeId])
+}
+
+model EmailLog {
+  id            String      @id @default(uuid())
+  chatSessionId String      @map("chat_session_id")
+  chatSession   ChatSession @relation(fields: [chatSessionId], references: [id])
+  subject       String      @map("email_subject")
+  body          String      @map("email_body") @db.Text
+  sentBy        String      @map("sent_by")
+  sentAt        DateTime    @default(now()) @map("sent_at")
+
+  @@map("email_logs")
+}
+
+model SystemSettings {
+  id                   Int      @id @default(1)
+  weeklyReportTime     String   @map("weekly_report_time") // HH:MM
+  weeklyReportDay      String   @map("weekly_report_day")  // Monday, Sunday, etc.
+  reportRecipientEmail String   @map("report_recipient_email")
+
+  @@map("system_settings")
+}

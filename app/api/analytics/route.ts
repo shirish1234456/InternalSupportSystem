@@ -68,37 +68,79 @@ export async function GET(req: NextRequest) {
             value: d._count.id
         }));
 
-        // 3. Top Issue Types
+        // 3. Top Issue Types (Segmented by Department)
         const issueDist = await prisma.chatSession.groupBy({
-            by: ['issueTypeId'],
+            by: ['departmentId', 'issueTypeId'],
             where: dateFilter,
             _count: { id: true },
-            orderBy: { _count: { id: 'desc' } },
-            take: 50
         });
 
         const issues = await prisma.issueType.findMany({ select: { id: true, name: true } });
         const issueMap = new Map(issues.map((i: any) => [i.id, i.name]));
-        const topIssues = issueDist.map((i: any) => ({
-            name: issueMap.get(i.issueTypeId) || 'Unknown',
-            value: i._count.id
-        }));
 
-        // 4. Agent Performance (Top 50)
+        const topIssuesMap = new Map<string, Map<string, number>>();
+        topIssuesMap.set('All Departments', new Map<string, number>());
+        depts.forEach((d: any) => topIssuesMap.set(d.name, new Map<string, number>()));
+
+        issueDist.forEach((i: any) => {
+            const issueName = issueMap.get(i.issueTypeId) || 'Unknown';
+            const deptName = deptMap.get(i.departmentId) || 'Unknown';
+            const count = i._count.id;
+
+            // Add to All Departments
+            const allMap = topIssuesMap.get('All Departments')!;
+            allMap.set(issueName, (allMap.get(issueName) || 0) + count);
+
+            // Add to Specific Department
+            if (topIssuesMap.has(deptName)) {
+                const deptMapObj = topIssuesMap.get(deptName)!;
+                deptMapObj.set(issueName, (deptMapObj.get(issueName) || 0) + count);
+            }
+        });
+
+        const topIssuesSegmented = Array.from(topIssuesMap.entries()).map(([deptName, counts]) => ({
+            departmentName: deptName,
+            data: Array.from(counts.entries())
+                .map(([name, value]) => ({ name, value }))
+                .sort((a, b) => b.value - a.value)
+        })).filter(dept => dept.departmentName === 'All Departments' || dept.data.length > 0);
+
+        // 4. Agent Performance (Segmented by Department)
         const agentDist = await prisma.chatSession.groupBy({
-            by: ['agentId'],
+            by: ['departmentId', 'agentId'],
             where: dateFilter,
             _count: { id: true },
-            orderBy: { _count: { id: 'desc' } },
-            take: 50
         });
 
         const agents = await prisma.agent.findMany({ select: { id: true, name: true } });
         const agentMap = new Map(agents.map((a: any) => [a.id, a.name]));
-        const topAgents = agentDist.map((a: any) => ({
-            name: agentMap.get(a.agentId) || 'Unknown',
-            chatsHandled: a._count.id
-        }));
+
+        const topAgentsMap = new Map<string, Map<string, number>>();
+        topAgentsMap.set('All Departments', new Map<string, number>());
+        depts.forEach((d: any) => topAgentsMap.set(d.name, new Map<string, number>()));
+
+        agentDist.forEach((a: any) => {
+            const agentName = agentMap.get(a.agentId) || 'Unknown';
+            const deptName = deptMap.get(a.departmentId) || 'Unknown';
+            const count = a._count.id;
+
+            // Add to All Departments
+            const allMap = topAgentsMap.get('All Departments')!;
+            allMap.set(agentName, (allMap.get(agentName) || 0) + count);
+
+            // Add to Specific Department
+            if (topAgentsMap.has(deptName)) {
+                const deptMapObj = topAgentsMap.get(deptName)!;
+                deptMapObj.set(agentName, (deptMapObj.get(agentName) || 0) + count);
+            }
+        });
+
+        const topAgentsSegmented = Array.from(topAgentsMap.entries()).map(([deptName, counts]) => ({
+            departmentName: deptName,
+            data: Array.from(counts.entries())
+                .map(([name, chatsHandled]) => ({ name, chatsHandled }))
+                .sort((a, b) => b.chatsHandled - a.chatsHandled)
+        })).filter(dept => dept.departmentName === 'All Departments' || dept.data.length > 0);
 
         // 5. Volume Trend by Department
         const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
@@ -215,8 +257,8 @@ export async function GET(req: NextRequest) {
             },
             charts: {
                 departmentDistribution: departmentChart,
-                topIssues,
-                topAgents,
+                topIssuesSegmented,
+                topAgentsSegmented,
                 departmentTrends,
                 chatSpikes,
                 emailsSentByDept

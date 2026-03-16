@@ -19,8 +19,8 @@ interface AnalyticsData {
     };
     charts: {
         departmentDistribution: { name: string; value: number }[];
-        topIssues: { name: string; value: number }[];
-        topAgents: { name: string; chatsHandled: number }[];
+        topIssuesSegmented: { departmentName: string; data: { name: string; value: number }[] }[];
+        topAgentsSegmented: { departmentName: string; data: { name: string; chatsHandled: number }[] }[];
         departmentTrends: { departmentName: string; trend: { date: string; count: number }[] }[];
         chatSpikes: { hour: string; count: number }[];
         emailsSentByDept: { name: string; value: number }[];
@@ -40,6 +40,8 @@ export default function DashboardPage() {
     const [customEnd, setCustomEnd] = useState('');
 
     const [currentTrendIndex, setCurrentTrendIndex] = useState(0);
+    const [currentIssuesIndex, setCurrentIssuesIndex] = useState(0);
+    const [currentAgentsIndex, setCurrentAgentsIndex] = useState(0);
 
     const fetchAnalytics = async () => {
         setLoading(true);
@@ -321,15 +323,39 @@ export default function DashboardPage() {
 
                 {/* Top Issues Breakdown */}
                 <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 lg:col-span-2">
-                    <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
-                        <AlertTriangle className="w-5 h-5 text-slate-400" />
-                        Top Issue Types
-                    </h3>
-                    {charts.topIssues && charts.topIssues.length > 0 ? (
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-2">
+                            <AlertTriangle className="w-5 h-5 text-slate-400" />
+                            <h3 className="text-base font-semibold text-slate-800 dark:text-white">
+                                Top Issue Types ({charts.topIssuesSegmented?.[currentIssuesIndex]?.departmentName || 'Loading'})
+                            </h3>
+                        </div>
+                        {charts.topIssuesSegmented && charts.topIssuesSegmented.length > 1 && (
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => setCurrentIssuesIndex(prev => prev > 0 ? prev - 1 : charts.topIssuesSegmented.length - 1)}
+                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                                >
+                                    <ChevronLeft className="w-5 h-5 text-slate-500" />
+                                </button>
+                                <span className="text-sm font-medium text-slate-500">
+                                    {currentIssuesIndex + 1} / {charts.topIssuesSegmented.length}
+                                </span>
+                                <button
+                                    onClick={() => setCurrentIssuesIndex(prev => prev < charts.topIssuesSegmented.length - 1 ? prev + 1 : 0)}
+                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                                >
+                                    <ChevronRight className="w-5 h-5 text-slate-500" />
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                    {charts.topIssuesSegmented?.[currentIssuesIndex]?.data && charts.topIssuesSegmented[currentIssuesIndex].data.length > 0 ? (
                         <div className="space-y-3 overflow-y-auto" style={{ maxHeight: '288px' }}>
                             {(() => {
-                                const max = charts.topIssues[0]?.value || 1;
-                                return charts.topIssues.slice(0, 10).map((issue, index) => {
+                                const issuesData = charts.topIssuesSegmented[currentIssuesIndex].data;
+                                const max = issuesData[0]?.value || 1;
+                                return issuesData.slice(0, 10).map((issue, index) => {
                                     const pct = Math.round((issue.value / max) * 100);
                                     const barColors = [
                                         'bg-blue-500', 'bg-emerald-500', 'bg-amber-500',
@@ -427,13 +453,36 @@ export default function DashboardPage() {
 
                 {/* Top Agents Bar Chart */}
                 <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
-                    <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
-                        <Users className="w-5 h-5 text-slate-400" />
-                        Top 5 Agents by Volume
-                    </h3>
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-2">
+                            <Users className="w-5 h-5 text-slate-400" />
+                            <h3 className="text-base font-semibold text-slate-800 dark:text-white">
+                                Top 5 Agents ({charts.topAgentsSegmented?.[currentAgentsIndex]?.departmentName || 'Loading'})
+                            </h3>
+                        </div>
+                        {charts.topAgentsSegmented && charts.topAgentsSegmented.length > 1 && (
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => setCurrentAgentsIndex(prev => prev > 0 ? prev - 1 : charts.topAgentsSegmented.length - 1)}
+                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                                >
+                                    <ChevronLeft className="w-5 h-5 text-slate-500" />
+                                </button>
+                                <span className="text-sm font-medium text-slate-500">
+                                    {currentAgentsIndex + 1} / {charts.topAgentsSegmented.length}
+                                </span>
+                                <button
+                                    onClick={() => setCurrentAgentsIndex(prev => prev < charts.topAgentsSegmented.length - 1 ? prev + 1 : 0)}
+                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                                >
+                                    <ChevronRight className="w-5 h-5 text-slate-500" />
+                                </button>
+                            </div>
+                        )}
+                    </div>
                     <div className="h-64 w-full">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={charts.topAgents.slice(0, 5)} layout="vertical" margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
+                            <BarChart data={charts.topAgentsSegmented?.[currentAgentsIndex]?.data?.slice(0, 5) || []} layout="vertical" margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
                                 <XAxis type="number" tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} />
                                 <YAxis dataKey="name" type="category" tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} width={100} />
@@ -452,7 +501,7 @@ export default function DashboardPage() {
                     </h3>
                     <div className="h-64 w-full">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={charts.topIssues.slice(0, 5)} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
+                            <BarChart data={(charts.topIssuesSegmented?.[currentIssuesIndex]?.data || []).slice(0, 5)} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                                 <XAxis dataKey="name" tick={{ fontSize: 12 }} tickMargin={10} axisLine={false} tickLine={false} />
                                 <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />

@@ -19,8 +19,8 @@ interface AnalyticsData {
     };
     charts: {
         departmentDistribution: { name: string; value: number }[];
-        topIssues: { name: string; value: number }[];
-        topAgents: { name: string; chatsHandled: number }[];
+        topIssuesSegmented: { departmentName: string; data: { name: string; value: number }[] }[];
+        topAgentsSegmented: { departmentName: string; data: { name: string; chatsHandled: number }[] }[];
         departmentTrends: { departmentName: string; trend: { date: string; count: number }[] }[];
         chatSpikes: { hour: string; count: number }[];
         emailsSentByDept: { name: string; value: number }[];
@@ -193,19 +193,22 @@ export default function AnalyticsPage() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                                {charts.topIssues.length > 0 ? (
-                                    charts.topIssues.map((item, index) => (
-                                        <tr key={index} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                                            <td className="px-6 py-3 font-medium text-slate-500">#{index + 1}</td>
-                                            <td className="px-6 py-3">{item.name}</td>
-                                            <td className="px-6 py-3 text-right font-semibold">{item.value}</td>
+                                {(() => {
+                                    const allIssuesData = charts.topIssuesSegmented?.find(d => d.departmentName === 'All Departments')?.data || [];
+                                    return allIssuesData.length > 0 ? (
+                                        allIssuesData.map((item, index) => (
+                                            <tr key={index} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                                <td className="px-6 py-3 font-medium text-slate-500">#{index + 1}</td>
+                                                <td className="px-6 py-3">{item.name}</td>
+                                                <td className="px-6 py-3 text-right font-semibold">{item.value}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan={3} className="px-6 py-8 text-center text-slate-500">No issue type data found for this period.</td>
                                         </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan={3} className="px-6 py-8 text-center text-slate-500">No issue type data found for this period.</td>
-                                    </tr>
-                                )}
+                                    );
+                                })()}
                             </tbody>
                         </table>
                     </div>
@@ -227,19 +230,22 @@ export default function AnalyticsPage() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                                {charts.topAgents.length > 0 ? (
-                                    charts.topAgents.map((item, index) => (
-                                        <tr key={index} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                                            <td className="px-6 py-3 font-medium text-slate-500">#{index + 1}</td>
-                                            <td className="px-6 py-3">{item.name}</td>
-                                            <td className="px-6 py-3 text-right font-semibold">{item.chatsHandled}</td>
+                                {(() => {
+                                    const allAgentsData = charts.topAgentsSegmented?.find(d => d.departmentName === 'All Departments')?.data || [];
+                                    return allAgentsData.length > 0 ? (
+                                        allAgentsData.map((item, index) => (
+                                            <tr key={index} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                                <td className="px-6 py-3 font-medium text-slate-500">#{index + 1}</td>
+                                                <td className="px-6 py-3">{item.name}</td>
+                                                <td className="px-6 py-3 text-right font-semibold">{item.chatsHandled}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan={3} className="px-6 py-8 text-center text-slate-500">No agent data found for this period.</td>
                                         </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan={3} className="px-6 py-8 text-center text-slate-500">No agent data found for this period.</td>
-                                    </tr>
-                                )}
+                                    );
+                                })()}
                             </tbody>
                         </table>
                     </div>

@@ -79,7 +79,22 @@ export async function POST(req: NextRequest) {
                 const attenderEmail = row['Attender Email'] || row['ATTENDER EMAIL'] || null;
                 const emailSent = !!attenderEmail || (emailSentRaw === '1' || emailSentRaw === 'yes' || emailSentRaw === 'true' || emailSentRaw.includes('/'));
 
-                const role = row['Role'] || row['ROLE'] ? String(row['Role'] || row['ROLE']) : null;
+                const rawRole = row['Role'] || row['ROLE'] ? String(row['Role'] || row['ROLE']).trim() : null;
+
+                // Map shorthand role codes from standard.xlsx to full labels
+                const roleCodeMap: Record<string, string> = {
+                    's': 'Student',
+                    'student': 'Student',
+                    't': 'Teacher',
+                    'teacher': 'Teacher',
+                    'p': 'Parent',
+                    'parent': 'Parent',
+                    'n/a': 'N/A',
+                };
+                const role = rawRole
+                    ? (roleCodeMap[rawRole.toLowerCase()] ?? rawRole)
+                    : null;
+
 
                 if (!chatCode || chatCode === 'undefined') throw new Error('Missing Chat ID or Conversation ID');
                 if (!agentName || !agentMap.has(agentName)) throw new Error(`Agent '${row['AGENT'] || row['Attender']}' not found in system`);

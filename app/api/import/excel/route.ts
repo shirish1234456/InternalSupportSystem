@@ -63,8 +63,10 @@ export async function POST(req: NextRequest) {
                 // 1. Raw Extraction
                 const rawAgentName = String(row['AGENT'] || row['Attender'] || '').toLowerCase().trim();
 
-                // 2. Identity Mapping ('Support Team' -> 'agent', otherwise 'bot')
-                const agentName = rawAgentName === 'support team' ? 'agent' : 'bot';
+                // 2. Identity Mapping ('Support Team' -> 'agent', blank -> 'bot', otherwise pass through)
+                let agentName = rawAgentName;
+                if (agentName === 'support team') agentName = 'agent';
+                else if (!agentName) agentName = 'bot';
 
                 const deptName = String(row['PROPERTY'] || row['Department'] || '').toLowerCase().trim();
                 const rqType = String(row['TYPE'] || 'Queries').toLowerCase().trim(); // Hardcode to 'Queries' for history.xlsx

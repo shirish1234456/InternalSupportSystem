@@ -495,10 +495,33 @@ export default function DashboardPage() {
 
                 {/* Top Query Types Bar Chart */}
                 <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
-                    <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
-                        <FileText className="w-5 h-5 text-slate-400" />
-                        Most Common Issue Type
-                    </h3>
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-2">
+                            <FileText className="w-5 h-5 text-slate-400" />
+                            <h3 className="text-base font-semibold text-slate-800 dark:text-white">
+                                Most Common Issue Type ({charts.topIssuesSegmented?.[currentIssuesIndex]?.departmentName || 'Loading'})
+                            </h3>
+                        </div>
+                        {charts.topIssuesSegmented && charts.topIssuesSegmented.length > 1 && (
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => setCurrentIssuesIndex(prev => prev > 0 ? prev - 1 : charts.topIssuesSegmented.length - 1)}
+                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                                >
+                                    <ChevronLeft className="w-5 h-5 text-slate-500" />
+                                </button>
+                                <span className="text-sm font-medium text-slate-500">
+                                    {currentIssuesIndex + 1} / {charts.topIssuesSegmented.length}
+                                </span>
+                                <button
+                                    onClick={() => setCurrentIssuesIndex(prev => prev < charts.topIssuesSegmented.length - 1 ? prev + 1 : 0)}
+                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                                >
+                                    <ChevronRight className="w-5 h-5 text-slate-500" />
+                                </button>
+                            </div>
+                        )}
+                    </div>
                     <div className="h-64 w-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={(charts.topIssuesSegmented?.[currentIssuesIndex]?.data || []).slice(0, 5)} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>

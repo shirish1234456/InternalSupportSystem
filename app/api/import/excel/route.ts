@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
 
         const formData = await req.formData();
         const file = formData.get('file') as File | null;
+        const validateOnly = formData.get('validateOnly') === 'true';
 
         if (!file) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
@@ -167,18 +168,23 @@ export async function POST(req: NextRequest) {
                     customer = await prisma.customer.findFirst({ where: { email } });
                 }
                 if (!customer) {
-                    customer = await prisma.customer.create({
-                        data: {
-                            visitorId,
-                            fullName: customerName,
-                            email: email,
-                            contactNumber: row['Phone Number'] ? String(row['Phone Number']) : null,
-                            school: row['SCHOOL/COLLEGE'] ? String(row['SCHOOL/COLLEGE']) : null,
-                            country: (row['COUNTRY'] || row['Country/Region']) ? String(row['COUNTRY'] || row['Country/Region']) : null,
-                            role: role
-                        }
-                    });
-                } else if ((visitorId && !customer.visitorId) || (role && !customer.role)) {
+                    if (!validateOnly) {
+                        customer = await prisma.customer.create({
+                            data: {
+                                visitorId,
+                                fullName: customerName,
+                                email: email,
+                                contactNumber: row['Phone Number'] ? String(row['Phone Number']) : null,
+                                school: row['SCHOOL/COLLEGE'] ? String(row['SCHOOL/COLLEGE']) : null,
+                                country: (row['COUNTRY'] || row['Country/Region']) ? String(row['COUNTRY'] || row['Country/Region']) : null,
+                                role: role
+                            }
+                        });
+                    } else {
+                        // Mock customer for validation
+                        customer = { id: 'mock-id', visitorId, role };
+                    }
+                } else if (!validateOnly && ((visitorId && !customer.visitorId) || (role && !customer.role))) {
                     // Optionally, try updating the user if they were found but lack the new fields
                     await prisma.customer.update({
                         where: { id: customer.id },
@@ -275,24 +281,26 @@ export async function POST(req: NextRequest) {
                     }
                 }
 
-                await prisma.chatSession.create({
-                    data: {
-                        chatCode,
-                        queryDescription: String(row['QUERY DESCRIPTION'] || row['Question'] || 'No description provided'),
-                        resolution: resolutionText,
-                        status,
-                        customerId: customer.id,
-                        departmentId: deptMap.get(deptName)!,
-                        agentId: agentMap.get(agentName)!,
-                        queryTypeId: queryTypeId as string,
-                        issueTypeId: issueTypeId as string,
-                        emailSent: emailSent,
-                        emailSentAt: emailSent ? combinedDate : null,
-                        createdById: systemUserId,
-                        updatedById: systemUserId,
-                        createdAt: combinedDate,
-                    }
-                });
+                if (!validateOnly) {
+                    await prisma.chatSession.create({
+                        data: {
+                            chatCode,
+                            queryDescription: String(row['QUERY DESCRIPTION'] || row['Question'] || 'No description provided'),
+                            resolution: resolutionText,
+                            status,
+                            customerId: customer.id,
+                            departmentId: deptMap.get(deptName)!,
+                            agentId: agentMap.get(agentName)!,
+                            queryTypeId: queryTypeId as string,
+                            issueTypeId: issueTypeId as string,
+                            emailSent: emailSent,
+                            emailSentAt: emailSent ? combinedDate : null,
+                            createdById: systemUserId,
+                            updatedById: systemUserId,
+                            createdAt: combinedDate,
+                        }
+                    });
+                }
 
                 inserted++;
             } catch (err: any) {

@@ -7,6 +7,9 @@ export default function BulkImportPage() {
     const [file, setFile] = useState<File | null>(null);
     const [isDragging, setIsDragging] = useState(false);
 
+    const [isValidating, setIsValidating] = useState(false);
+    const [validationResult, setValidationResult] = useState<any>(null);
+
     const [isUploading, setIsUploading] = useState(false);
     const [result, setResult] = useState<any>(null);
     const [error, setError] = useState('');
@@ -36,9 +39,10 @@ export default function BulkImportPage() {
         }
     };
 
-    const validateAndSetFile = (selectedFile: File) => {
+    const validateAndSetFile = async (selectedFile: File) => {
         setError('');
         setResult(null);
+        setValidationResult(null);
 
         // Accept only excel files
         const validTypes = [
@@ -53,6 +57,27 @@ export default function BulkImportPage() {
         }
 
         setFile(selectedFile);
+
+        // Auto-validate the file
+        setIsValidating(true);
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        formData.append('validateOnly', 'true');
+
+        try {
+            const res = await fetch('/api/import/excel', {
+                method: 'POST',
+                body: formData,
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Validation failed');
+            setValidationResult(data);
+        } catch (err: any) {
+            setError(err.message);
+            setFile(null); // Remove file if we couldn't even parse it
+        } finally {
+            setIsValidating(false);
+        }
     };
 
     const handleUpload = async () => {
@@ -155,14 +180,55 @@ export default function BulkImportPage() {
                         </div>
                     )}
 
+                    {isValidating && (
+                        <div className="mt-6 flex flex-col items-center justify-center p-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <Loader2 className="w-8 h-8 text-blue-500 animate-spin mb-2" />
+                            <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Validating file...</p>
+                            <p className="text-xs text-slate-500">Checking for errors and missing data</p>
+                        </div>
+                    )}
+
+                    {!isValidating && validationResult && (
+                        <div className={`mt-6 p-6 rounded-xl border ${validationResult.errors.length > 0 ? 'bg-red-50 border-red-200 dark:bg-red-900/10 dark:border-red-900/30' : 'bg-green-50 border-green-200 dark:bg-green-900/10 dark:border-green-900/30'}`}>
+                            <div className="flex items-start gap-3">
+                                {validationResult.errors.length > 0 ? (
+                                    <XCircle className="w-6 h-6 text-red-500 shrink-0 mt-0.5" />
+                                ) : (
+                                    <CheckCircle2 className="w-6 h-6 text-green-500 shrink-0 mt-0.5" />
+                                )}
+                                <div className="flex-1">
+                                    <h3 className={`text-base font-semibold mb-1 ${validationResult.errors.length > 0 ? 'text-red-800 dark:text-red-400' : 'text-green-800 dark:text-green-400'}`}>
+                                        {validationResult.errors.length > 0 ? `Validation Failed (${validationResult.errors.length} errors)` : 'File Validated Successfully'}
+                                    </h3>
+                                    <p className={`text-sm mb-4 ${validationResult.errors.length > 0 ? 'text-red-600 dark:text-red-300' : 'text-green-600 dark:text-green-300'}`}>
+                                        {validationResult.errors.length > 0
+                                            ? 'Please fix the following errors in your Excel file and re-upload.'
+                                            : `${validationResult.summary.inserted} rows are ready to be imported.`
+                                        }
+                                    </p>
+
+                                    {validationResult.errors.length > 0 && (
+                                        <div className="bg-white dark:bg-slate-900 rounded border border-red-100 dark:border-red-900/30 overflow-hidden max-h-60 overflow-y-auto">
+                                            <ul className="text-xs font-mono p-3 space-y-2">
+                                                {validationResult.errors.map((err: string, i: number) => (
+                                                    <li key={i} className="text-red-600 dark:text-red-400">{err}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="mt-6 flex justify-end">
                         <button
                             onClick={handleUpload}
-                            disabled={!file || isUploading}
-                            className="px-6 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center gap-2 shadow-sm"
+                            disabled={!file || isUploading || isValidating || (validationResult && validationResult.errors.length > 0)}
+                            className="px-6 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 shadow-sm"
                         >
                             {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
-                            {isUploading ? 'Processing File...' : 'Start Import'}
+                            {isUploading ? 'Importing Data...' : 'Start Import'}
                         </button>
                     </div>
                 </div>

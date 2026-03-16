@@ -71,13 +71,28 @@ export async function POST(req: NextRequest) {
                 const customerName = String(row['FULL NAME'] || row['Name'] || '');
                 const emailRaw = row['EMAIL ADDRESS'] || row['Email Address'];
                 const email = emailRaw ? String(emailRaw) : null;
-                const emailSentRaw = String(row['Replied via email'] || row['Last Email Sent Time'] || '').toLowerCase().trim();
+                // Read "Replied via email" directly (don't use || which skips boolean false)
+                const repliedViaEmailRaw = row['Replied via email'];
+                const lastEmailSentRaw = row['Last Email Sent Time'];
+
+                // Determine emailSentRaw — prefer "Replied via email" if the column is present at all
+                const emailSentRaw = (repliedViaEmailRaw !== undefined && repliedViaEmailRaw !== null)
+                    ? String(repliedViaEmailRaw).toLowerCase().trim()
+                    : String(lastEmailSentRaw || '').toLowerCase().trim();
 
                 // Determine `emailSent` State
-                // If "Attender Email" has ANY value, we consider emailSent = true.
-                // Otherwise fallback to existing logic based on "Replied via email" / "Last Email Sent"
+                // Blank, "false", "0", or "no" → NOT sent
+                // "true", "1", "yes", or a date string → sent
+                // Attender Email present → sent (history.xlsx compat) ONLY if not explicitly false above
                 const attenderEmail = row['Attender Email'] || row['ATTENDER EMAIL'] || null;
-                const emailSent = !!attenderEmail || (emailSentRaw === '1' || emailSentRaw === 'yes' || emailSentRaw === 'true' || emailSentRaw.includes('/'));
+                const isExplicitlyFalse = emailSentRaw === '' || emailSentRaw === 'false' || emailSentRaw === '0' || emailSentRaw === 'no';
+                const emailSent = !isExplicitlyFalse && (
+                    !!attenderEmail ||
+                    emailSentRaw === '1' ||
+                    emailSentRaw === 'yes' ||
+                    emailSentRaw === 'true' ||
+                    emailSentRaw.includes('/')
+                );
 
                 const rawRole = row['Role'] || row['ROLE'] ? String(row['Role'] || row['ROLE']).trim() : null;
 

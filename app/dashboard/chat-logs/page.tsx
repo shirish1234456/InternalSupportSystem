@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Search, MessageSquare, Loader2, RefreshCw, FileText, Trash2, X, Edit2, Save, XCircle, Download, Filter } from 'lucide-react';
 import Link from 'next/link';
+import ConfirmDialog from '@/components/ConfirmDialog';
 
 interface ChatSession {
     id: string;
@@ -59,6 +60,11 @@ export default function ChatLogsPage() {
     // Bulk Delete State
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
     const [isDeletingBulk, setIsDeletingBulk] = useState(false);
+
+    // Confirm Dialog State
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [confirmMessage, setConfirmMessage] = useState('');
+    const [pendingAction, setPendingAction] = useState<(() => Promise<void>) | null>(null);
 
     // Fetch master dropdowns
     useEffect(() => {
@@ -171,63 +177,55 @@ export default function ChatLogsPage() {
         }
     };
 
-    const handleDelete = async (id: string, code: string) => {
-        if (!window.confirm(`Are you sure you want to delete chat session ${code}? This action cannot be undone.`)) {
-            return;
-        }
-
-        const previousSessions = [...sessions];
-        setSessions(prev => prev.filter(s => s.id !== id));
-        setSelectedIds(prev => {
-            const next = new Set(prev);
-            next.delete(id);
-            return next;
-        });
-
-        try {
-            const res = await fetch(`/api/chat-sessions?id=${id}`, {
-                method: 'DELETE'
+    const handleDelete = (id: string, code: string) => {
+        setConfirmMessage(`Are you sure you want to delete chat session ${code}? This action cannot be undone.`);
+        setPendingAction(() => async () => {
+            const previousSessions = [...sessions];
+            setSessions(prev => prev.filter(s => s.id !== id));
+            setSelectedIds(prev => {
+                const next = new Set(prev);
+                next.delete(id);
+                return next;
             });
-
-            if (!res.ok) {
-                const data = await res.json();
-                throw new Error(data.error || 'Failed to delete chat session');
+            try {
+                const res = await fetch(`/api/chat-sessions?id=${id}`, { method: 'DELETE' });
+                if (!res.ok) {
+                    const data = await res.json();
+                    throw new Error(data.error || 'Failed to delete chat session');
+                }
+                await fetchLogs();
+            } catch (err: any) {
+                setSessions(previousSessions);
+                setError(err.message);
             }
-
-            // Refresh logs to reflect deletion
-            await fetchLogs();
-        } catch (err: any) {
-            setSessions(previousSessions);
-            alert(err.message);
-        }
+        });
+        setConfirmOpen(true);
     };
 
-    const handleBulkDelete = async () => {
+    const handleBulkDelete = () => {
         if (selectedIds.size === 0) return;
-        if (!window.confirm(`Are you sure you want to delete ${selectedIds.size} chat sessions? This action cannot be undone.`)) {
-            return;
-        }
-
-        setIsDeletingBulk(true);
-        try {
-            const res = await fetch(`/api/chat-sessions`, {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ids: Array.from(selectedIds) })
-            });
-
-            if (!res.ok) {
-                const data = await res.json();
-                throw new Error(data.error || 'Failed to bulk delete chat sessions');
+        setConfirmMessage(`Are you sure you want to delete ${selectedIds.size} chat session${selectedIds.size > 1 ? 's' : ''}? This action cannot be undone.`);
+        setPendingAction(() => async () => {
+            setIsDeletingBulk(true);
+            try {
+                const res = await fetch(`/api/chat-sessions`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids: Array.from(selectedIds) })
+                });
+                if (!res.ok) {
+                    const data = await res.json();
+                    throw new Error(data.error || 'Failed to bulk delete chat sessions');
+                }
+                setSelectedIds(new Set());
+                await fetchLogs();
+            } catch (err: any) {
+                setError(err.message);
+            } finally {
+                setIsDeletingBulk(false);
             }
-
-            setSelectedIds(new Set());
-            await fetchLogs();
-        } catch (err: any) {
-            alert(err.message);
-        } finally {
-            setIsDeletingBulk(false);
-        }
+        });
+        setConfirmOpen(true);
     };
 
     const toggleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -815,6 +813,23 @@ export default function ChatLogsPage() {
                     </div>
                 </div>
             )}
+
+            <ConfirmDialog
+                isOpen={confirmOpen}
+                title="Confirm Deletion"
+                message={confirmMessage}
+                confirmLabel="Delete"
+                variant="danger"
+                onConfirm={async () => {
+                    setConfirmOpen(false);
+                    if (pendingAction) await pendingAction();
+                    setPendingAction(null);
+                }}
+                onCancel={() => {
+                    setConfirmOpen(false);
+                    setPendingAction(null);
+                }}
+            />
         </div>
     );
 }

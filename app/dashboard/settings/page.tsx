@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Settings, Save, Loader2, Mail, Clock, CalendarDays, CheckCircle2 } from 'lucide-react';
+import ConfirmDialog from '@/components/ConfirmDialog';
 
 interface SystemSettings {
     weeklyReportTime: string;
@@ -20,6 +21,7 @@ export default function SettingsPage() {
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
     useEffect(() => {
         const fetchSettings = async () => {
@@ -65,15 +67,19 @@ export default function SettingsPage() {
         }
     };
 
-    const handleManualTrigger = async () => {
-        if (!confirm("Are you sure you want to test send the weekly email report now?")) return;
+    const handleManualTrigger = () => {
+        setConfirmOpen(true);
+    };
 
+    const confirmManualTrigger = async () => {
+        setConfirmOpen(false);
         try {
             const res = await fetch('/api/cron/weekly-report');
             const data = await res.json();
-            alert(data.message || 'Report sent!');
+            setSuccess(data.message || 'Report sent!');
+            setTimeout(() => setSuccess(''), 4000);
         } catch (err: any) {
-            alert('Failed to send test email.');
+            setError('Failed to send test email.');
         }
     };
 
@@ -89,110 +95,123 @@ export default function SettingsPage() {
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     return (
-        <div className="max-w-3xl mx-auto space-y-6 pb-12">
-            <div>
-                <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                    <Settings className="w-6 h-6 text-blue-600" />
-                    System Settings
-                </h1>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                    Configure automated tasks, notifications, and global system parameters.
-                </p>
-            </div>
-
-            <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-                <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
-                    <h2 className="text-lg font-semibold text-slate-800 dark:text-white flex items-center gap-2">
-                        <Mail className="w-5 h-5 text-slate-400" />
-                        Automated Weekly Analytics Report
-                    </h2>
-                    <p className="text-sm text-slate-500 mt-1">
-                        Configure when and where the weekly summary email is sent. Note: This requires an external cron trigger pointing to `/api/cron/weekly-report`.
+        <>
+            <div className="max-w-3xl mx-auto space-y-6 pb-12">
+                <div>
+                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                        <Settings className="w-6 h-6 text-blue-600" />
+                        System Settings
+                    </h1>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                        Configure automated tasks, notifications, and global system parameters.
                     </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                    {error && (
-                        <div className="p-4 bg-red-50 text-red-700 text-sm rounded-lg border border-red-100">
-                            {error}
-                        </div>
-                    )}
+                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+                    <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
+                        <h2 className="text-lg font-semibold text-slate-800 dark:text-white flex items-center gap-2">
+                            <Mail className="w-5 h-5 text-slate-400" />
+                            Automated Weekly Analytics Report
+                        </h2>
+                        <p className="text-sm text-slate-500 mt-1">
+                            Configure when and where the weekly summary email is sent. Note: This requires an external cron trigger pointing to `/api/cron/weekly-report`.
+                        </p>
+                    </div>
 
-                    {success && (
-                        <div className="p-4 bg-green-50 text-green-700 text-sm rounded-lg border border-green-100 flex items-center gap-2">
-                            <CheckCircle2 className="w-5 h-5" />
-                            {success}
-                        </div>
-                    )}
+                    <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                        {error && (
+                            <div className="p-4 bg-red-50 text-red-700 text-sm rounded-lg border border-red-100">
+                                {error}
+                            </div>
+                        )}
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {success && (
+                            <div className="p-4 bg-green-50 text-green-700 text-sm rounded-lg border border-green-100 flex items-center gap-2">
+                                <CheckCircle2 className="w-5 h-5" />
+                                {success}
+                            </div>
+                        )}
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+                                    <CalendarDays className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                                    Report Delivery Day
+                                </label>
+                                <select
+                                    required
+                                    value={settings.weeklyReportDay}
+                                    onChange={(e) => setSettings({ ...settings, weeklyReportDay: e.target.value })}
+                                    className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
+                                >
+                                    {daysOfWeek.map(day => (
+                                        <option key={day} value={day}>{day}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+                                    <Clock className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                                    Time (HH:MM 24h)
+                                </label>
+                                <input
+                                    type="time"
+                                    required
+                                    value={settings.weeklyReportTime}
+                                    onChange={(e) => setSettings({ ...settings, weeklyReportTime: e.target.value })}
+                                    className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm bg-white dark:bg-slate-800 min-h-10"
+                                />
+                            </div>
+                        </div>
+
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
-                                <CalendarDays className="w-4 h-4 text-slate-400 dark:text-slate-500" />
-                                Report Delivery Day
-                            </label>
-                            <select
-                                required
-                                value={settings.weeklyReportDay}
-                                onChange={(e) => setSettings({ ...settings, weeklyReportDay: e.target.value })}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
-                            >
-                                {daysOfWeek.map(day => (
-                                    <option key={day} value={day}>{day}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
-                                <Clock className="w-4 h-4 text-slate-400 dark:text-slate-500" />
-                                Time (HH:MM 24h)
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                                Recipient Email Address(es)
                             </label>
                             <input
-                                type="time"
+                                type="text"
                                 required
-                                value={settings.weeklyReportTime}
-                                onChange={(e) => setSettings({ ...settings, weeklyReportTime: e.target.value })}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm bg-white dark:bg-slate-800 min-h-10"
+                                value={settings.reportRecipientEmail}
+                                onChange={(e) => setSettings({ ...settings, reportRecipientEmail: e.target.value })}
+                                placeholder="admin@company.com, ceo@company.com"
+                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 text-slate-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm bg-white dark:bg-slate-800"
                             />
+                            <p className="text-xs text-slate-500 mt-1">Separate multiple emails with commas.</p>
                         </div>
-                    </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                            Recipient Email Address(es)
-                        </label>
-                        <input
-                            type="text"
-                            required
-                            value={settings.reportRecipientEmail}
-                            onChange={(e) => setSettings({ ...settings, reportRecipientEmail: e.target.value })}
-                            placeholder="admin@company.com, ceo@company.com"
-                            className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 text-slate-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm bg-white dark:bg-slate-800"
-                        />
-                        <p className="text-xs text-slate-500 mt-1">Separate multiple emails with commas.</p>
-                    </div>
+                        <div className="pt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800 mt-6">
+                            <button
+                                type="button"
+                                onClick={handleManualTrigger}
+                                className="px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-lg transition-colors border border-blue-200 dark:border-blue-900"
+                            >
+                                Send Test Email Now
+                            </button>
 
-                    <div className="pt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800 mt-6">
-                        <button
-                            type="button"
-                            onClick={handleManualTrigger}
-                            className="px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-lg transition-colors border border-blue-200 dark:border-blue-900"
-                        >
-                            Send Test Email Now
-                        </button>
-
-                        <button
-                            type="submit"
-                            disabled={saving}
-                            className="px-6 py-2.5 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center gap-2 shadow-sm"
-                        >
-                            {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
-                            Save Configuration
-                        </button>
-                    </div>
-                </form>
+                            <button
+                                type="submit"
+                                disabled={saving}
+                                className="px-6 py-2.5 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center gap-2 shadow-sm"
+                            >
+                                {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+                                Save Configuration
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
+
+            <ConfirmDialog
+                isOpen={confirmOpen}
+                title="Send Test Email Report"
+                message="Are you sure you want to send the weekly email report now? This will immediately dispatch the report to all configured recipients."
+                confirmLabel="Send Now"
+                variant="warning"
+                onConfirm={confirmManualTrigger}
+                onCancel={() => setConfirmOpen(false)}
+            />
+        </>
     );
 }
+

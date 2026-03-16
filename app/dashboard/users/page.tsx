@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, Edit2, Shield, UserCircle, Loader2, RefreshCw, Power, PowerOff } from 'lucide-react';
+import ConfirmDialog from '@/components/ConfirmDialog';
 
 interface User {
     id: string;
@@ -27,6 +28,9 @@ export default function UsersPage() {
     const [password, setPassword] = useState('');
     const [isActive, setIsActive] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [pendingToggleUser, setPendingToggleUser] = useState<User | null>(null);
 
     const fetchUsers = async () => {
         setLoading(true);
@@ -87,9 +91,16 @@ export default function UsersPage() {
         }
     };
 
-    const toggleUserStatus = async (user: User) => {
-        if (!confirm(`Are you sure you want to ${user.isActive ? 'deactivate' : 'activate'} ${user.fullName}?`)) return;
+    const toggleUserStatus = (user: User) => {
+        setPendingToggleUser(user);
+        setConfirmOpen(true);
+    };
 
+    const confirmToggle = async () => {
+        if (!pendingToggleUser) return;
+        const user = pendingToggleUser;
+        setConfirmOpen(false);
+        setPendingToggleUser(null);
         try {
             const res = await fetch('/api/users', {
                 method: 'PUT',
@@ -99,18 +110,16 @@ export default function UsersPage() {
                     fullName: user.fullName,
                     email: user.email,
                     role: user.role,
-                    isActive: !user.isActive // Toggle status
+                    isActive: !user.isActive
                 })
             });
-
             if (!res.ok) {
                 const errorData = await res.json();
                 throw new Error(errorData.error || 'Failed to update status');
             }
-
             await fetchUsers();
         } catch (err: any) {
-            alert(err.message);
+            setError(err.message);
         }
     };
 
@@ -368,6 +377,19 @@ export default function UsersPage() {
                     </div>
                 </div>
             )}
+
+            <ConfirmDialog
+                isOpen={confirmOpen}
+                title={pendingToggleUser?.isActive ? 'Deactivate User' : 'Activate User'}
+                message={pendingToggleUser
+                    ? `Are you sure you want to ${pendingToggleUser.isActive ? 'deactivate' : 'activate'} ${pendingToggleUser.fullName}?`
+                    : ''
+                }
+                confirmLabel={pendingToggleUser?.isActive ? 'Deactivate' : 'Activate'}
+                variant={pendingToggleUser?.isActive ? 'danger' : 'warning'}
+                onConfirm={confirmToggle}
+                onCancel={() => { setConfirmOpen(false); setPendingToggleUser(null); }}
+            />
         </div>
     );
 }

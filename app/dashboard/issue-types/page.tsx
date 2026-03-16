@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, AlertTriangle, Loader2, RefreshCw } from 'lucide-react';
+import ConfirmDialog from '@/components/ConfirmDialog';
 
 interface IssueType {
     id: string;
@@ -21,6 +22,9 @@ export default function IssueTypesPage() {
     const [editingType, setEditingType] = useState<IssueType | null>(null);
     const [typeName, setTypeName] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
     const fetchTypes = async () => {
         setLoading(true);
@@ -71,22 +75,27 @@ export default function IssueTypesPage() {
         }
     };
 
-    const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this issue type?')) return;
+    const handleDelete = (id: string) => {
+        setPendingDeleteId(id);
+        setConfirmOpen(true);
+    };
 
+    const confirmDelete = async () => {
+        if (!pendingDeleteId) return;
+        setConfirmOpen(false);
         try {
-            const res = await fetch(`/api/issue-types?id=${id}`, {
+            const res = await fetch(`/api/issue-types?id=${pendingDeleteId}`, {
                 method: 'DELETE'
             });
-
             if (!res.ok) {
                 const errorData = await res.json();
                 throw new Error(errorData.error || 'Failed to delete');
             }
-
             await fetchTypes();
         } catch (err: any) {
-            alert(err.message);
+            setError(err.message);
+        } finally {
+            setPendingDeleteId(null);
         }
     };
 
@@ -255,6 +264,16 @@ export default function IssueTypesPage() {
                     </div>
                 </div>
             )}
+
+            <ConfirmDialog
+                isOpen={confirmOpen}
+                title="Delete Issue Type"
+                message="Are you sure you want to delete this issue type? This action cannot be undone."
+                confirmLabel="Delete"
+                variant="danger"
+                onConfirm={confirmDelete}
+                onCancel={() => { setConfirmOpen(false); setPendingDeleteId(null); }}
+            />
         </div>
     );
 }

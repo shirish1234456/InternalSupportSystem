@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Building2, Loader2, RefreshCw } from 'lucide-react';
+import ConfirmDialog from '@/components/ConfirmDialog';
 
 interface Department {
     id: string;
@@ -22,6 +23,9 @@ export default function DepartmentsPage() {
     const [editingDept, setEditingDept] = useState<Department | null>(null);
     const [deptName, setDeptName] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
     const fetchDepartments = async () => {
         setLoading(true);
@@ -72,22 +76,27 @@ export default function DepartmentsPage() {
         }
     };
 
-    const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this department?')) return;
+    const handleDelete = (id: string) => {
+        setPendingDeleteId(id);
+        setConfirmOpen(true);
+    };
 
+    const confirmDelete = async () => {
+        if (!pendingDeleteId) return;
+        setConfirmOpen(false);
         try {
-            const res = await fetch(`/api/departments?id=${id}`, {
+            const res = await fetch(`/api/departments?id=${pendingDeleteId}`, {
                 method: 'DELETE'
             });
-
             if (!res.ok) {
                 const errorData = await res.json();
                 throw new Error(errorData.error || 'Failed to delete');
             }
-
             await fetchDepartments();
         } catch (err: any) {
-            alert(err.message);
+            setError(err.message);
+        } finally {
+            setPendingDeleteId(null);
         }
     };
 
@@ -264,6 +273,16 @@ export default function DepartmentsPage() {
                     </div>
                 </div>
             )}
+
+            <ConfirmDialog
+                isOpen={confirmOpen}
+                title="Delete Department"
+                message="Are you sure you want to delete this department? This action cannot be undone."
+                confirmLabel="Delete"
+                variant="danger"
+                onConfirm={confirmDelete}
+                onCancel={() => { setConfirmOpen(false); setPendingDeleteId(null); }}
+            />
         </div>
     );
 }

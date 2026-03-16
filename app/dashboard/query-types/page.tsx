@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, HelpCircle, Loader2, RefreshCw } from 'lucide-react';
+import ConfirmDialog from '@/components/ConfirmDialog';
 
 interface QueryType {
     id: string;
@@ -21,6 +22,9 @@ export default function QueryTypesPage() {
     const [editingType, setEditingType] = useState<QueryType | null>(null);
     const [typeName, setTypeName] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
     const fetchTypes = async () => {
         setLoading(true);
@@ -71,22 +75,27 @@ export default function QueryTypesPage() {
         }
     };
 
-    const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this query type?')) return;
+    const handleDelete = (id: string) => {
+        setPendingDeleteId(id);
+        setConfirmOpen(true);
+    };
 
+    const confirmDelete = async () => {
+        if (!pendingDeleteId) return;
+        setConfirmOpen(false);
         try {
-            const res = await fetch(`/api/query-types?id=${id}`, {
+            const res = await fetch(`/api/query-types?id=${pendingDeleteId}`, {
                 method: 'DELETE'
             });
-
             if (!res.ok) {
                 const errorData = await res.json();
                 throw new Error(errorData.error || 'Failed to delete');
             }
-
             await fetchTypes();
         } catch (err: any) {
-            alert(err.message);
+            setError(err.message);
+        } finally {
+            setPendingDeleteId(null);
         }
     };
 
@@ -255,6 +264,16 @@ export default function QueryTypesPage() {
                     </div>
                 </div>
             )}
+
+            <ConfirmDialog
+                isOpen={confirmOpen}
+                title="Delete Query Type"
+                message="Are you sure you want to delete this query type? This action cannot be undone."
+                confirmLabel="Delete"
+                variant="danger"
+                onConfirm={confirmDelete}
+                onCancel={() => { setConfirmOpen(false); setPendingDeleteId(null); }}
+            />
         </div>
     );
 }

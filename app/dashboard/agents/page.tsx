@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Users, Loader2, RefreshCw } from 'lucide-react';
+import ConfirmDialog from '@/components/ConfirmDialog';
 
 interface Department {
     id: string;
@@ -34,6 +35,9 @@ export default function AgentsPage() {
     const [shift, setShift] = useState('Morning'); // Default
     const [departmentId, setDepartmentId] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
     const fetchData = async () => {
         setLoading(true);
@@ -101,22 +105,27 @@ export default function AgentsPage() {
         }
     };
 
-    const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this agent?')) return;
+    const handleDelete = (id: string) => {
+        setPendingDeleteId(id);
+        setConfirmOpen(true);
+    };
 
+    const confirmDelete = async () => {
+        if (!pendingDeleteId) return;
+        setConfirmOpen(false);
         try {
-            const res = await fetch(`/api/agents?id=${id}`, {
+            const res = await fetch(`/api/agents?id=${pendingDeleteId}`, {
                 method: 'DELETE'
             });
-
             if (!res.ok) {
                 const errorData = await res.json();
                 throw new Error(errorData.error || 'Failed to delete');
             }
-
             await fetchData();
         } catch (err: any) {
-            alert(err.message);
+            setError(err.message);
+        } finally {
+            setPendingDeleteId(null);
         }
     };
 
@@ -332,6 +341,16 @@ export default function AgentsPage() {
                     </div>
                 </div>
             )}
+
+            <ConfirmDialog
+                isOpen={confirmOpen}
+                title="Delete Agent"
+                message="Are you sure you want to delete this agent? This action cannot be undone."
+                confirmLabel="Delete"
+                variant="danger"
+                onConfirm={confirmDelete}
+                onCancel={() => { setConfirmOpen(false); setPendingDeleteId(null); }}
+            />
         </div>
     );
 }

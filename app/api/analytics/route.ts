@@ -168,8 +168,8 @@ export async function GET(req: NextRequest) {
                 }
             }
 
-            // Map hourly spike
-            const hour = chat.createdAt.getHours();
+            // Map hourly spike — use UTC hours to match how dates are stored in DB
+            const hour = chat.createdAt.getUTCHours();
             hourlyMap[hour]++;
         });
 

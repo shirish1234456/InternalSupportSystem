@@ -193,14 +193,43 @@ export async function POST(req: NextRequest) {
                 const resolutionText = row['RESOLUTION'] || row['Status'] ? String(row['RESOLUTION'] || row['Status']) : null;
                 const status = resolutionText ? 'Resolved' : 'Open';
 
-                // Attempt to combine Date and TIME columns
+                // Attempt to combine Date and TIME columns from the Excel file
                 let combinedDate = new Date();
                 try {
                     const dateVal = row['Date'] || row['Date '] || row['DATE'] || row['Created Time'];
+                    // Look for a separate TIME column (common in standard.xlsx)
+                    const timeVal = row['Time'] || row['TIME'] || row['time'] || null;
+
                     if (dateVal) {
                         if (typeof dateVal === 'number') {
-                            // Excel serial date to JS Date formula (Excel bug 1900 leap year assumed)
-                            combinedDate = new Date(Math.round((dateVal - 25569) * 86400 * 1000));
+                            // Excel serial date → JS Date (excel epoch is Jan 1 1900, JS epoch is Jan 1 1970)
+                            // The integer part is the date, the fractional part is the time-of-day
+                            const dateSerial = Math.floor(dateVal);
+                            const datePart = new Date(Math.round((dateSerial - 25569) * 86400 * 1000));
+
+                            // Time can come from: fractional part of dateVal, a separate numeric serial, or a "HH:MM" string
+                            let totalMs = datePart.getTime();
+
+                            if (timeVal !== null && timeVal !== undefined) {
+                                if (typeof timeVal === 'number') {
+                                    // Fractional serial: 0.5 = 12:00:00, multiply by ms in a day
+                                    totalMs += Math.round(timeVal * 86400 * 1000);
+                                } else if (typeof timeVal === 'string' && timeVal.includes(':')) {
+                                    // "HH:MM" or "HH:MM:SS" string
+                                    const tParts = timeVal.trim().split(':');
+                                    const hours = parseInt(tParts[0] || '0', 10);
+                                    const minutes = parseInt(tParts[1] || '0', 10);
+                                    const seconds = parseInt(tParts[2] || '0', 10);
+                                    totalMs += (hours * 3600 + minutes * 60 + seconds) * 1000;
+                                }
+                            } else if (dateVal % 1 !== 0) {
+                                // Fractional part of dateVal itself carries the time
+                                const timeFraction = dateVal - dateSerial;
+                                totalMs += Math.round(timeFraction * 86400 * 1000);
+                            }
+
+                            combinedDate = new Date(totalMs);
+
                         } else if (typeof dateVal === 'string' && dateVal.includes('/')) {
                             // Try to parse "DD/MM/YYYY HH:mm:ss" like history.xlsx often uses
                             const parts = dateVal.split(' ');
@@ -214,8 +243,9 @@ export async function POST(req: NextRequest) {
                                     if (year.length === 2) {
                                         year = '20' + year; // assume 20xx
                                     }
-                                    // Parse strictly as ISO 8601 text format
-                                    combinedDate = new Date(`${year}-${month}-${day}T${parts[1] || '00:00:00'}Z`);
+                                    const timeStr = parts[1] || (timeVal ? String(timeVal) : '00:00:00');
+                                    // Parse without Z suffix so it's interpreted as local time
+                                    combinedDate = new Date(`${year}-${month}-${day}T${timeStr}`);
                                     if (isNaN(combinedDate.getTime())) {
                                         combinedDate = new Date(dateVal); // ultimate fallback
                                     }
@@ -232,6 +262,7 @@ export async function POST(req: NextRequest) {
                 } catch (e) {
                     // fallback to current date
                 }
+
 
                 // Find a valid user to assign as the creator (fallback to session ID if strictly verified, or first admin)
                 // Since this was a newly seeded database, the session UI cookie might contain an old UUID

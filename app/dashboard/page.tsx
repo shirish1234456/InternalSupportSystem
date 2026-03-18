@@ -43,6 +43,8 @@ export default function DashboardPage() {
     const [currentIssuesIndex, setCurrentIssuesIndex] = useState(0);
     const [currentAgentsIndex, setCurrentAgentsIndex] = useState(0);
 
+    const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
+
     const fetchAnalytics = async () => {
         setLoading(true);
         try {
@@ -84,6 +86,11 @@ export default function DashboardPage() {
 
             const json = await res.json();
             setData(json);
+
+            if (json.charts?.departmentTrends && !selectedDepartments.length) {
+                // Initialize all departments to checked
+                setSelectedDepartments(json.charts.departmentTrends.map((d: any) => d.departmentName));
+            }
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -122,6 +129,25 @@ export default function DashboardPage() {
     }
 
     const { summary, charts } = data;
+
+    const getComparativeTrendData = () => {
+        if (!charts.departmentTrends || charts.departmentTrends.length === 0) return [];
+        const dates = new Set<string>();
+        charts.departmentTrends.forEach(dept => {
+            dept.trend.forEach(t => dates.add(t.date));
+        });
+        const sortedDates = Array.from(dates).sort();
+        return sortedDates.map(date => {
+            const obj: any = { date };
+            charts.departmentTrends.forEach(dept => {
+                const match = dept.trend.find(t => t.date === date);
+                obj[dept.departmentName] = match ? match.count : 0;
+            });
+            return obj;
+        });
+    };
+
+    const comparativeData = getComparativeTrendData();
 
     const KpiCard = ({ title, value, icon: Icon, colorClass, subtitle }: any) => (
         <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 flex items-start gap-4 hover:shadow-md transition-shadow">
@@ -223,6 +249,85 @@ export default function DashboardPage() {
 
             {/* Main Charts Area */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                {/* Comparative Trend Chart (Full Width) */}
+                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 col-span-1 lg:col-span-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+                        <div className="flex items-center gap-2">
+                            <TrendingUp className="w-5 h-5 text-slate-400" />
+                            <h3 className="text-lg font-semibold text-slate-800 dark:text-white">
+                                Comparative Chat Volume Trend
+                            </h3>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-4">
+                            {charts.departmentTrends?.map((dept, index) => (
+                                <label key={dept.departmentName} className="flex items-center gap-2 cursor-pointer group">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedDepartments.includes(dept.departmentName)}
+                                        onChange={(e) => {
+                                            if (e.target.checked) {
+                                                setSelectedDepartments(prev => [...prev, dept.departmentName]);
+                                            } else {
+                                                setSelectedDepartments(prev => prev.filter(d => d !== dept.departmentName));
+                                            }
+                                        }}
+                                        className="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-800 transition-colors"
+                                    />
+                                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1.5 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+                                        <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
+                                        {dept.departmentName}
+                                    </span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="h-72 w-full">
+                        {comparativeData.length > 0 ? (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <LineChart data={comparativeData} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                                    <XAxis
+                                        dataKey="date"
+                                        tick={{ fontSize: 12 }}
+                                        tickMargin={10}
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tickFormatter={(val) => {
+                                            const parts = val.split('-');
+                                            if (parts.length === 3) return `${parts[1]}/${parts[2]}`;
+                                            if (parts.length === 2) return `${parts[1]}/${parts[0]}`;
+                                            return val;
+                                        }}
+                                    />
+                                    <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+                                    <RechartsTooltip
+                                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                        labelFormatter={(label) => `Date: ${label}`}
+                                        itemStyle={{ fontSize: '12px' }}
+                                    />
+                                    {charts.departmentTrends?.map((dept, index) => {
+                                        if (!selectedDepartments.includes(dept.departmentName)) return null;
+                                        return (
+                                            <Line
+                                                key={dept.departmentName}
+                                                type="monotone"
+                                                dataKey={dept.departmentName}
+                                                name={dept.departmentName}
+                                                stroke={COLORS[index % COLORS.length]}
+                                                strokeWidth={3}
+                                                dot={{ r: 4, strokeWidth: 2 }}
+                                                activeDot={{ r: 6, strokeWidth: 0 }}
+                                            />
+                                        );
+                                    })}
+                                </LineChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="h-full flex items-center justify-center text-slate-400 text-sm">No data available</div>
+                        )}
+                    </div>
+                </div>
 
                 {/* Trend Chart (Full Width) */}
                 <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 col-span-1 lg:col-span-3">

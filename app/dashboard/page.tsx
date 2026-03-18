@@ -129,6 +129,14 @@ export default function DashboardPage() {
 
     const { summary, charts } = data;
 
+    const getDepartmentColor = (name: string, fallbackIndex: number) => {
+        const lower = (name || '').toLowerCase();
+        if (lower.includes('alston')) return '#eb2226';
+        if (lower.includes('mysecondteacher')) return '#7a50ec';
+        if (lower.includes('homeschool')) return '#55ca8f';
+        return COLORS[fallbackIndex % COLORS.length];
+    };
+
     const getComparativeTrendData = () => {
         if (!charts.departmentTrends || charts.departmentTrends.length === 0) return [];
         const dates = new Set<string>();
@@ -274,7 +282,7 @@ export default function DashboardPage() {
                                         className="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-800 transition-colors"
                                     />
                                     <span className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1.5 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
-                                        <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
+                                        <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: getDepartmentColor(dept.departmentName, index) }}></span>
                                         {dept.departmentName}
                                     </span>
                                 </label>
@@ -313,7 +321,7 @@ export default function DashboardPage() {
                                                 type="monotone"
                                                 dataKey={dept.departmentName}
                                                 name={dept.departmentName}
-                                                stroke={COLORS[index % COLORS.length]}
+                                                stroke={getDepartmentColor(dept.departmentName, index)}
                                                 strokeWidth={3}
                                                 dot={{ r: 4, strokeWidth: 2 }}
                                                 activeDot={{ r: 6, strokeWidth: 0 }}

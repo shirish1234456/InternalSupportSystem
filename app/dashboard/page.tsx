@@ -39,7 +39,6 @@ export default function DashboardPage() {
     const [customStart, setCustomStart] = useState('');
     const [customEnd, setCustomEnd] = useState('');
 
-    const [currentTrendIndex, setCurrentTrendIndex] = useState(0);
     const [currentIssuesIndex, setCurrentIssuesIndex] = useState(0);
     const [currentAgentsIndex, setCurrentAgentsIndex] = useState(0);
 
@@ -326,72 +325,6 @@ export default function DashboardPage() {
                         ) : (
                             <div className="h-full flex items-center justify-center text-slate-400 text-sm">No data available</div>
                         )}
-                    </div>
-                </div>
-
-                {/* Trend Chart (Full Width) */}
-                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 col-span-1 lg:col-span-3">
-                    <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center gap-2">
-                            <TrendingUp className="w-5 h-5 text-slate-400" />
-                            <h3 className="text-lg font-semibold text-slate-800 dark:text-white">
-                                Chat Volume Trend ({charts.departmentTrends?.[currentTrendIndex]?.departmentName || 'Loading'})
-                            </h3>
-                        </div>
-                        {charts.departmentTrends && charts.departmentTrends.length > 1 && (
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={() => setCurrentTrendIndex(prev => prev > 0 ? prev - 1 : charts.departmentTrends.length - 1)}
-                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
-                                >
-                                    <ChevronLeft className="w-5 h-5 text-slate-500" />
-                                </button>
-                                <span className="text-sm font-medium text-slate-500">
-                                    {currentTrendIndex + 1} / {charts.departmentTrends.length}
-                                </span>
-                                <button
-                                    onClick={() => setCurrentTrendIndex(prev => prev < charts.departmentTrends.length - 1 ? prev + 1 : 0)}
-                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
-                                >
-                                    <ChevronRight className="w-5 h-5 text-slate-500" />
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                    <div className="h-72 w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={charts.departmentTrends?.[currentTrendIndex]?.trend || []} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                                <XAxis
-                                    dataKey="date"
-                                    tick={{ fontSize: 12 }}
-                                    tickMargin={10}
-                                    axisLine={false}
-                                    tickLine={false}
-                                    tickFormatter={(val) => {
-                                        // Shorten displayed dates
-                                        const parts = val.split('-');
-                                        if (parts.length === 3) return `${parts[1]}/${parts[2]}`; // MM/DD
-                                        if (parts.length === 2) return `${parts[1]}/${parts[0]}`; // MM/YYYY
-                                        return val;
-                                    }}
-                                />
-                                <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
-                                <RechartsTooltip
-                                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                                    formatter={(value: any) => [`${value}`, 'Sessions']}
-                                    labelFormatter={(label) => `Date: ${label}`}
-                                />
-                                <Line
-                                    type="monotone"
-                                    dataKey="count"
-                                    stroke="#3b82f6"
-                                    strokeWidth={3}
-                                    dot={{ r: 4, strokeWidth: 2 }}
-                                    activeDot={{ r: 6, strokeWidth: 0 }}
-                                />
-                            </LineChart>
-                        </ResponsiveContainer>
                     </div>
                 </div>
 

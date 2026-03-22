@@ -29,6 +29,7 @@ export default function AddEntryPage() {
     const [contactNumber, setContactNumber] = useState('');
     const [school, setSchool] = useState('');
     const [country, setCountry] = useState('');
+    const [customerRole, setCustomerRole] = useState('');
 
     const [departmentId, setDepartmentId] = useState('');
     const [agentId, setAgentId] = useState('');
@@ -97,6 +98,7 @@ export default function AddEntryPage() {
                     contactNumber,
                     school,
                     country,
+                    customerRole,
                     departmentId,
                     agentId,
                     queryTypeId,
@@ -122,6 +124,7 @@ export default function AddEntryPage() {
             setContactNumber('');
             setSchool('');
             setCountry('');
+            setCustomerRole('');
             setQueryDescription('');
             setResolution('');
             setStatus('Open');
@@ -243,6 +246,22 @@ export default function AddEntryPage() {
                                 className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
                                 placeholder="e.g. United Kingdom"
                             />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                                Role
+                            </label>
+                            <select
+                                value={customerRole}
+                                onChange={(e) => setCustomerRole(e.target.value)}
+                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
+                            >
+                                <option value="" className="bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-400">Select Role</option>
+                                <option value="Student" className="bg-white dark:bg-slate-800">Student</option>
+                                <option value="Teacher" className="bg-white dark:bg-slate-800">Teacher</option>
+                                <option value="Parent" className="bg-white dark:bg-slate-800">Parent</option>
+                                <option value="Other" className="bg-white dark:bg-slate-800">Other</option>
+                            </select>
                         </div>
                     </div>
                 </div>

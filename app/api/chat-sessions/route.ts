@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
             contactNumber,
             school,
             country,
+            customerRole,
             departmentId,
             agentId,
             queryTypeId,
@@ -50,6 +51,13 @@ export async function POST(req: NextRequest) {
             customer = await prisma.customer.findFirst({
                 where: { email: customerEmail }
             });
+            // Link existing customer and update role if it was previously unset and is now provided
+            if (customer && customerRole && !customer.role) {
+                customer = await prisma.customer.update({
+                    where: { id: customer.id },
+                    data: { role: customerRole }
+                });
+            }
         }
 
         if (!customer) {
@@ -59,7 +67,8 @@ export async function POST(req: NextRequest) {
                     email: customerEmail || null,
                     contactNumber: contactNumber || null,
                     school: school || null,
-                    country: country || null
+                    country: country || null,
+                    role: customerRole || null
                 }
             });
         }
@@ -284,7 +293,7 @@ export async function PUT(req: NextRequest) {
             },
             include: {
                 customer: {
-                    select: { fullName: true, email: true, school: true, contactNumber: true, country: true }
+                    select: { fullName: true, email: true, school: true, contactNumber: true, country: true, role: true }
                 },
                 department: { select: { name: true } },
                 agent: { select: { name: true } },

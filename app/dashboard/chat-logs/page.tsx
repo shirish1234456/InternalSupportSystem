@@ -14,7 +14,7 @@ interface ChatSession {
     closedAt?: string;
     emailSent: boolean;
     resolution?: string | null;
-    customer: { fullName: string; email: string; school?: string | null; contactNumber?: string | null; country?: string | null };
+    customer: { fullName: string; email: string; school?: string | null; contactNumber?: string | null; country?: string | null; role?: string | null };
     department: { name: string };
     agent: { name: string };
     queryType: { name: string };
@@ -492,6 +492,11 @@ export default function ChatLogsPage() {
                                         <td className="px-6 py-4">
                                             <div className="font-medium text-slate-900 dark:text-white line-clamp-1" title={session.customer.fullName}>
                                                 {session.customer.fullName}
+                                                {session.customer.role && (
+                                                    <span className="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
+                                                        {session.customer.role}
+                                                    </span>
+                                                )}
                                             </div>
                                             {session.customer.email && (
                                                 <div className="text-xs text-slate-500 mt-1 line-clamp-1" title={session.customer.email}>
@@ -648,9 +653,13 @@ export default function ChatLogsPage() {
                                         <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Contact Number</p>
                                         <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.customer.contactNumber || 'N/A'}</p>
                                     </div>
-                                    <div className="col-span-2">
+                                    <div>
                                         <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Country</p>
                                         <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.customer.country || 'N/A'}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Role</p>
+                                        <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.customer.role || 'N/A'}</p>
                                     </div>
                                 </div>
                             </div>

@@ -150,7 +150,7 @@ export async function GET(req: NextRequest) {
         // Fetch chats for the whole selected date range to calculate hourly spikes, emails sent, and trends
         const allPeriodChats = await prisma.chatSession.findMany({
             where: dateFilter,
-            select: { createdAt: true, closedAt: true, status: true, emailSent: true, departmentId: true }
+            select: { createdAt: true, closedAt: true, status: true, emailSent: true, departmentId: true, customer: { select: { country: true } } }
         });
 
         // Initialize maps for all departments + "All Departments" wrapper
@@ -228,6 +228,7 @@ export async function GET(req: NextRequest) {
 
         // Calculate Emails Sent by Department
         const emailSentByDeptMap = new Map<string, number>();
+        const countryMap = new Map<string, number>();
         let totalEmailsSent = 0;
 
         allPeriodChats.forEach((chat: any) => {
@@ -239,9 +240,16 @@ export async function GET(req: NextRequest) {
                 }
                 emailSentByDeptMap.set(deptName, emailSentByDeptMap.get(deptName)! + 1);
             }
+
+            const country = chat.customer?.country || 'Unknown';
+            countryMap.set(country, (countryMap.get(country) || 0) + 1);
         });
 
         const emailsSentByDept = Array.from(emailSentByDeptMap.entries())
+            .map(([name, value]) => ({ name, value }))
+            .sort((a, b) => b.value - a.value);
+
+        const chatsByCountry = Array.from(countryMap.entries())
             .map(([name, value]) => ({ name, value }))
             .sort((a, b) => b.value - a.value);
 
@@ -261,7 +269,8 @@ export async function GET(req: NextRequest) {
                 topAgentsSegmented,
                 departmentTrends,
                 chatSpikes,
-                emailsSentByDept
+                emailsSentByDept,
+                chatsByCountry
             }
         });
 

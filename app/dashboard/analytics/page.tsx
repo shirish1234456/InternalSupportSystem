@@ -24,6 +24,7 @@ interface AnalyticsData {
         departmentTrends: { departmentName: string; trend: { date: string; count: number }[] }[];
         chatSpikes: { hour: string; count: number }[];
         emailsSentByDept: { name: string; value: number }[];
+        chatsByCountry: { name: string; value: number }[];
     };
 }
 
@@ -312,6 +313,45 @@ export default function AnalyticsPage() {
                                 )}
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                {/* Volume By Country Pie Chart */}
+                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 col-span-1 lg:col-span-2 overflow-hidden">
+                    <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
+                        <PieChart className="w-5 h-5 text-slate-400" />
+                        <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Chats by Country</h3>
+                    </div>
+                    <div className="h-80 p-6">
+                        {charts.chatsByCountry && charts.chatsByCountry.length > 0 ? (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <RechartsPieChart>
+                                    <Pie
+                                        data={charts.chatsByCountry}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={100}
+                                        paddingAngle={5}
+                                        dataKey="value"
+                                    >
+                                        {charts.chatsByCountry.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                        ))}
+                                    </Pie>
+                                    <RechartsTooltip
+                                        formatter={(value: any) => [`${value} chats`, 'Volume']}
+                                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                        itemStyle={{ color: '#0f172a' }}
+                                    />
+                                    <Legend />
+                                </RechartsPieChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="flex items-center justify-center h-full text-slate-500">
+                                No country data found for this period.
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

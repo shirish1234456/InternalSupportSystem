@@ -24,7 +24,11 @@ export default function IssueTypesPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+    const [confirmMessage, setConfirmMessage] = useState('');
+    const [pendingAction, setPendingAction] = useState<(() => Promise<void>) | null>(null);
+
+    const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+    const [isDeletingBulk, setIsDeletingBulk] = useState(false);
 
     const fetchTypes = async () => {
         setLoading(true);
@@ -75,27 +79,67 @@ export default function IssueTypesPage() {
         }
     };
 
-    const handleDelete = (id: string) => {
-        setPendingDeleteId(id);
+    const toggleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.checked) {
+            const deletableIds = types.filter(t => (t._count?.sessions || 0) === 0).map(t => t.id);
+            setSelectedIds(new Set([...selectedIds, ...deletableIds]));
+        } else {
+            const newSet = new Set(selectedIds);
+            types.forEach(t => newSet.delete(t.id));
+            setSelectedIds(newSet);
+        }
+    };
+
+    const toggleSelect = (id: string) => {
+        const newSet = new Set(selectedIds);
+        if (newSet.has(id)) newSet.delete(id);
+        else newSet.add(id);
+        setSelectedIds(newSet);
+    };
+
+    const handleDelete = (id: string, name: string) => {
+        setConfirmMessage(`Are you sure you want to delete "${name}"? This action cannot be undone.`);
+        setPendingAction(() => async () => {
+            try {
+                const res = await fetch(`/api/issue-types?id=${id}`, { method: 'DELETE' });
+                if (!res.ok) throw new Error((await res.json()).error || 'Failed to delete');
+                await fetchTypes();
+                setSelectedIds(prev => { const n = new Set(prev); n.delete(id); return n; });
+            } catch (err: any) {
+                setError(err.message);
+            }
+        });
+        setConfirmOpen(true);
+    };
+
+    const handleBulkDelete = () => {
+        if (selectedIds.size === 0) return;
+        setConfirmMessage(`Are you sure you want to delete ${selectedIds.size} issue type${selectedIds.size > 1 ? 's' : ''}? This action cannot be undone.`);
+        setPendingAction(() => async () => {
+            setIsDeletingBulk(true);
+            try {
+                const res = await fetch(`/api/issue-types`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids: Array.from(selectedIds) })
+                });
+                if (!res.ok) throw new Error((await res.json()).error || 'Failed to bulk delete');
+                setSelectedIds(new Set());
+                await fetchTypes();
+            } catch (err: any) {
+                setError(err.message);
+            } finally {
+                setIsDeletingBulk(false);
+            }
+        });
         setConfirmOpen(true);
     };
 
     const confirmDelete = async () => {
-        if (!pendingDeleteId) return;
-        setConfirmOpen(false);
-        try {
-            const res = await fetch(`/api/issue-types?id=${pendingDeleteId}`, {
-                method: 'DELETE'
-            });
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.error || 'Failed to delete');
-            }
-            await fetchTypes();
-        } catch (err: any) {
-            setError(err.message);
-        } finally {
-            setPendingDeleteId(null);
+        if (pendingAction) {
+            setConfirmOpen(false);
+            await pendingAction();
+            setPendingAction(null);
         }
     };
 
@@ -148,6 +192,33 @@ export default function IssueTypesPage() {
                 </div>
             </div>
 
+            {selectedIds.size > 0 && (
+                <div className="bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-lg p-3 flex items-center justify-between shrink-0 mb-4 animate-in fade-in slide-in-from-top-4">
+                    <div className="flex items-center gap-3">
+                        <span className="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                            {selectedIds.size}
+                        </span>
+                        <span className="text-sm font-medium text-blue-900 dark:text-blue-200">issue types selected</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => setSelectedIds(new Set())}
+                            className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleBulkDelete}
+                            disabled={isDeletingBulk}
+                            className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+                        >
+                            {isDeletingBulk ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                            Delete Selected
+                        </button>
+                    </div>
+                </div>
+            )}
+
             <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
                 {loading ? (
                     <div className="flex items-center justify-center h-64 text-slate-400">
@@ -171,6 +242,15 @@ export default function IssueTypesPage() {
                         <table className="w-full text-sm text-left">
                             <thead className="text-xs text-slate-500 dark:text-slate-400 uppercase bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
                                 <tr>
+                                    <th className="px-6 py-4 font-medium w-12 text-center">
+                                        <input
+                                            type="checkbox"
+                                            className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer disabled:opacity-50"
+                                            checked={types.length > 0 && types.filter(t => (t._count?.sessions || 0) === 0).every(t => selectedIds.has(t.id))}
+                                            onChange={toggleSelectAll}
+                                            disabled={types.filter(t => (t._count?.sessions || 0) === 0).length === 0}
+                                        />
+                                    </th>
                                     <th className="px-6 py-4 font-medium">Issue Type Name</th>
                                     <th className="px-6 py-4 font-medium text-center">Sessions Logged</th>
                                     <th className="px-6 py-4 font-medium text-right">Actions</th>
@@ -178,7 +258,16 @@ export default function IssueTypesPage() {
                             </thead>
                             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                                 {types.map((type) => (
-                                    <tr key={type.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
+                                    <tr key={type.id} className={`hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors ${selectedIds.has(type.id) ? 'bg-blue-50/30 dark:bg-blue-900/10' : ''}`}>
+                                        <td className="px-6 py-4 text-center">
+                                            <input
+                                                type="checkbox"
+                                                className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer disabled:opacity-50"
+                                                checked={selectedIds.has(type.id)}
+                                                onChange={() => toggleSelect(type.id)}
+                                                disabled={(type._count?.sessions || 0) > 0}
+                                            />
+                                        </td>
                                         <td className="px-6 py-4 font-medium text-slate-900 dark:text-white">{type.name}</td>
                                         <td className="px-6 py-4 text-center text-slate-500 dark:text-slate-400">
                                             {type._count?.sessions || 0}
@@ -192,7 +281,7 @@ export default function IssueTypesPage() {
                                                 <Edit2 className="w-4 h-4" />
                                             </button>
                                             <button
-                                                onClick={() => handleDelete(type.id)}
+                                                onClick={() => handleDelete(type.id, type.name)}
                                                 className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
                                                 title="Delete"
                                                 disabled={type._count?.sessions > 0}
@@ -268,11 +357,11 @@ export default function IssueTypesPage() {
             <ConfirmDialog
                 isOpen={confirmOpen}
                 title="Delete Issue Type"
-                message="Are you sure you want to delete this issue type? This action cannot be undone."
+                message={confirmMessage || "Are you sure you want to delete this issue type? This action cannot be undone."}
                 confirmLabel="Delete"
                 variant="danger"
                 onConfirm={confirmDelete}
-                onCancel={() => { setConfirmOpen(false); setPendingDeleteId(null); }}
+                onCancel={() => { setConfirmOpen(false); setPendingAction(null); }}
             />
         </div>
     );

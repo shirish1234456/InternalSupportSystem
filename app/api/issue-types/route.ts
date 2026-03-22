@@ -88,28 +88,41 @@ export async function DELETE(req: NextRequest) {
         }
 
         const url = new URL(req.url);
-        const id = url.searchParams.get('id');
+        const singleId = url.searchParams.get('id');
 
-        if (!id) {
-            return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+        let idsToDelete: string[] = [];
+        try {
+            const body = await req.json();
+            if (body && Array.isArray(body.ids) && body.ids.length > 0) {
+                idsToDelete = body.ids;
+            }
+        } catch (e) { }
+
+        if (idsToDelete.length === 0 && singleId) {
+            idsToDelete = [singleId];
         }
 
-        const usage = await prisma.issueType.findUnique({
-            where: { id },
+        if (idsToDelete.length === 0) {
+            return NextResponse.json({ error: 'ID(s) are required' }, { status: 400 });
+        }
+
+        const usage = await prisma.issueType.findMany({
+            where: { id: { in: idsToDelete } },
             include: {
                 _count: { select: { sessions: true } }
             }
         });
 
-        if (usage && usage._count.sessions > 0) {
-            return NextResponse.json({ error: 'Cannot delete: Issue Type is in use by Chat Sessions' }, { status: 400 });
+        const inUse = usage.filter(u => u._count.sessions > 0);
+        if (inUse.length > 0) {
+            return NextResponse.json({ error: `Cannot delete: ${inUse.length} Issue Type(s) are in use by Chat Sessions` }, { status: 400 });
         }
 
-        await prisma.issueType.delete({ where: { id } });
+        await prisma.issueType.deleteMany({ where: { id: { in: idsToDelete } } });
 
-        return NextResponse.json({ message: 'Issue Type deleted successfully' });
+        return NextResponse.json({ message: 'Issue Type(s) deleted successfully' });
     } catch (error) {
-        console.error('Failed to delete issue type:', error);
+        console.error('Failed to delete issue type(s):', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }

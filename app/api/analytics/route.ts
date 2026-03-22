@@ -249,9 +249,16 @@ export async function GET(req: NextRequest) {
             .map(([name, value]) => ({ name, value }))
             .sort((a, b) => b.value - a.value);
 
-        const chatsByCountry = Array.from(countryMap.entries())
+        const sortedCountries = Array.from(countryMap.entries())
             .map(([name, value]) => ({ name, value }))
             .sort((a, b) => b.value - a.value);
+
+        let chatsByCountry = sortedCountries;
+        if (sortedCountries.length > 5) {
+            const top5 = sortedCountries.slice(0, 5);
+            const othersCount = sortedCountries.slice(5).reduce((acc, curr) => acc + curr.value, 0);
+            chatsByCountry = [...top5, { name: 'Other', value: othersCount }];
+        }
 
         return NextResponse.json({
             summary: {

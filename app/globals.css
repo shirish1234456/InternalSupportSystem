@@ -151,16 +151,3 @@ body {
   border-radius: 8px !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
 }
-
-/* Smooth page transitions */
-* {
-  transition-property: background-color, border-color, color;
-  transition-duration: 150ms;
-  transition-timing-function: ease;
-}
-
-/* Exclude transforms and opacity to avoid affecting animations */
-[class*="animate-"],
-[class*="transition-"] {
-  transition-property: initial;
-}

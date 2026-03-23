@@ -141,7 +141,13 @@ body {
   color: #e2e8f0;
 }
 
+.dark .recharts-tooltip-item {
+  color: #f8fafc !important;
+}
 
+.dark .recharts-tooltip-label {
+  color: #cbd5e1 !important;
+}
 
 .dark .recharts-tooltip-cursor {
   fill: rgba(148, 163, 184, 0.08) !important;
@@ -151,4 +157,13 @@ body {
 .recharts-default-tooltip {
   border-radius: 8px !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+  background-color: #ffffff !important;
+}
+
+.recharts-tooltip-item {
+  color: #0f172a !important;
+}
+
+.recharts-tooltip-label {
+  color: #475569 !important;
 }

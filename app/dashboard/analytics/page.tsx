@@ -179,7 +179,7 @@ export default function AnalyticsPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-6">
                 {/* Extensive Issue Types Table */}
-                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden col-span-1 lg:col-span-2">
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden col-span-1 lg:col-span-2">
                     <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
                         <FileText className="w-5 h-5 text-slate-400" />
                         <h3 className="text-lg font-semibold text-slate-800 dark:text-white">All Issue Types Ranking</h3>
@@ -216,7 +216,7 @@ export default function AnalyticsPage() {
                 </div>
 
                 {/* Extensive Agent Performance Table */}
-                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden">
                     <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
                         <Users className="w-5 h-5 text-slate-400" />
                         <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Full Agent Performance</h3>
@@ -253,7 +253,7 @@ export default function AnalyticsPage() {
                 </div>
 
                 {/* Volume By Department Full List */}
-                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden">
                     <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
                         <Building2 className="w-5 h-5 text-slate-400" />
                         <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Department Overview</h3>
@@ -285,7 +285,7 @@ export default function AnalyticsPage() {
                 </div>
 
                 {/* Extensive Emails Sent By Department Table */}
-                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden col-span-1 lg:col-span-2">
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden col-span-1 lg:col-span-2">
                     <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
                         <MessageSquare className="w-5 h-5 text-slate-400" />
                         <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Emails Sent By Department</h3>
@@ -317,7 +317,7 @@ export default function AnalyticsPage() {
                 </div>
 
                 {/* Volume By Country Pie Chart */}
-                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 col-span-1 lg:col-span-2 overflow-hidden">
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 col-span-1 lg:col-span-2 overflow-hidden">
                     <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
                         <PieChart className="w-5 h-5 text-slate-400" />
                         <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Chats by Country</h3>

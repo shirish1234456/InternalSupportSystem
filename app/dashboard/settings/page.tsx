@@ -107,7 +107,7 @@ export default function SettingsPage() {
                     </p>
                 </div>
 
-                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden">
                     <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
                         <h2 className="text-lg font-semibold text-slate-800 dark:text-white flex items-center gap-2">
                             <Mail className="w-5 h-5 text-slate-400" />

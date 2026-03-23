@@ -157,7 +157,7 @@ export default function DashboardPage() {
     const comparativeData = getComparativeTrendData();
 
     const KpiCard = ({ title, value, icon: Icon, colorClass, subtitle }: any) => (
-        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 flex items-start gap-4 hover:shadow-md transition-shadow">
+        <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 flex items-start gap-4 hover:shadow-md transition-shadow">
             <div className={`p-4 rounded-xl shrink-0 ${colorClass}`}>
                 <Icon className="w-6 h-6" />
             </div>
@@ -258,7 +258,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                 {/* Comparative Trend Chart (Full Width) */}
-                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 col-span-1 lg:col-span-3">
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 col-span-1 lg:col-span-3">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
                         <div className="flex items-center gap-2">
                             <TrendingUp className="w-5 h-5 text-slate-400" />
@@ -337,7 +337,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Department Distribution Pie Chart */}
-                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
                     <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <Users className="w-5 h-5 text-slate-400" />
                         Volume by Department
@@ -368,7 +368,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Top Issues Breakdown */}
-                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 lg:col-span-2">
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <AlertTriangle className="w-5 h-5 text-slate-400" />
@@ -448,7 +448,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-6">
 
                 {/* Emails Sent by Department Bar Chart */}
-                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 lg:col-span-2">
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
                     <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <MessageSquare className="w-5 h-5 text-slate-400" />
                         Emails Sent by Department
@@ -467,7 +467,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Chat Spikes by Time Chart */}
-                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 lg:col-span-2">
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
                     <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <Clock className="w-5 h-5 text-slate-400" />
                         Chat Spikes by Time of Day
@@ -498,7 +498,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Top Agents Bar Chart */}
-                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <Users className="w-5 h-5 text-slate-400" />
@@ -540,7 +540,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Top Query Types Bar Chart */}
-                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <FileText className="w-5 h-5 text-slate-400" />

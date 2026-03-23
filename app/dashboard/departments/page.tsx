@@ -150,7 +150,7 @@ export default function DepartmentsPage() {
             </div>
 
             {/* Main Content Area */}
-            <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden">
                 {loading ? (
                     <div className="flex items-center justify-center h-64 text-slate-400">
                         <Loader2 className="w-8 h-8 animate-spin" />

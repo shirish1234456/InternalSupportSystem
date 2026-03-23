@@ -122,7 +122,7 @@ export default function BulkImportPage() {
                 </p>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden">
                 <div className="p-8 border-b border-slate-100 dark:border-slate-800">
                     <h2 className="text-base font-semibold text-slate-800 dark:text-white mb-4">Upload Rules</h2>
                     <ul className="list-disc list-inside text-sm text-slate-600 dark:text-slate-300 space-y-2">
@@ -235,7 +235,7 @@ export default function BulkImportPage() {
             </div>
 
             {result && (
-                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden">
                     <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
                         <CheckCircle2 className="w-6 h-6 text-green-500" />
                         <h2 className="text-lg font-semibold text-slate-800 dark:text-white">Import Complete</h2>

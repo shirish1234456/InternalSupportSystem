@@ -426,7 +426,7 @@ export default function ChatLogsPage() {
                 </div>
             )}
 
-            <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col flex-1">
+            <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col flex-1">
                 {loading && sessions.length === 0 ? (
                     <div className="flex items-center justify-center h-full text-slate-400">
                         <Loader2 className="w-8 h-8 animate-spin" />

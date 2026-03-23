@@ -14,13 +14,13 @@ import 'react-resizable/css/styles.css';
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const DEFAULT_LAYOUT: any[] = [
-    { i: 'comparative', x: 0, y: 0, w: 12, h: 4 },
-    { i: 'department', x: 0, y: 4, w: 4, h: 4 },
-    { i: 'issues', x: 4, y: 4, w: 8, h: 4 },
-    { i: 'emails', x: 0, y: 8, w: 8, h: 3 },
-    { i: 'spikes', x: 8, y: 8, w: 4, h: 3 },
-    { i: 'agents', x: 0, y: 11, w: 6, h: 3 },
-    { i: 'queries', x: 6, y: 11, w: 6, h: 3 }
+    { i: 'comparative', x: 0, y: 0, w: 3, h: 2 },
+    { i: 'spikes', x: 0, y: 2, w: 3, h: 2 },
+    { i: 'department', x: 0, y: 4, w: 1, h: 2 },
+    { i: 'issues', x: 1, y: 4, w: 2, h: 2 },
+    { i: 'emails', x: 0, y: 6, w: 2, h: 2 },
+    { i: 'agents', x: 2, y: 6, w: 1, h: 2 },
+    { i: 'queries', x: 0, y: 8, w: 3, h: 2 },
 ];
 
 interface AnalyticsData {

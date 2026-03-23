@@ -7,12 +7,10 @@ import { BarChart3, Clock, Users, FileText, CheckCircle2, AlertTriangle, Message
 import {
     LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell
 } from 'recharts';
-import ReactGridLayout, { Responsive } from 'react-grid-layout';
+import { Responsive, WidthProvider } from 'react-grid-layout/legacy';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
-// @ts-ignore
-import { WidthProvider } from 'react-grid-layout';
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const DEFAULT_LAYOUT: any[] = [
@@ -84,7 +82,7 @@ export default function DashboardPage() {
         fetchProfileLayout();
     }, []);
 
-    const handleLayoutChange = async (newLayout: any[]) => {
+    const handleLayoutChange = async (newLayout: any) => {
         if (!isLayoutLoaded) return;
         setLayout(newLayout);
         try {

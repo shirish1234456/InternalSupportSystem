@@ -3,25 +3,10 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { BarChart3, Clock, Users, FileText, CheckCircle2, AlertTriangle, MessageSquare, Loader2, RefreshCw, ChevronLeft, ChevronRight, Calendar, TrendingUp, GripHorizontal } from 'lucide-react';
+import { BarChart3, Clock, Users, FileText, CheckCircle2, AlertTriangle, MessageSquare, Loader2, RefreshCw, ChevronLeft, ChevronRight, Calendar, TrendingUp } from 'lucide-react';
 import {
     LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell
 } from 'recharts';
-import { Responsive, WidthProvider } from 'react-grid-layout/legacy';
-import 'react-grid-layout/css/styles.css';
-import 'react-resizable/css/styles.css';
-
-const ResponsiveGridLayout = WidthProvider(Responsive);
-
-const DEFAULT_LAYOUT: any[] = [
-    { i: 'comparative', x: 0, y: 0, w: 3, h: 2 },
-    { i: 'spikes', x: 0, y: 2, w: 3, h: 2 },
-    { i: 'department', x: 0, y: 4, w: 1, h: 2 },
-    { i: 'issues', x: 1, y: 4, w: 2, h: 2 },
-    { i: 'emails', x: 0, y: 6, w: 2, h: 2 },
-    { i: 'agents', x: 2, y: 6, w: 1, h: 2 },
-    { i: 'queries', x: 0, y: 8, w: 3, h: 2 },
-];
 
 interface AnalyticsData {
     summary: {
@@ -59,42 +44,6 @@ export default function DashboardPage() {
     const [currentAgentsIndex, setCurrentAgentsIndex] = useState(0);
 
     const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
-
-    const [layout, setLayout] = useState<any[]>(DEFAULT_LAYOUT);
-    const [isLayoutLoaded, setIsLayoutLoaded] = useState(false);
-
-    useEffect(() => {
-        const fetchProfileLayout = async () => {
-            try {
-                const res = await fetch('/api/profile');
-                if (!res.ok) return;
-                const pdt = await res.json();
-                if (pdt.dashboardLayout) {
-                    const saved = JSON.parse(pdt.dashboardLayout);
-                    if (Array.isArray(saved) && saved.length > 0) setLayout(saved);
-                }
-            } catch (e) {
-                console.error('Failed to load layout');
-            } finally {
-                setIsLayoutLoaded(true);
-            }
-        };
-        fetchProfileLayout();
-    }, []);
-
-    const handleLayoutChange = async (newLayout: any) => {
-        if (!isLayoutLoaded) return;
-        setLayout(newLayout);
-        try {
-            await fetch('/api/profile', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'update_layout', dashboardLayout: newLayout })
-            });
-        } catch (e) {
-            console.error('Failed to save layout');
-        }
-    };
 
     const fetchAnalytics = async () => {
         setLoading(true);
@@ -319,24 +268,11 @@ export default function DashboardPage() {
                 />
             </motion.div>
 
-            {/* Draggable Dashboard Layout */}
-            <ResponsiveGridLayout
-                className="layout mt-6 relative z-20"
-                layouts={{ lg: layout }}
-                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-                rowHeight={100}
-                onLayoutChange={handleLayoutChange}
-                isDraggable={true}
-                isResizable={true}
-                draggableHandle=".drag-handle"
-            >
+            {/* Main Charts Area */}
+            <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                 {/* Comparative Trend Chart (Full Width) */}
-                <div key="comparative" className="w-full h-full bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative group overflow-hidden">
-                    <div className="drag-handle absolute top-4 right-4 cursor-move text-slate-300 hover:text-slate-500 transition-colors opacity-0 group-hover:opacity-100 z-10 bg-white/50 backdrop-blur-sm rounded-lg p-1">
-                        <GripHorizontal className="w-5 h-5" />
-                    </div>
+                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 col-span-1 lg:col-span-3">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
                         <div className="flex items-center gap-2">
                             <TrendingUp className="w-5 h-5 text-slate-400" />
@@ -412,13 +348,10 @@ export default function DashboardPage() {
                             <div className="h-full flex items-center justify-center text-slate-400 text-sm">No data available</div>
                         )}
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Department Distribution Pie Chart */}
-                <div key="department" className="w-full h-full bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative group overflow-hidden">
-                    <div className="drag-handle absolute top-4 right-4 cursor-move text-slate-300 hover:text-slate-500 transition-colors opacity-0 group-hover:opacity-100 z-10 bg-white/50 backdrop-blur-sm rounded-lg p-1">
-                        <GripHorizontal className="w-5 h-5" />
-                    </div>
+                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
                     <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <Users className="w-5 h-5 text-slate-400" />
                         Volume by Department
@@ -446,13 +379,10 @@ export default function DashboardPage() {
                             <div className="h-full flex items-center justify-center text-slate-400 text-sm">No data available</div>
                         )}
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Top Issues Breakdown */}
-                <div key="issues" className="w-full h-full bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative group overflow-hidden">
-                    <div className="drag-handle absolute top-4 right-4 cursor-move text-slate-300 hover:text-slate-500 transition-colors opacity-0 group-hover:opacity-100 z-10 bg-white/50 backdrop-blur-sm rounded-lg p-1">
-                        <GripHorizontal className="w-5 h-5" />
-                    </div>
+                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <AlertTriangle className="w-5 h-5 text-slate-400" />
@@ -524,15 +454,15 @@ export default function DashboardPage() {
                     ) : (
                         <div className="h-72 flex items-center justify-center text-slate-400 text-sm">No data available</div>
                     )}
-                </div>
+                </motion.div>
 
-                {/* Secondary Charts */}
+            </motion.div>
+
+            {/* Secondary Charts */}
+            <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-6">
 
                 {/* Emails Sent by Department Bar Chart */}
-                <div key="emails" className="w-full h-full bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative group overflow-hidden">
-                    <div className="drag-handle absolute top-4 right-4 cursor-move text-slate-300 hover:text-slate-500 transition-colors opacity-0 group-hover:opacity-100 z-10 bg-white/50 backdrop-blur-sm rounded-lg p-1">
-                        <GripHorizontal className="w-5 h-5" />
-                    </div>
+                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
                     <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <MessageSquare className="w-5 h-5 text-slate-400" />
                         Emails Sent by Department
@@ -548,13 +478,10 @@ export default function DashboardPage() {
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Chat Spikes by Time Chart */}
-                <div key="spikes" className="w-full h-full bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative group overflow-hidden">
-                    <div className="drag-handle absolute top-4 right-4 cursor-move text-slate-300 hover:text-slate-500 transition-colors opacity-0 group-hover:opacity-100 z-10 bg-white/50 backdrop-blur-sm rounded-lg p-1">
-                        <GripHorizontal className="w-5 h-5" />
-                    </div>
+                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
                     <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <Clock className="w-5 h-5 text-slate-400" />
                         Chat Spikes by Time of Day
@@ -582,13 +509,10 @@ export default function DashboardPage() {
                             </LineChart>
                         </ResponsiveContainer>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Top Agents Bar Chart */}
-                <div key="agents" className="w-full h-full bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative group overflow-hidden">
-                    <div className="drag-handle absolute top-4 right-4 cursor-move text-slate-300 hover:text-slate-500 transition-colors opacity-0 group-hover:opacity-100 z-10 bg-white/50 backdrop-blur-sm rounded-lg p-1">
-                        <GripHorizontal className="w-5 h-5" />
-                    </div>
+                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <Users className="w-5 h-5 text-slate-400" />
@@ -627,13 +551,10 @@ export default function DashboardPage() {
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Top Query Types Bar Chart */}
-                <div key="queries" className="w-full h-full bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative group overflow-hidden">
-                    <div className="drag-handle absolute top-4 right-4 cursor-move text-slate-300 hover:text-slate-500 transition-colors opacity-0 group-hover:opacity-100 z-10 bg-white/50 backdrop-blur-sm rounded-lg p-1">
-                        <GripHorizontal className="w-5 h-5" />
-                    </div>
+                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <FileText className="w-5 h-5 text-slate-400" />
@@ -672,8 +593,8 @@ export default function DashboardPage() {
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
-                </div>
-            </ResponsiveGridLayout>
+                </motion.div>
+            </motion.div>
         </div>
     );
 }

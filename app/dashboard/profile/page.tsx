@@ -11,7 +11,7 @@ interface ProfileData {
 }
 
 const ACCENT_COLORS = [
-    { id: 'blue', name: 'Support Blue', bgClass: 'bg-primary-600', borderClass: 'border-primary-600' },
+    { id: 'blue', name: 'Support Blue', bgClass: 'bg-blue-600', borderClass: 'border-blue-600' },
     { id: 'emerald', name: 'Emerald', bgClass: 'bg-emerald-500', borderClass: 'border-emerald-500' },
     { id: 'rose', name: 'Rose', bgClass: 'bg-rose-500', borderClass: 'border-rose-500' },
     { id: 'violet', name: 'Violet', bgClass: 'bg-violet-500', borderClass: 'border-violet-500' },

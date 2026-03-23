@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import {
     BarChart3,
     MessageSquare,
@@ -80,9 +81,9 @@ export default function Sidebar({ user }: SidebarProps) {
             {/* Brand */}
             <div className="px-5 py-5 border-b border-slate-100/50 dark:border-slate-800/50">
                 <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
+                    <motion.div whileHover={{ scale: 1.05, rotate: 5 }} whileTap={{ scale: 0.95 }} className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
                         <MessageSquare className="w-4 h-4 text-white" />
-                    </div>
+                    </motion.div>
                     SupportHub
                 </h1>
             </div>
@@ -129,17 +130,18 @@ export default function Sidebar({ user }: SidebarProps) {
                                     const Icon = item.icon;
 
                                     return (
-                                        <Link
-                                            key={item.href}
-                                            href={item.href}
-                                            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 text-sm font-medium group ${isActive
-                                                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 translate-x-1'
-                                                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-white hover:translate-x-1'
-                                                }`}
-                                        >
-                                            <Icon className={`w-4 h-4 flex-shrink-0 transition-colors ${isActive ? 'text-white' : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-white'}`} />
-                                            {item.name}
-                                        </Link>
+                                        <motion.div key={item.href} whileHover={{ x: 4 }} whileTap={{ scale: 0.98 }}>
+                                            <Link
+                                                href={item.href}
+                                                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-200 text-sm font-medium group ${isActive
+                                                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20'
+                                                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-white'
+                                                    }`}
+                                            >
+                                                <Icon className={`w-4 h-4 flex-shrink-0 transition-colors ${isActive ? 'text-white' : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-white'}`} />
+                                                {item.name}
+                                            </Link>
+                                        </motion.div>
                                     );
                                 })}
                             </div>

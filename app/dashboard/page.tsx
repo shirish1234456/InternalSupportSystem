@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { BarChart3, Clock, Users, FileText, CheckCircle2, AlertTriangle, MessageSquare, Loader2, RefreshCw, ChevronLeft, ChevronRight, Calendar, TrendingUp } from 'lucide-react';
 import {
     LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell
@@ -156,8 +157,21 @@ export default function DashboardPage() {
 
     const comparativeData = getComparativeTrendData();
 
+    const containerVariants: any = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: { staggerChildren: 0.1 }
+        }
+    };
+
+    const itemVariants: any = {
+        hidden: { opacity: 0, y: 20 },
+        show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } }
+    };
+
     const KpiCard = ({ title, value, icon: Icon, colorClass, subtitle }: any) => (
-        <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 flex items-start gap-4 hover:shadow-md transition-shadow">
+        <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:-translate-y-1 hover:shadow-md transition-all duration-300 p-6 flex items-start gap-4">
             <div className={`p-4 rounded-xl shrink-0 ${colorClass}`}>
                 <Icon className="w-6 h-6" />
             </div>
@@ -166,7 +180,7 @@ export default function DashboardPage() {
                 <h3 className="text-3xl font-bold text-slate-800 dark:text-white">{value}</h3>
                 {subtitle && <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{subtitle}</p>}
             </div>
-        </div>
+        </motion.div>
     );
 
     return (
@@ -226,7 +240,7 @@ export default function DashboardPage() {
             </div>
 
             {/* KPI Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <KpiCard
                     title="Total Chats"
                     value={summary.totalChats}
@@ -252,13 +266,13 @@ export default function DashboardPage() {
                     icon={AlertTriangle}
                     colorClass="bg-red-50 text-red-600"
                 />
-            </div>
+            </motion.div>
 
             {/* Main Charts Area */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                 {/* Comparative Trend Chart (Full Width) */}
-                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 col-span-1 lg:col-span-3">
+                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 col-span-1 lg:col-span-3">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
                         <div className="flex items-center gap-2">
                             <TrendingUp className="w-5 h-5 text-slate-400" />
@@ -334,10 +348,10 @@ export default function DashboardPage() {
                             <div className="h-full flex items-center justify-center text-slate-400 text-sm">No data available</div>
                         )}
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Department Distribution Pie Chart */}
-                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
+                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
                     <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <Users className="w-5 h-5 text-slate-400" />
                         Volume by Department
@@ -365,10 +379,10 @@ export default function DashboardPage() {
                             <div className="h-full flex items-center justify-center text-slate-400 text-sm">No data available</div>
                         )}
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Top Issues Breakdown */}
-                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
+                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <AlertTriangle className="w-5 h-5 text-slate-400" />
@@ -440,15 +454,15 @@ export default function DashboardPage() {
                     ) : (
                         <div className="h-72 flex items-center justify-center text-slate-400 text-sm">No data available</div>
                     )}
-                </div>
+                </motion.div>
 
-            </div>
+            </motion.div>
 
             {/* Secondary Charts */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-6">
+            <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-6">
 
                 {/* Emails Sent by Department Bar Chart */}
-                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
+                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
                     <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <MessageSquare className="w-5 h-5 text-slate-400" />
                         Emails Sent by Department
@@ -464,10 +478,10 @@ export default function DashboardPage() {
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Chat Spikes by Time Chart */}
-                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
+                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
                     <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <Clock className="w-5 h-5 text-slate-400" />
                         Chat Spikes by Time of Day
@@ -495,10 +509,10 @@ export default function DashboardPage() {
                             </LineChart>
                         </ResponsiveContainer>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Top Agents Bar Chart */}
-                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
+                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <Users className="w-5 h-5 text-slate-400" />
@@ -537,10 +551,10 @@ export default function DashboardPage() {
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Top Query Types Bar Chart */}
-                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
+                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <FileText className="w-5 h-5 text-slate-400" />
@@ -579,8 +593,8 @@ export default function DashboardPage() {
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
-                </div>
-            </div>
+                </motion.div>
+            </motion.div>
         </div>
     );
 }

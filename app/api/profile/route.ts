@@ -39,7 +39,7 @@ export async function PUT(req: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { action, fullName, currentPassword, newPassword } = await req.json();
+        const { action, fullName, currentPassword, newPassword, accentColor, dashboardLayout } = await req.json();
 
         const user = await prisma.user.findUnique({
             where: { id: session.id }
@@ -83,8 +83,6 @@ export async function PUT(req: Request) {
         }
 
         if (action === 'update_theme') {
-            const { accentColor } = await req.json();
-
             const updatedUser = await (prisma.user as any).update({
                 where: { id: session.id },
                 data: { accentColor }
@@ -114,8 +112,6 @@ export async function PUT(req: Request) {
         }
 
         if (action === 'update_layout') {
-            const { dashboardLayout } = await req.json();
-
             await (prisma.user as any).update({
                 where: { id: session.id },
                 data: { dashboardLayout: JSON.stringify(dashboardLayout) }

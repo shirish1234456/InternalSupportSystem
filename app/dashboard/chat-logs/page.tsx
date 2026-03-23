@@ -336,7 +336,7 @@ export default function ChatLogsPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                        <MessageSquare className="w-6 h-6 text-blue-600" />
+                        <MessageSquare className="w-6 h-6 text-primary-600" />
                         Chat Logs
                     </h1>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
@@ -373,7 +373,7 @@ export default function ChatLogsPage() {
                             placeholder="Search reference..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="pl-10 pr-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 transition-colors sm:text-sm w-48 xl:w-64 h-10"
+                            className="pl-10 pr-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 transition-colors sm:text-sm w-48 xl:w-64 h-10"
                         />
                     </div>
 
@@ -390,7 +390,7 @@ export default function ChatLogsPage() {
 
                         <button
                             onClick={fetchLogs}
-                            className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm h-10"
+                            className="p-2 text-slate-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm h-10"
                             title="Refresh"
                         >
                             <RefreshCw className="w-5 h-5" />
@@ -400,17 +400,17 @@ export default function ChatLogsPage() {
             </div>
 
             {selectedIds.size > 0 && (
-                <div className="bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-lg p-3 flex items-center justify-between shrink-0 animate-in fade-in slide-in-from-top-4">
+                <div className="bg-primary-50 dark:bg-primary-950/60 border border-primary-200 dark:border-primary-800 rounded-lg p-3 flex items-center justify-between shrink-0 animate-in fade-in slide-in-from-top-4">
                     <div className="flex items-center gap-3">
-                        <span className="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                        <span className="bg-primary-600 text-white text-xs font-bold px-2 py-1 rounded-full">
                             {selectedIds.size}
                         </span>
-                        <span className="text-sm font-medium text-blue-900 dark:text-blue-200">sessions selected</span>
+                        <span className="text-sm font-medium text-primary-900 dark:text-primary-200">sessions selected</span>
                     </div>
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setSelectedIds(new Set())}
-                            className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors"
+                            className="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-200 transition-colors"
                         >
                             Cancel
                         </button>
@@ -442,7 +442,7 @@ export default function ChatLogsPage() {
                         {!search && (
                             <Link
                                 href="/dashboard/add-entry"
-                                className="mt-6 text-blue-600 hover:text-blue-700 font-medium text-sm hover:underline"
+                                className="mt-6 text-primary-600 hover:text-primary-700 font-medium text-sm hover:underline"
                             >
                                 + Create your first entry
                             </Link>
@@ -456,7 +456,7 @@ export default function ChatLogsPage() {
                                     <th className="px-6 py-4 font-medium w-12 text-center">
                                         <input
                                             type="checkbox"
-                                            className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer"
+                                            className="w-4 h-4 text-primary-600 rounded border-slate-300 focus:ring-primary-500 cursor-pointer"
                                             checked={sessions.length > 0 && sessions.every(s => selectedIds.has(s.id))}
                                             onChange={toggleSelectAll}
                                         />
@@ -471,11 +471,11 @@ export default function ChatLogsPage() {
                             </thead>
                             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                                 {sessions.map((session) => (
-                                    <tr key={session.id} className={`hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors align-top ${selectedIds.has(session.id) ? 'bg-blue-50/30 dark:bg-blue-900/10' : ''}`}>
+                                    <tr key={session.id} className={`hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors align-top ${selectedIds.has(session.id) ? 'bg-primary-50/30 dark:bg-primary-900/10' : ''}`}>
                                         <td className="px-6 py-4 text-center">
                                             <input
                                                 type="checkbox"
-                                                className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer"
+                                                className="w-4 h-4 text-primary-600 rounded border-slate-300 focus:ring-primary-500 cursor-pointer"
                                                 checked={selectedIds.has(session.id)}
                                                 onChange={() => toggleSelect(session.id)}
                                             />
@@ -510,7 +510,7 @@ export default function ChatLogsPage() {
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                                                <span className="text-[10px] font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded uppercase tracking-wider">
+                                                <span className="text-[10px] font-semibold bg-primary-50 text-primary-700 px-1.5 py-0.5 rounded uppercase tracking-wider">
                                                     {session.queryType.name}
                                                 </span>
                                                 <span className="text-[10px] font-semibold bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded uppercase tracking-wider">
@@ -528,7 +528,7 @@ export default function ChatLogsPage() {
                                             <div className="flex justify-end gap-2">
                                                 <button
                                                     onClick={() => openModal(session)}
-                                                    className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors"
+                                                    className="p-1.5 text-slate-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg transition-colors"
                                                     title="View Details"
                                                 >
                                                     <FileText className="w-4 h-4" />
@@ -594,7 +594,7 @@ export default function ChatLogsPage() {
                                 {!isEditMode ? (
                                     <button
                                         onClick={() => setIsEditMode(true)}
-                                        className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors"
+                                        className="p-2 text-slate-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg transition-colors"
                                         title="Edit Details"
                                     >
                                         <Edit2 className="w-5 h-5" />
@@ -675,7 +675,7 @@ export default function ChatLogsPage() {
                                             <select
                                                 value={editForm.agentId}
                                                 onChange={(e) => setEditForm(prev => ({ ...prev, agentId: e.target.value }))}
-                                                className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+                                                className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
                                             >
                                                 <option value="" disabled>Select Agent</option>
                                                 {agents.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
@@ -692,7 +692,7 @@ export default function ChatLogsPage() {
                                             <select
                                                 value={editForm.departmentId}
                                                 onChange={(e) => setEditForm(prev => ({ ...prev, departmentId: e.target.value }))}
-                                                className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+                                                className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
                                             >
                                                 <option value="" disabled>Select Department</option>
                                                 {departments.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
@@ -709,7 +709,7 @@ export default function ChatLogsPage() {
                                             <select
                                                 value={editForm.queryTypeId}
                                                 onChange={(e) => setEditForm(prev => ({ ...prev, queryTypeId: e.target.value }))}
-                                                className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+                                                className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
                                             >
                                                 <option value="" disabled>Select Query Type</option>
                                                 {queryTypes.map(q => <option key={q.id} value={q.id}>{q.name}</option>)}
@@ -726,7 +726,7 @@ export default function ChatLogsPage() {
                                             <select
                                                 value={editForm.issueTypeId}
                                                 onChange={(e) => setEditForm(prev => ({ ...prev, issueTypeId: e.target.value }))}
-                                                className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+                                                className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
                                             >
                                                 <option value="" disabled>Select Issue Type</option>
                                                 {issueTypes.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
@@ -747,7 +747,7 @@ export default function ChatLogsPage() {
                                             value={editForm.queryDescription}
                                             onChange={(e) => setEditForm(prev => ({ ...prev, queryDescription: e.target.value }))}
                                             placeholder="What was the initial question or problem?"
-                                            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 transition-colors text-sm min-h-[80px]"
+                                            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 transition-colors text-sm min-h-[80px]"
                                         />
                                     ) : (
                                         <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap">{selectedSession.queryDescription}</p>
@@ -770,7 +770,7 @@ export default function ChatLogsPage() {
                                                     checked={editForm.emailSent}
                                                     onChange={(e) => setEditForm(prev => ({ ...prev, emailSent: e.target.checked }))}
                                                 />
-                                                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-blue-600"></div>
+                                                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-primary-600"></div>
                                                 <span className="ml-3 text-sm font-medium text-slate-700 dark:text-slate-300">{editForm.emailSent ? 'Yes' : 'No'}</span>
                                             </label>
                                         ) : (
@@ -785,7 +785,7 @@ export default function ChatLogsPage() {
                                                 value={editForm.resolution}
                                                 onChange={(e) => setEditForm(prev => ({ ...prev, resolution: e.target.value }))}
                                                 placeholder="Enter the resolution details..."
-                                                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 transition-colors text-sm min-h-[100px]"
+                                                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 transition-colors text-sm min-h-[100px]"
                                             />
                                         ) : (
                                             <div className="bg-white dark:bg-slate-900 p-3 rounded border border-slate-200 dark:border-slate-700">
@@ -812,7 +812,7 @@ export default function ChatLogsPage() {
                                 <button
                                     onClick={handleSaveEdit}
                                     disabled={isSaving}
-                                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50"
+                                    className="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50"
                                 >
                                     {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                                     Save Changes

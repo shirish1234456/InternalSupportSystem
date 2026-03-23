@@ -30,6 +30,7 @@ export async function POST(req: Request) {
       email: user.email,
       role: user.role,
       fullName: user.fullName,
+      accentColor: (user as any).accentColor || 'blue',
     };
 
     const token = await signToken(payload);

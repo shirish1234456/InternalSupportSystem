@@ -72,7 +72,7 @@ export default function Sidebar({ user }: SidebarProps) {
 
     const roleColors: Record<string, string> = {
         SuperAdmin: 'text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/30 border-violet-200 dark:border-violet-800/50',
-        Admin: 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800/50',
+        Admin: 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 border-primary-200 dark:border-primary-800/50',
         DataEntry: 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800/50',
     };
 
@@ -81,7 +81,7 @@ export default function Sidebar({ user }: SidebarProps) {
             {/* Brand */}
             <div className="px-5 py-5 border-b border-slate-100/50 dark:border-slate-800/50">
                 <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-                    <motion.div whileHover={{ scale: 1.05, rotate: 5 }} whileTap={{ scale: 0.95 }} className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
+                    <motion.div whileHover={{ scale: 1.05, rotate: 5 }} whileTap={{ scale: 0.95 }} className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-md">
                         <MessageSquare className="w-4 h-4 text-white" />
                     </motion.div>
                     SupportHub
@@ -92,8 +92,8 @@ export default function Sidebar({ user }: SidebarProps) {
             {user && (
                 <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
                     <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center flex-shrink-0">
-                            <span className="text-sm font-bold text-blue-700 dark:text-blue-300">
+                        <div className="w-9 h-9 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm font-bold text-primary-700 dark:text-primary-300">
                                 {user.fullName?.charAt(0)?.toUpperCase()}
                             </span>
                         </div>
@@ -134,7 +134,7 @@ export default function Sidebar({ user }: SidebarProps) {
                                             <Link
                                                 href={item.href}
                                                 className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-200 text-sm font-medium group ${isActive
-                                                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20'
+                                                    ? 'bg-gradient-to-r from-primary-600 to-primary-600 text-white shadow-md shadow-primary-500/20'
                                                     : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-white'
                                                     }`}
                                             >

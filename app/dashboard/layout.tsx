@@ -15,9 +15,9 @@ export default async function DashboardLayout({
     }
 
     return (
-        <div className="flex h-screen bg-slate-50 dark:bg-slate-950 overflow-hidden font-sans relative">
+        <div className={`flex h-screen bg-slate-50 dark:bg-slate-950 overflow-hidden font-sans relative theme-${session.accentColor || 'blue'}`}>
             {/* Premium Ambient Background Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/80 via-slate-50 to-indigo-100/50 dark:from-slate-950 dark:via-slate-900/90 dark:to-indigo-950/30 pointer-events-none z-0 animate-in fade-in duration-1000" />
+            <div className="absolute inset-0 bg-gradient-to-br from-primary-50/80 via-slate-50 to-primary-100/50 dark:from-slate-950 dark:via-slate-900/90 dark:to-primary-950/30 pointer-events-none z-0 animate-in fade-in duration-1000" />
 
             <Sidebar user={session} />
 
@@ -30,7 +30,7 @@ export default async function DashboardLayout({
                     <div className="ml-auto flex items-center gap-3">
                         <ThemeToggle />
                         <div className="text-sm font-medium text-slate-600 dark:text-slate-400 border-l border-slate-200/50 dark:border-slate-700/50 pl-3">
-                            Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 font-bold tracking-wide">{session.fullName}</span>
+                            Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-600 dark:from-primary-400 dark:to-primary-400 font-bold tracking-wide">{session.fullName}</span>
                         </div>
                     </div>
                 </header>

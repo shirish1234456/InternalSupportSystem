@@ -16,7 +16,9 @@ export async function GET() {
                 fullName: true,
                 email: true,
                 role: true,
-            }
+                accentColor: true,
+                dashboardLayout: true,
+            } as any
         });
 
         if (!user) {
@@ -63,6 +65,7 @@ export async function PUT(req: Request) {
                 email: updatedUser.email,
                 role: updatedUser.role,
                 fullName: updatedUser.fullName,
+                accentColor: (updatedUser as any).accentColor || 'blue',
             };
 
             const token = await signToken(newPayload);
@@ -77,6 +80,48 @@ export async function PUT(req: Request) {
             });
 
             return response;
+        }
+
+        if (action === 'update_theme') {
+            const { accentColor } = await req.json();
+
+            const updatedUser = await (prisma.user as any).update({
+                where: { id: session.id },
+                data: { accentColor }
+            });
+
+            // Update JWT to reflect theme instantly on hard reloads
+            const newPayload = {
+                id: updatedUser.id,
+                email: updatedUser.email,
+                role: updatedUser.role,
+                fullName: updatedUser.fullName,
+                accentColor: (updatedUser as any).accentColor || 'blue',
+            };
+
+            const token = await signToken(newPayload);
+            const response = NextResponse.json({ message: 'Theme updated successfully', user: newPayload });
+
+            response.cookies.set('auth_token', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax',
+                path: '/',
+                maxAge: 60 * 60 * 24, // 24 hours
+            });
+
+            return response;
+        }
+
+        if (action === 'update_layout') {
+            const { dashboardLayout } = await req.json();
+
+            await (prisma.user as any).update({
+                where: { id: session.id },
+                data: { dashboardLayout: JSON.stringify(dashboardLayout) }
+            });
+
+            return NextResponse.json({ message: 'Layout updated successfully' });
         }
 
         if (action === 'update_password') {

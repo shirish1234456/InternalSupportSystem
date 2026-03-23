@@ -1,13 +1,22 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { UserCircle, Key, Mail, Shield, AlertTriangle, CheckCircle2, Loader2, Save } from 'lucide-react';
+import { UserCircle, Key, Mail, Shield, AlertTriangle, CheckCircle2, Loader2, Save, Palette } from 'lucide-react';
 
 interface ProfileData {
     fullName: string;
     email: string;
     role: string;
+    accentColor?: string;
 }
+
+const ACCENT_COLORS = [
+    { id: 'blue', name: 'Support Blue', bgClass: 'bg-primary-600', borderClass: 'border-primary-600' },
+    { id: 'emerald', name: 'Emerald', bgClass: 'bg-emerald-500', borderClass: 'border-emerald-500' },
+    { id: 'rose', name: 'Rose', bgClass: 'bg-rose-500', borderClass: 'border-rose-500' },
+    { id: 'violet', name: 'Violet', bgClass: 'bg-violet-500', borderClass: 'border-violet-500' },
+    { id: 'amber', name: 'Amber', bgClass: 'bg-amber-500', borderClass: 'border-amber-500' }
+];
 
 export default function ProfilePage() {
     const [profile, setProfile] = useState<ProfileData | null>(null);
@@ -28,6 +37,10 @@ export default function ProfilePage() {
     const [saving, setSaving] = useState(false);
     const [passwordError, setPasswordError] = useState('');
     const [passwordSuccess, setPasswordSuccess] = useState('');
+
+    // Theme Update State
+    const [themeSaving, setThemeSaving] = useState(false);
+    const [themeSuccess, setThemeSuccess] = useState('');
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -132,6 +145,35 @@ export default function ProfilePage() {
         }
     };
 
+    const handleThemeChange = async (colorId: string) => {
+        if (!profile || profile.accentColor === colorId) return;
+        setThemeSaving(true);
+        setThemeSuccess('');
+
+        try {
+            const res = await fetch('/api/profile', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'update_theme', accentColor: colorId })
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error);
+
+            setProfile(prev => prev ? { ...prev, accentColor: colorId } : prev);
+            setThemeSuccess('Theme updated. Reloading...');
+
+            // Force hard reload to update root layout theme class
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        } catch (err) {
+            console.error('Failed to change theme:', err);
+        } finally {
+            setThemeSaving(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64 text-slate-400">
@@ -155,7 +197,7 @@ export default function ProfilePage() {
         <div className="max-w-4xl mx-auto space-y-6 pb-12">
             <div>
                 <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                    <UserCircle className="w-6 h-6 text-blue-600" />
+                    <UserCircle className="w-6 h-6 text-primary-600" />
                     My Profile
                 </h1>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
@@ -168,13 +210,13 @@ export default function ProfilePage() {
                 {/* Account Details Card */}
                 <div className="md:col-span-1 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-xl shadow-sm overflow-hidden h-fit">
                     <div className="p-6 flex flex-col items-center text-center">
-                        <div className="w-24 h-24 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center mb-4">
-                            <span className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                        <div className="w-24 h-24 bg-primary-100 dark:bg-primary-900/50 rounded-full flex items-center justify-center mb-4">
+                            <span className="text-3xl font-bold text-primary-600 dark:text-primary-400">
                                 {profile.fullName.charAt(0).toUpperCase()}
                             </span>
                         </div>
 
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 mb-4 border border-blue-200 dark:border-blue-800/50">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400 mb-4 border border-primary-200 dark:border-primary-800/50">
                             <Shield className="w-3.5 h-3.5" />
                             {profile.role}
                         </span>
@@ -201,7 +243,7 @@ export default function ProfilePage() {
                                     required
                                     value={nameInput}
                                     onChange={(e) => setNameInput(e.target.value)}
-                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm font-medium"
+                                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm font-medium"
                                 />
                             </div>
 
@@ -219,7 +261,7 @@ export default function ProfilePage() {
                             <button
                                 type="submit"
                                 disabled={nameSaving || nameInput === profile.fullName}
-                                className="w-full mt-4 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 rounded-lg transition-colors border border-blue-200 dark:border-blue-900 disabled:opacity-50 flex items-center justify-center gap-2"
+                                className="w-full mt-4 px-4 py-2 text-sm font-medium text-primary-600 bg-primary-50 hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-400 dark:hover:bg-primary-900/50 rounded-lg transition-colors border border-primary-200 dark:border-primary-900 disabled:opacity-50 flex items-center justify-center gap-2"
                             >
                                 {nameSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                                 Save Name
@@ -266,7 +308,7 @@ export default function ProfilePage() {
                                     required
                                     value={currentPassword}
                                     onChange={(e) => setCurrentPassword(e.target.value)}
-                                    className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
+                                    className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
                                 />
                             </div>
 
@@ -281,7 +323,7 @@ export default function ProfilePage() {
                                     required
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
-                                    className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
+                                    className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
                                 />
                                 <p className="text-xs text-slate-500 mt-1.5">Must be at least 8 characters long.</p>
                             </div>
@@ -295,7 +337,7 @@ export default function ProfilePage() {
                                     required
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
-                                    className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
+                                    className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
                                 />
                             </div>
                         </div>
@@ -304,7 +346,7 @@ export default function ProfilePage() {
                             <button
                                 type="submit"
                                 disabled={saving}
-                                className="px-6 py-2.5 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center gap-2 shadow-sm"
+                                className="px-6 py-2.5 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center gap-2 shadow-sm"
                             >
                                 {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                                 Update Password
@@ -312,7 +354,58 @@ export default function ProfilePage() {
                         </div>
                     </form>
                 </div>
+
+                {/* Personalization Settings Card */}
+                <div className="md:col-span-3 border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-xl shadow-sm overflow-hidden mt-6">
+                    <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-between">
+                        <div>
+                            <h3 className="text-lg font-semibold text-slate-800 dark:text-white flex items-center gap-2">
+                                <Palette className="w-5 h-5 text-slate-400" />
+                                Personalization
+                            </h3>
+                            <p className="text-sm text-slate-500 mt-1">
+                                Customize your dashboard accent color.
+                            </p>
+                        </div>
+                        {themeSuccess && (
+                            <span className="text-sm font-medium text-green-600 bg-green-50 px-3 py-1 rounded-full flex items-center gap-2">
+                                <CheckCircle2 className="w-4 h-4" />
+                                {themeSuccess}
+                            </span>
+                        )}
+                        {themeSaving && (
+                            <span className="text-sm font-medium text-slate-500 flex items-center gap-2">
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                Saving...
+                            </span>
+                        )}
+                    </div>
+                    <div className="p-6">
+                        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                            {ACCENT_COLORS.map((color) => {
+                                const isSelected = (profile.accentColor || 'blue') === color.id;
+                                const activeClasses = color.borderClass + ' bg-slate-50 dark:bg-slate-800 shadow-md scale-105';
+                                const inactiveClasses = 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800/50';
+
+                                return (
+                                    <button
+                                        key={color.id}
+                                        onClick={() => handleThemeChange(color.id)}
+                                        disabled={themeSaving}
+                                        className={'flex flex-col items-center gap-3 p-4 rounded-xl border-2 transition-all duration-200 ' + (isSelected ? activeClasses : inactiveClasses)}
+                                    >
+                                        <div className={'w-8 h-8 rounded-full shadow-sm ' + color.bgClass + ' ' + (isSelected ? 'ring-4 ring-offset-2 ring-offset-white dark:ring-offset-slate-900 ' + color.borderClass : '')} />
+                                        <span className={'text-sm font-medium ' + (isSelected ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400')}>
+                                            {color.name}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </div>
+        </div >
     );
 }

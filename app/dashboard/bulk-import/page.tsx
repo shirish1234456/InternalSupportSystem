@@ -114,7 +114,7 @@ export default function BulkImportPage() {
         <div className="space-y-6 max-w-4xl mx-auto">
             <div>
                 <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                    <Upload className="w-6 h-6 text-blue-600" />
+                    <Upload className="w-6 h-6 text-primary-600" />
                     Bulk Data Import
                 </h1>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
@@ -140,10 +140,10 @@ export default function BulkImportPage() {
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
                         onDrop={handleDrop}
-                        className={`border-2 border-dashed rounded-xl p-10 flex flex-col items-center justify-center text-center transition-colors ${isDragging ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700/50'
+                        className={`border-2 border-dashed rounded-xl p-10 flex flex-col items-center justify-center text-center transition-colors ${isDragging ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20' : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700/50'
                             }`}
                     >
-                        <FileSpreadsheet className={`w-12 h-12 mb-4 ${isDragging ? 'text-blue-500' : 'text-slate-400'}`} />
+                        <FileSpreadsheet className={`w-12 h-12 mb-4 ${isDragging ? 'text-primary-500' : 'text-slate-400'}`} />
 
                         {file ? (
                             <div className="space-y-2">
@@ -182,7 +182,7 @@ export default function BulkImportPage() {
 
                     {isValidating && (
                         <div className="mt-6 flex flex-col items-center justify-center p-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-800">
-                            <Loader2 className="w-8 h-8 text-blue-500 animate-spin mb-2" />
+                            <Loader2 className="w-8 h-8 text-primary-500 animate-spin mb-2" />
                             <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Validating file...</p>
                             <p className="text-xs text-slate-500">Checking for errors and missing data</p>
                         </div>
@@ -225,7 +225,7 @@ export default function BulkImportPage() {
                         <button
                             onClick={handleUpload}
                             disabled={!file || isUploading || isValidating || (validationResult && validationResult.errors.length > 0)}
-                            className="px-6 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 shadow-sm"
+                            className="px-6 py-2.5 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 shadow-sm"
                         >
                             {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
                             {isUploading ? 'Importing Data...' : 'Start Import'}

@@ -158,7 +158,7 @@ export default function AgentsPage() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                        <Users className="w-6 h-6 text-blue-600" />
+                        <Users className="w-6 h-6 text-primary-600" />
                         Support Agents
                     </h1>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
@@ -168,14 +168,14 @@ export default function AgentsPage() {
                 <div className="flex items-center gap-3">
                     <button
                         onClick={fetchData}
-                        className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        className="p-2 text-slate-500 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
                         title="Refresh"
                     >
                         <RefreshCw className="w-5 h-5" />
                     </button>
                     <button
                         onClick={() => openModal()}
-                        className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-sm font-medium"
+                        className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors shadow-sm text-sm font-medium"
                     >
                         <Plus className="w-4 h-4" />
                         Add Agent
@@ -198,7 +198,7 @@ export default function AgentsPage() {
                         </p>
                         <button
                             onClick={() => openModal()}
-                            className="mt-6 text-blue-600 hover:text-blue-700 font-medium text-sm hover:underline"
+                            className="mt-6 text-primary-600 hover:text-primary-700 font-medium text-sm hover:underline"
                         >
                             + Create your first agent
                         </button>
@@ -231,7 +231,7 @@ export default function AgentsPage() {
                                         <td className="px-6 py-4 flex items-center justify-end gap-2">
                                             <button
                                                 onClick={() => openModal(agent)}
-                                                className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-800 rounded transition-colors"
+                                                className="p-1.5 text-slate-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-slate-800 rounded transition-colors"
                                                 title="Edit"
                                             >
                                                 <Edit2 className="w-4 h-4" />
@@ -283,7 +283,7 @@ export default function AgentsPage() {
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     placeholder="e.g. John Doe"
-                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm placeholder-slate-400"
+                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm placeholder-slate-400"
                                     autoFocus
                                 />
                             </div>
@@ -295,7 +295,7 @@ export default function AgentsPage() {
                                 <select
                                     value={departmentId || ''}
                                     onChange={(e) => setDepartmentId(e.target.value)}
-                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white transition-colors sm:text-sm"
+                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white transition-colors sm:text-sm"
                                 >
                                     <option value="">None (Unassigned)</option>
                                     {departments.map(dept => (
@@ -312,7 +312,7 @@ export default function AgentsPage() {
                                     required
                                     value={shift}
                                     onChange={(e) => setShift(e.target.value)}
-                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white transition-colors sm:text-sm"
+                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white transition-colors sm:text-sm"
                                 >
                                     <option value="Morning">Morning</option>
                                     <option value="Afternoon">Afternoon</option>
@@ -331,7 +331,7 @@ export default function AgentsPage() {
                                 <button
                                     type="submit"
                                     disabled={isSubmitting || !name.trim()}
-                                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center gap-2"
+                                    className="px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center gap-2"
                                 >
                                     {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
                                     {editingAgent ? 'Save Changes' : 'Create Agent'}

@@ -1,6 +1,6 @@
 export default function DashboardStats({ stats }: { stats: any }) {
   const cards = [
-    { label: 'Total Chats Today', value: stats.today, color: 'text-blue-600' },
+    { label: 'Total Chats Today', value: stats.today, color: 'text-primary-600' },
     { label: 'Open Issues', value: stats.open, color: 'text-red-600' },
     { label: 'Resolution Rate', value: `${stats.rate}%`, color: 'text-green-600' },
   ];

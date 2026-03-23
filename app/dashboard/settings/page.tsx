@@ -99,7 +99,7 @@ export default function SettingsPage() {
             <div className="max-w-3xl mx-auto space-y-6 pb-12">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                        <Settings className="w-6 h-6 text-blue-600" />
+                        <Settings className="w-6 h-6 text-primary-600" />
                         System Settings
                     </h1>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
@@ -142,7 +142,7 @@ export default function SettingsPage() {
                                     required
                                     value={settings.weeklyReportDay}
                                     onChange={(e) => setSettings({ ...settings, weeklyReportDay: e.target.value })}
-                                    className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
+                                    className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
                                 >
                                     {daysOfWeek.map(day => (
                                         <option key={day} value={day}>{day}</option>
@@ -160,7 +160,7 @@ export default function SettingsPage() {
                                     required
                                     value={settings.weeklyReportTime}
                                     onChange={(e) => setSettings({ ...settings, weeklyReportTime: e.target.value })}
-                                    className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm bg-white dark:bg-slate-800 min-h-10"
+                                    className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm bg-white dark:bg-slate-800 min-h-10"
                                 />
                             </div>
                         </div>
@@ -175,7 +175,7 @@ export default function SettingsPage() {
                                 value={settings.reportRecipientEmail}
                                 onChange={(e) => setSettings({ ...settings, reportRecipientEmail: e.target.value })}
                                 placeholder="admin@company.com, ceo@company.com"
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 text-slate-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm bg-white dark:bg-slate-800"
+                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 text-slate-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm bg-white dark:bg-slate-800"
                             />
                             <p className="text-xs text-slate-500 mt-1">Separate multiple emails with commas.</p>
                         </div>
@@ -184,7 +184,7 @@ export default function SettingsPage() {
                             <button
                                 type="button"
                                 onClick={handleManualTrigger}
-                                className="px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-lg transition-colors border border-blue-200 dark:border-blue-900"
+                                className="px-4 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 hover:bg-primary-100 dark:hover:bg-primary-900/50 rounded-lg transition-colors border border-primary-200 dark:border-primary-900"
                             >
                                 Send Test Email Now
                             </button>
@@ -192,7 +192,7 @@ export default function SettingsPage() {
                             <button
                                 type="submit"
                                 disabled={saving}
-                                className="px-6 py-2.5 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center gap-2 shadow-sm"
+                                className="px-6 py-2.5 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center gap-2 shadow-sm"
                             >
                                 {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                                 Save Configuration

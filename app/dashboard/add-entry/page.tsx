@@ -157,7 +157,7 @@ export default function AddEntryPage() {
         <div className="max-w-4xl mx-auto space-y-6 pb-12">
             <div>
                 <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                    <PlusCircle className="w-6 h-6 text-blue-600" />
+                    <PlusCircle className="w-6 h-6 text-primary-600" />
                     Add Manual Entry
                 </h1>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
@@ -194,7 +194,7 @@ export default function AddEntryPage() {
                                 required
                                 value={customerName}
                                 onChange={(e) => setCustomerName(e.target.value)}
-                                className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
+                                className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
                                 placeholder="Jane Doe"
                             />
                         </div>
@@ -206,7 +206,7 @@ export default function AddEntryPage() {
                                 type="email"
                                 value={customerEmail}
                                 onChange={(e) => setCustomerEmail(e.target.value)}
-                                className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
+                                className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
                                 placeholder="jane@example.com"
                             />
                         </div>
@@ -218,7 +218,7 @@ export default function AddEntryPage() {
                                 type="tel"
                                 value={contactNumber}
                                 onChange={(e) => setContactNumber(e.target.value)}
-                                className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
+                                className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
                                 placeholder="+1 234 567 890"
                             />
                         </div>
@@ -230,7 +230,7 @@ export default function AddEntryPage() {
                                 type="text"
                                 value={school}
                                 onChange={(e) => setSchool(e.target.value)}
-                                className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
+                                className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
                                 placeholder="e.g. Lincoln High"
                             />
                         </div>
@@ -243,7 +243,7 @@ export default function AddEntryPage() {
                                 required
                                 value={country}
                                 onChange={(e) => setCountry(e.target.value)}
-                                className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
+                                className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
                                 placeholder="e.g. United Kingdom"
                             />
                         </div>
@@ -254,7 +254,7 @@ export default function AddEntryPage() {
                             <select
                                 value={customerRole}
                                 onChange={(e) => setCustomerRole(e.target.value)}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
+                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
                             >
                                 <option value="" className="bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-400">Select Role</option>
                                 <option value="Student" className="bg-white dark:bg-slate-800">Student</option>
@@ -283,7 +283,7 @@ export default function AddEntryPage() {
                                 required
                                 value={chatCode}
                                 onChange={(e) => setChatCode(e.target.value)}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm bg-slate-50 dark:bg-slate-800"
+                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm bg-slate-50 dark:bg-slate-800"
                                 placeholder="e.g. CHAT-10293"
                             />
                         </div>
@@ -296,7 +296,7 @@ export default function AddEntryPage() {
                                 required
                                 value={agentId}
                                 onChange={(e) => setAgentId(e.target.value)}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
+                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
                             >
                                 <option value="" disabled className="bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-400">Select Agent</option>
                                 {agents.map(a => <option key={a.id} value={a.id} className="bg-white dark:bg-slate-800">{a.name}</option>)}
@@ -311,7 +311,7 @@ export default function AddEntryPage() {
                                 required
                                 value={departmentId}
                                 onChange={(e) => setDepartmentId(e.target.value)}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
+                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
                             >
                                 <option value="" disabled className="bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-400">Select Department</option>
                                 {departments.map(d => <option key={d.id} value={d.id} className="bg-white dark:bg-slate-800">{d.name}</option>)}
@@ -328,7 +328,7 @@ export default function AddEntryPage() {
                                 required
                                 value={queryTypeId}
                                 onChange={(e) => setQueryTypeId(e.target.value)}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
+                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
                             >
                                 <option value="" disabled className="bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-400">Select Query Type</option>
                                 {queryTypes.map(q => <option key={q.id} value={q.id} className="bg-white dark:bg-slate-800">{q.name}</option>)}
@@ -342,7 +342,7 @@ export default function AddEntryPage() {
                                 required
                                 value={issueTypeId}
                                 onChange={(e) => setIssueTypeId(e.target.value)}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
+                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
                             >
                                 <option value="" disabled className="bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-400">Select Specific Issue</option>
                                 {issueTypes.map(i => <option key={i.id} value={i.id} className="bg-white dark:bg-slate-800">{i.name}</option>)}
@@ -360,7 +360,7 @@ export default function AddEntryPage() {
                                 rows={3}
                                 value={queryDescription}
                                 onChange={(e) => setQueryDescription(e.target.value)}
-                                className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm resize-none"
+                                className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm resize-none"
                                 placeholder="What was the user's initial question or problem?"
                             />
                         </div>
@@ -374,7 +374,7 @@ export default function AddEntryPage() {
                                 required
                                 value={createdAt}
                                 onChange={(e) => setCreatedAt(e.target.value)}
-                                className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm"
+                                className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
                             />
                         </div>
 
@@ -386,7 +386,7 @@ export default function AddEntryPage() {
                                 rows={3}
                                 value={resolution}
                                 onChange={(e) => setResolution(e.target.value)}
-                                className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm resize-none"
+                                className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm resize-none"
                                 placeholder="How was the issue solved? (Leave blank if open)"
                             />
                         </div>
@@ -404,7 +404,7 @@ export default function AddEntryPage() {
                                             value={s}
                                             checked={status === s}
                                             onChange={(e) => setStatus(e.target.value)}
-                                            className="w-4 h-4 text-blue-600 border-slate-300 dark:border-slate-700 dark:bg-slate-900 focus:ring-blue-500 disabled:opacity-50"
+                                            className="w-4 h-4 text-primary-600 border-slate-300 dark:border-slate-700 dark:bg-slate-900 focus:ring-primary-500 disabled:opacity-50"
                                         />
                                         <span className={`text-sm font-medium ${s === status ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'}`}>{s}</span>
                                     </label>
@@ -426,7 +426,7 @@ export default function AddEntryPage() {
                     <button
                         type="submit"
                         disabled={isSubmitting || !chatCode || !customerName || !country || !agentId || !departmentId || !queryTypeId || !issueTypeId || !queryDescription}
-                        className="px-6 py-2.5 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center gap-2 shadow-sm"
+                        className="px-6 py-2.5 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center gap-2 shadow-sm"
                     >
                         {isSubmitting ? (
                             <Loader2 className="w-5 h-5 animate-spin" />

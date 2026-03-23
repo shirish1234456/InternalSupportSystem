@@ -10,6 +10,7 @@ export interface JWTPayload {
   email: string;
   role: 'SuperAdmin' | 'Admin' | 'DataEntry';
   fullName: string;
+  accentColor?: string;
 }
 
 export async function signToken(payload: JWTPayload) {

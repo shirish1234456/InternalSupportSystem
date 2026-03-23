@@ -167,7 +167,7 @@ export default function IssueTypesPage() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                        <AlertTriangle className="w-6 h-6 text-blue-600" />
+                        <AlertTriangle className="w-6 h-6 text-primary-600" />
                         Issue Types
                     </h1>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
@@ -177,14 +177,14 @@ export default function IssueTypesPage() {
                 <div className="flex items-center gap-3">
                     <button
                         onClick={fetchTypes}
-                        className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        className="p-2 text-slate-500 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
                         title="Refresh"
                     >
                         <RefreshCw className="w-5 h-5" />
                     </button>
                     <button
                         onClick={() => openModal()}
-                        className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-sm font-medium"
+                        className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors shadow-sm text-sm font-medium"
                     >
                         <Plus className="w-4 h-4" />
                         Add Issue Type
@@ -193,17 +193,17 @@ export default function IssueTypesPage() {
             </div>
 
             {selectedIds.size > 0 && (
-                <div className="bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-lg p-3 flex items-center justify-between shrink-0 mb-4 animate-in fade-in slide-in-from-top-4">
+                <div className="bg-primary-50 dark:bg-primary-950/60 border border-primary-200 dark:border-primary-800 rounded-lg p-3 flex items-center justify-between shrink-0 mb-4 animate-in fade-in slide-in-from-top-4">
                     <div className="flex items-center gap-3">
-                        <span className="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                        <span className="bg-primary-600 text-white text-xs font-bold px-2 py-1 rounded-full">
                             {selectedIds.size}
                         </span>
-                        <span className="text-sm font-medium text-blue-900 dark:text-blue-200">issue types selected</span>
+                        <span className="text-sm font-medium text-primary-900 dark:text-primary-200">issue types selected</span>
                     </div>
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setSelectedIds(new Set())}
-                            className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors"
+                            className="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-200 transition-colors"
                         >
                             Cancel
                         </button>
@@ -232,7 +232,7 @@ export default function IssueTypesPage() {
                         <p className="text-slate-500 dark:text-slate-400 text-sm max-w-sm">Create a new issue type to categorize the specifics of chat logs.</p>
                         <button
                             onClick={() => openModal()}
-                            className="mt-6 text-blue-600 hover:text-blue-700 font-medium text-sm hover:underline"
+                            className="mt-6 text-primary-600 hover:text-primary-700 font-medium text-sm hover:underline"
                         >
                             + Create issue type
                         </button>
@@ -245,7 +245,7 @@ export default function IssueTypesPage() {
                                     <th className="px-6 py-4 font-medium w-12 text-center">
                                         <input
                                             type="checkbox"
-                                            className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer disabled:opacity-50"
+                                            className="w-4 h-4 text-primary-600 rounded border-slate-300 focus:ring-primary-500 cursor-pointer disabled:opacity-50"
                                             checked={types.length > 0 && types.filter(t => (t._count?.sessions || 0) === 0).every(t => selectedIds.has(t.id))}
                                             onChange={toggleSelectAll}
                                             disabled={types.filter(t => (t._count?.sessions || 0) === 0).length === 0}
@@ -258,11 +258,11 @@ export default function IssueTypesPage() {
                             </thead>
                             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                                 {types.map((type) => (
-                                    <tr key={type.id} className={`hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors ${selectedIds.has(type.id) ? 'bg-blue-50/30 dark:bg-blue-900/10' : ''}`}>
+                                    <tr key={type.id} className={`hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors ${selectedIds.has(type.id) ? 'bg-primary-50/30 dark:bg-primary-900/10' : ''}`}>
                                         <td className="px-6 py-4 text-center">
                                             <input
                                                 type="checkbox"
-                                                className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer disabled:opacity-50"
+                                                className="w-4 h-4 text-primary-600 rounded border-slate-300 focus:ring-primary-500 cursor-pointer disabled:opacity-50"
                                                 checked={selectedIds.has(type.id)}
                                                 onChange={() => toggleSelect(type.id)}
                                                 disabled={(type._count?.sessions || 0) > 0}
@@ -275,7 +275,7 @@ export default function IssueTypesPage() {
                                         <td className="px-6 py-4 flex items-center justify-end gap-2">
                                             <button
                                                 onClick={() => openModal(type)}
-                                                className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-800 rounded transition-colors"
+                                                className="p-1.5 text-slate-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-slate-800 rounded transition-colors"
                                                 title="Edit"
                                             >
                                                 <Edit2 className="w-4 h-4" />
@@ -327,7 +327,7 @@ export default function IssueTypesPage() {
                                     value={typeName}
                                     onChange={(e) => setTypeName(e.target.value)}
                                     placeholder="e.g. Password Reset, Need Refund"
-                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm placeholder-slate-400"
+                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm placeholder-slate-400"
                                     autoFocus
                                 />
                             </div>
@@ -343,7 +343,7 @@ export default function IssueTypesPage() {
                                 <button
                                     type="submit"
                                     disabled={isSubmitting || !typeName.trim()}
-                                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center gap-2"
+                                    className="px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center gap-2"
                                 >
                                     {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
                                     {editingType ? 'Save Changes' : 'Create Issue Type'}

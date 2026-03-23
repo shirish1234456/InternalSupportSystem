@@ -33,6 +33,10 @@ model User {
   isActive     Boolean  @default(true) @map("is_active")
   createdAt    DateTime @default(now()) @map("created_at")
 
+  // Personalization Preferences
+  accentColor      String?  @default("blue") @map("accent_color")
+  dashboardLayout  String?  @map("dashboard_layout") @db.Text
+
   // Tracking who created/updated sessions
   createdSessions ChatSession[] @relation("CreatedBy")
   updatedSessions ChatSession[] @relation("UpdatedBy")

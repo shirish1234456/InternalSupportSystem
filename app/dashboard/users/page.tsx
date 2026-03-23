@@ -158,7 +158,7 @@ export default function UsersPage() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                        <UserCircle className="w-6 h-6 text-blue-600" />
+                        <UserCircle className="w-6 h-6 text-primary-600" />
                         System Users
                     </h1>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
@@ -168,14 +168,14 @@ export default function UsersPage() {
                 <div className="flex items-center gap-3">
                     <button
                         onClick={fetchUsers}
-                        className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        className="p-2 text-slate-500 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
                         title="Refresh"
                     >
                         <RefreshCw className="w-5 h-5" />
                     </button>
                     <button
                         onClick={() => openModal()}
-                        className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-sm font-medium"
+                        className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors shadow-sm text-sm font-medium"
                     >
                         <Plus className="w-4 h-4" />
                         Add User
@@ -221,7 +221,7 @@ export default function UsersPage() {
                                         </td>
                                         <td className="px-6 py-4">
                                             <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium border ${user.role === 'SuperAdmin' ? 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800' :
-                                                user.role === 'Admin' ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800' :
+                                                user.role === 'Admin' ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 border-primary-200 dark:border-primary-800' :
                                                     'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
                                                 }`}>
                                                 {user.role === 'SuperAdmin' && <Shield className="w-3 h-3" />}
@@ -237,7 +237,7 @@ export default function UsersPage() {
                                         <td className="px-6 py-4 flex items-center justify-end gap-2">
                                             <button
                                                 onClick={() => openModal(user)}
-                                                className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-800 rounded transition-colors"
+                                                className="p-1.5 text-slate-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-slate-800 rounded transition-colors"
                                                 title="Edit User"
                                             >
                                                 <Edit2 className="w-4 h-4" />
@@ -290,7 +290,7 @@ export default function UsersPage() {
                                     value={fullName}
                                     onChange={(e) => setFullName(e.target.value)}
                                     placeholder="e.g. Jane Smith"
-                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm placeholder-slate-400"
+                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm placeholder-slate-400"
                                 />
                             </div>
 
@@ -305,7 +305,7 @@ export default function UsersPage() {
                                     disabled={!!editingUser} // Prevent changing email to avoid conflicts easily
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="jane.smith@company.com"
-                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm disabled:bg-slate-100 disabled:dark:bg-slate-800/50 disabled:text-slate-500 placeholder-slate-400"
+                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm disabled:bg-slate-100 disabled:dark:bg-slate-800/50 disabled:text-slate-500 placeholder-slate-400"
                                 />
                             </div>
 
@@ -317,7 +317,7 @@ export default function UsersPage() {
                                     required
                                     value={role}
                                     onChange={(e) => setRole(e.target.value as any)}
-                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white transition-colors sm:text-sm"
+                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white transition-colors sm:text-sm"
                                 >
                                     <option value="DataEntry">Data Entry (Limited Access)</option>
                                     <option value="Admin">Admin (View Analytics)</option>
@@ -337,7 +337,7 @@ export default function UsersPage() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••"
-                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm placeholder-slate-400"
+                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm placeholder-slate-400"
                                 />
                             </div>
 
@@ -348,7 +348,7 @@ export default function UsersPage() {
                                         id="isActive"
                                         checked={isActive}
                                         onChange={(e) => setIsActive(e.target.checked)}
-                                        className="w-4 h-4 text-blue-600 border-slate-300 dark:border-slate-700 dark:bg-slate-800 rounded focus:ring-blue-500"
+                                        className="w-4 h-4 text-primary-600 border-slate-300 dark:border-slate-700 dark:bg-slate-800 rounded focus:ring-primary-500"
                                     />
                                     <label htmlFor="isActive" className="text-sm font-medium text-slate-700 dark:text-slate-300">
                                         Account is Active
@@ -367,7 +367,7 @@ export default function UsersPage() {
                                 <button
                                     type="submit"
                                     disabled={isSubmitting || !fullName.trim() || !email.trim() || (!editingUser && !password)}
-                                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center gap-2"
+                                    className="px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center gap-2"
                                 >
                                     {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
                                     {editingUser ? 'Save Changes' : 'Create User'}

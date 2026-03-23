@@ -124,7 +124,7 @@ export default function DepartmentsPage() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                        <Building2 className="w-6 h-6 text-blue-600" />
+                        <Building2 className="w-6 h-6 text-primary-600" />
                         Departments
                     </h1>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
@@ -134,14 +134,14 @@ export default function DepartmentsPage() {
                 <div className="flex items-center gap-3">
                     <button
                         onClick={fetchDepartments}
-                        className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        className="p-2 text-slate-500 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
                         title="Refresh"
                     >
                         <RefreshCw className="w-5 h-5" />
                     </button>
                     <button
                         onClick={() => openModal()}
-                        className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-sm font-medium"
+                        className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors shadow-sm text-sm font-medium"
                     >
                         <Plus className="w-4 h-4" />
                         Add Department
@@ -163,7 +163,7 @@ export default function DepartmentsPage() {
                         <p className="text-slate-500 dark:text-slate-400 text-sm max-w-sm">Get started by creating a new department to categorize your agents and chat logs.</p>
                         <button
                             onClick={() => openModal()}
-                            className="mt-6 text-blue-600 hover:text-blue-700 font-medium text-sm hover:underline"
+                            className="mt-6 text-primary-600 hover:text-primary-700 font-medium text-sm hover:underline"
                         >
                             + Create your first department
                         </button>
@@ -184,7 +184,7 @@ export default function DepartmentsPage() {
                                     <tr key={dept.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
                                         <td className="px-6 py-4 font-medium text-slate-900 dark:text-white">{dept.name}</td>
                                         <td className="px-6 py-4 text-center">
-                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400">
+                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-400">
                                                 {dept._count?.agents || 0}
                                             </span>
                                         </td>
@@ -194,7 +194,7 @@ export default function DepartmentsPage() {
                                         <td className="px-6 py-4 flex items-center justify-end gap-2">
                                             <button
                                                 onClick={() => openModal(dept)}
-                                                className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-800 rounded transition-colors"
+                                                className="p-1.5 text-slate-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-slate-800 rounded transition-colors"
                                                 title="Edit"
                                             >
                                                 <Edit2 className="w-4 h-4" />
@@ -247,7 +247,7 @@ export default function DepartmentsPage() {
                                     value={deptName}
                                     onChange={(e) => setDeptName(e.target.value)}
                                     placeholder="e.g. Technical Support"
-                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm placeholder-slate-400"
+                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm placeholder-slate-400"
                                     autoFocus
                                 />
                             </div>
@@ -263,7 +263,7 @@ export default function DepartmentsPage() {
                                 <button
                                     type="submit"
                                     disabled={isSubmitting || !deptName.trim()}
-                                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center gap-2"
+                                    className="px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center gap-2"
                                 >
                                     {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
                                     {editingDept ? 'Save Changes' : 'Create Department'}

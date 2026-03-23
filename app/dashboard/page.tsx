@@ -3,10 +3,27 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { BarChart3, Clock, Users, FileText, CheckCircle2, AlertTriangle, MessageSquare, Loader2, RefreshCw, ChevronLeft, ChevronRight, Calendar, TrendingUp } from 'lucide-react';
+import { BarChart3, Clock, Users, FileText, CheckCircle2, AlertTriangle, MessageSquare, Loader2, RefreshCw, ChevronLeft, ChevronRight, Calendar, TrendingUp, GripHorizontal } from 'lucide-react';
 import {
     LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell
 } from 'recharts';
+import ReactGridLayout, { Responsive } from 'react-grid-layout';
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
+
+// @ts-ignore
+import { WidthProvider } from 'react-grid-layout';
+const ResponsiveGridLayout = WidthProvider(Responsive);
+
+const DEFAULT_LAYOUT: any[] = [
+    { i: 'comparative', x: 0, y: 0, w: 12, h: 4 },
+    { i: 'department', x: 0, y: 4, w: 4, h: 4 },
+    { i: 'issues', x: 4, y: 4, w: 8, h: 4 },
+    { i: 'emails', x: 0, y: 8, w: 8, h: 3 },
+    { i: 'spikes', x: 8, y: 8, w: 4, h: 3 },
+    { i: 'agents', x: 0, y: 11, w: 6, h: 3 },
+    { i: 'queries', x: 6, y: 11, w: 6, h: 3 }
+];
 
 interface AnalyticsData {
     summary: {
@@ -44,6 +61,42 @@ export default function DashboardPage() {
     const [currentAgentsIndex, setCurrentAgentsIndex] = useState(0);
 
     const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
+
+    const [layout, setLayout] = useState<any[]>(DEFAULT_LAYOUT);
+    const [isLayoutLoaded, setIsLayoutLoaded] = useState(false);
+
+    useEffect(() => {
+        const fetchProfileLayout = async () => {
+            try {
+                const res = await fetch('/api/profile');
+                if (!res.ok) return;
+                const pdt = await res.json();
+                if (pdt.dashboardLayout) {
+                    const saved = JSON.parse(pdt.dashboardLayout);
+                    if (Array.isArray(saved) && saved.length > 0) setLayout(saved);
+                }
+            } catch (e) {
+                console.error('Failed to load layout');
+            } finally {
+                setIsLayoutLoaded(true);
+            }
+        };
+        fetchProfileLayout();
+    }, []);
+
+    const handleLayoutChange = async (newLayout: any[]) => {
+        if (!isLayoutLoaded) return;
+        setLayout(newLayout);
+        try {
+            await fetch('/api/profile', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'update_layout', dashboardLayout: newLayout })
+            });
+        } catch (e) {
+            console.error('Failed to save layout');
+        }
+    };
 
     const fetchAnalytics = async () => {
         setLoading(true);
@@ -107,7 +160,7 @@ export default function DashboardPage() {
     if (loading && !data) {
         return (
             <div className="flex flex-col items-center justify-center h-[calc(100vh-8rem)] text-slate-500">
-                <Loader2 className="w-10 h-10 animate-spin text-blue-600 mb-4" />
+                <Loader2 className="w-10 h-10 animate-spin text-primary-600 mb-4" />
                 <p className="font-medium">Compiling Analytics...</p>
             </div>
         );
@@ -188,7 +241,7 @@ export default function DashboardPage() {
             <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                        <BarChart3 className="w-6 h-6 text-blue-600" />
+                        <BarChart3 className="w-6 h-6 text-primary-600" />
                         Performance Dashboard
                     </h1>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
@@ -197,7 +250,7 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
-                    <Link href="/dashboard/analytics" className="hidden sm:flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium shadow-sm">
+                    <Link href="/dashboard/analytics" className="hidden sm:flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium shadow-sm">
                         View Extensive Analytics
                     </Link>
                     {dateRange === 'custom' && (
@@ -206,21 +259,21 @@ export default function DashboardPage() {
                                 type="date"
                                 value={customStart}
                                 onChange={(e) => setCustomStart(e.target.value)}
-                                className="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm shadow-sm"
+                                className="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm shadow-sm"
                             />
                             <span className="text-slate-500 dark:text-slate-400">to</span>
                             <input
                                 type="date"
                                 value={customEnd}
                                 onChange={(e) => setCustomEnd(e.target.value)}
-                                className="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm shadow-sm"
+                                className="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm shadow-sm"
                             />
                         </div>
                     )}
                     <select
                         value={dateRange}
                         onChange={(e) => setDateRange(e.target.value)}
-                        className="px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors sm:text-sm font-medium shadow-sm"
+                        className="px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm font-medium shadow-sm"
                     >
                         <option value="allTime">All Time</option>
                         <option value="7days">Last 7 Days</option>
@@ -231,7 +284,7 @@ export default function DashboardPage() {
 
                     <button
                         onClick={fetchAnalytics}
-                        className="p-2 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm"
+                        className="p-2 text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm"
                         title="Refresh Dashboard"
                     >
                         <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
@@ -245,7 +298,7 @@ export default function DashboardPage() {
                     title="Total Chats"
                     value={summary.totalChats}
                     icon={MessageSquare}
-                    colorClass="bg-blue-50 text-blue-600"
+                    colorClass="bg-primary-50 text-primary-600"
                 />
                 <KpiCard
                     title="Resolution Rate"
@@ -268,11 +321,24 @@ export default function DashboardPage() {
                 />
             </motion.div>
 
-            {/* Main Charts Area */}
-            <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Draggable Dashboard Layout */}
+            <ResponsiveGridLayout
+                className="layout mt-6 relative z-20"
+                layouts={{ lg: layout }}
+                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+                rowHeight={100}
+                onLayoutChange={handleLayoutChange}
+                isDraggable={true}
+                isResizable={true}
+                draggableHandle=".drag-handle"
+            >
 
                 {/* Comparative Trend Chart (Full Width) */}
-                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 col-span-1 lg:col-span-3">
+                <div key="comparative" className="w-full h-full bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative group overflow-hidden">
+                    <div className="drag-handle absolute top-4 right-4 cursor-move text-slate-300 hover:text-slate-500 transition-colors opacity-0 group-hover:opacity-100 z-10 bg-white/50 backdrop-blur-sm rounded-lg p-1">
+                        <GripHorizontal className="w-5 h-5" />
+                    </div>
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
                         <div className="flex items-center gap-2">
                             <TrendingUp className="w-5 h-5 text-slate-400" />
@@ -293,7 +359,7 @@ export default function DashboardPage() {
                                                 setSelectedDepartments(prev => prev.filter(d => d !== dept.departmentName));
                                             }
                                         }}
-                                        className="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500 bg-white dark:bg-slate-800 transition-colors"
+                                        className="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-primary-600 focus:ring-primary-500 bg-white dark:bg-slate-800 transition-colors"
                                     />
                                     <span className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1.5 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
                                         <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: getDepartmentColor(dept.departmentName, index) }}></span>
@@ -348,10 +414,13 @@ export default function DashboardPage() {
                             <div className="h-full flex items-center justify-center text-slate-400 text-sm">No data available</div>
                         )}
                     </div>
-                </motion.div>
+                </div>
 
                 {/* Department Distribution Pie Chart */}
-                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
+                <div key="department" className="w-full h-full bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative group overflow-hidden">
+                    <div className="drag-handle absolute top-4 right-4 cursor-move text-slate-300 hover:text-slate-500 transition-colors opacity-0 group-hover:opacity-100 z-10 bg-white/50 backdrop-blur-sm rounded-lg p-1">
+                        <GripHorizontal className="w-5 h-5" />
+                    </div>
                     <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <Users className="w-5 h-5 text-slate-400" />
                         Volume by Department
@@ -379,10 +448,13 @@ export default function DashboardPage() {
                             <div className="h-full flex items-center justify-center text-slate-400 text-sm">No data available</div>
                         )}
                     </div>
-                </motion.div>
+                </div>
 
                 {/* Top Issues Breakdown */}
-                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
+                <div key="issues" className="w-full h-full bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative group overflow-hidden">
+                    <div className="drag-handle absolute top-4 right-4 cursor-move text-slate-300 hover:text-slate-500 transition-colors opacity-0 group-hover:opacity-100 z-10 bg-white/50 backdrop-blur-sm rounded-lg p-1">
+                        <GripHorizontal className="w-5 h-5" />
+                    </div>
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <AlertTriangle className="w-5 h-5 text-slate-400" />
@@ -418,15 +490,15 @@ export default function DashboardPage() {
                                 return issuesData.slice(0, 10).map((issue, index) => {
                                     const pct = Math.round((issue.value / max) * 100);
                                     const barColors = [
-                                        'bg-blue-500', 'bg-emerald-500', 'bg-amber-500',
+                                        'bg-primary-500', 'bg-emerald-500', 'bg-amber-500',
                                         'bg-violet-500', 'bg-rose-500', 'bg-cyan-500',
-                                        'bg-orange-500', 'bg-indigo-500', 'bg-pink-500', 'bg-teal-500'
+                                        'bg-orange-500', 'bg-primary-500', 'bg-pink-500', 'bg-teal-500'
                                     ];
                                     const textColors = [
-                                        'text-blue-600 dark:text-blue-400', 'text-emerald-600 dark:text-emerald-400',
+                                        'text-primary-600 dark:text-primary-400', 'text-emerald-600 dark:text-emerald-400',
                                         'text-amber-600 dark:text-amber-400', 'text-violet-600 dark:text-violet-400',
                                         'text-rose-600 dark:text-rose-400', 'text-cyan-600 dark:text-cyan-400',
-                                        'text-orange-600 dark:text-orange-400', 'text-indigo-600 dark:text-indigo-400',
+                                        'text-orange-600 dark:text-orange-400', 'text-primary-600 dark:text-primary-400',
                                         'text-pink-600 dark:text-pink-400', 'text-teal-600 dark:text-teal-400'
                                     ];
                                     return (
@@ -454,15 +526,15 @@ export default function DashboardPage() {
                     ) : (
                         <div className="h-72 flex items-center justify-center text-slate-400 text-sm">No data available</div>
                     )}
-                </motion.div>
+                </div>
 
-            </motion.div>
-
-            {/* Secondary Charts */}
-            <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-6">
+                {/* Secondary Charts */}
 
                 {/* Emails Sent by Department Bar Chart */}
-                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
+                <div key="emails" className="w-full h-full bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative group overflow-hidden">
+                    <div className="drag-handle absolute top-4 right-4 cursor-move text-slate-300 hover:text-slate-500 transition-colors opacity-0 group-hover:opacity-100 z-10 bg-white/50 backdrop-blur-sm rounded-lg p-1">
+                        <GripHorizontal className="w-5 h-5" />
+                    </div>
                     <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <MessageSquare className="w-5 h-5 text-slate-400" />
                         Emails Sent by Department
@@ -478,10 +550,13 @@ export default function DashboardPage() {
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
-                </motion.div>
+                </div>
 
                 {/* Chat Spikes by Time Chart */}
-                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
+                <div key="spikes" className="w-full h-full bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative group overflow-hidden">
+                    <div className="drag-handle absolute top-4 right-4 cursor-move text-slate-300 hover:text-slate-500 transition-colors opacity-0 group-hover:opacity-100 z-10 bg-white/50 backdrop-blur-sm rounded-lg p-1">
+                        <GripHorizontal className="w-5 h-5" />
+                    </div>
                     <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <Clock className="w-5 h-5 text-slate-400" />
                         Chat Spikes by Time of Day
@@ -509,10 +584,13 @@ export default function DashboardPage() {
                             </LineChart>
                         </ResponsiveContainer>
                     </div>
-                </motion.div>
+                </div>
 
                 {/* Top Agents Bar Chart */}
-                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
+                <div key="agents" className="w-full h-full bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative group overflow-hidden">
+                    <div className="drag-handle absolute top-4 right-4 cursor-move text-slate-300 hover:text-slate-500 transition-colors opacity-0 group-hover:opacity-100 z-10 bg-white/50 backdrop-blur-sm rounded-lg p-1">
+                        <GripHorizontal className="w-5 h-5" />
+                    </div>
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <Users className="w-5 h-5 text-slate-400" />
@@ -551,10 +629,13 @@ export default function DashboardPage() {
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
-                </motion.div>
+                </div>
 
                 {/* Top Query Types Bar Chart */}
-                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
+                <div key="queries" className="w-full h-full bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 flex flex-col relative group overflow-hidden">
+                    <div className="drag-handle absolute top-4 right-4 cursor-move text-slate-300 hover:text-slate-500 transition-colors opacity-0 group-hover:opacity-100 z-10 bg-white/50 backdrop-blur-sm rounded-lg p-1">
+                        <GripHorizontal className="w-5 h-5" />
+                    </div>
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <FileText className="w-5 h-5 text-slate-400" />
@@ -593,8 +674,8 @@ export default function DashboardPage() {
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
-                </motion.div>
-            </motion.div>
+                </div>
+            </ResponsiveGridLayout>
         </div>
     );
 }

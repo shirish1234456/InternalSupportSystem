@@ -140,15 +140,7 @@ body {
   border-radius: 8px !important;
 }
 
-.dark .recharts-tooltip-item {
-  color: #e2e8f0 !important;
-  /* slate-200 */
-}
 
-.dark .recharts-tooltip-item-name {
-  color: #94a3b8 !important;
-  /* slate-400 */
-}
 
 .dark .recharts-tooltip-cursor {
   fill: rgba(148, 163, 184, 0.08) !important;

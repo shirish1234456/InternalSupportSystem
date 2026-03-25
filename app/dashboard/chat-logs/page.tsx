@@ -10,6 +10,7 @@ interface ChatSession {
     chatCode: string;
     queryDescription: string;
     status: 'Open' | 'Resolved' | 'Escalated';
+    feedback: 'Happy' | 'Neutral' | 'Sad' | null;
     createdAt: string;
     closedAt?: string;
     emailSent: boolean;
@@ -790,6 +791,17 @@ export default function ChatLogsPage() {
                                             ) : (
                                                 <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.issueType.name}</p>
                                             )}
+                                        </div>
+
+                                        {/* Feedback Rating */}
+                                        <div className="col-span-2 md:col-span-1">
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Customer Feedback</p>
+                                            <div className="text-sm font-medium text-slate-900 dark:text-white flex items-center gap-1.5">
+                                                {selectedSession.feedback === 'Happy' && <><span className="text-lg">😃</span> Happy</>}
+                                                {selectedSession.feedback === 'Neutral' && <><span className="text-lg">😐</span> Neutral</>}
+                                                {selectedSession.feedback === 'Sad' && <><span className="text-lg">☹️</span> Sad</>}
+                                                {!selectedSession.feedback && <span className="text-slate-400 font-normal italic">N/A</span>}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

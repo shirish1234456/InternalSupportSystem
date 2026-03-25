@@ -494,10 +494,10 @@ export default function ChatLogsPage() {
                                         <td className="px-6 py-4">
                                             <div className="font-semibold text-slate-900 dark:text-white">{session.chatCode}</div>
                                             <div className="text-xs text-slate-500 mt-1 whitespace-nowrap">
-                                                {new Date(session.createdAt).toLocaleDateString()}
+                                                {new Date(session.createdAt).toLocaleDateString('en-US')}
                                             </div>
                                             <div className="text-xs text-slate-400">
-                                                {new Date(session.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                {new Date(session.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
@@ -597,7 +597,7 @@ export default function ChatLogsPage() {
                                     {selectedSession.chatCode}
                                 </h2>
                                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-3">
-                                    <span>{new Date(selectedSession.createdAt).toLocaleString()}</span>
+                                    <span>{new Date(selectedSession.createdAt).toLocaleString('en-US')}</span>
                                     <StatusBadge status={selectedSession.status} />
                                 </p>
                             </div>

@@ -160,10 +160,6 @@ export default function Sidebar({ user, isCollapsed, setIsCollapsed }: SidebarPr
 
             {/* Footer */}
             <div className={`px-3 py-3 border-t border-slate-100/50 dark:border-slate-800/50 flex flex-col gap-2 ${isCollapsed ? 'items-center' : ''}`}>
-                <div className={`flex items-center w-full ${isCollapsed ? 'justify-center' : 'justify-between px-2'} mb-1`}>
-                    {!isCollapsed && <span className="text-xs font-semibold text-slate-400">Theme</span>}
-                    <ThemeToggle />
-                </div>
 
                 <button
                     onClick={() => setIsCollapsed(!isCollapsed)}

@@ -203,9 +203,16 @@ export async function GET(req: NextRequest) {
 
             const deptName = deptMap.get(chat.departmentId) || 'Unknown';
 
-            // Map hourly spike for ALL records (including bad-dated ones) — this is time-of-day, not calendar date
-            const hour = chat.createdAt.getUTCHours();
-            hourlyMap[hour]++;
+            // Only count hourly spikes for records with a real time component.
+            // Rows imported from date-only Excel cells are stored as midnight UTC (00:00:00)
+            // and would falsely inflate the 00:00 bucket.
+            const utcH = chat.createdAt.getUTCHours();
+            const utcM = chat.createdAt.getUTCMinutes();
+            const utcS = chat.createdAt.getUTCSeconds();
+            const hasMeaningfulTime = utcH !== 0 || utcM !== 0 || utcS !== 0;
+            if (hasMeaningfulTime) {
+                hourlyMap[utcH]++;
+            }
 
             // Skip future-dated records from the trend chart
             if (dateKey > todayKey) return;

@@ -22,9 +22,11 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 
 interface SidebarProps {
     user: JWTPayload | null;
+    isCollapsed: boolean;
+    setIsCollapsed: (val: boolean) => void;
 }
 
-export default function Sidebar({ user }: SidebarProps) {
+export default function Sidebar({ user, isCollapsed, setIsCollapsed }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
 
@@ -77,32 +79,34 @@ export default function Sidebar({ user }: SidebarProps) {
     };
 
     return (
-        <div className="w-64 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-800/50 h-screen fixed left-0 top-0 flex flex-col shadow-sm z-20 transition-colors duration-300">
+        <div className={`${isCollapsed ? 'w-20' : 'w-64'} bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-800/50 h-screen fixed left-0 top-0 flex flex-col shadow-sm z-20 transition-all duration-300`}>
             {/* Brand */}
-            <div className="px-5 py-5 border-b border-slate-100/50 dark:border-slate-800/50">
+            <div className={`px-5 py-5 border-b border-slate-100/50 dark:border-slate-800/50 flex items-center ${isCollapsed ? 'justify-center px-0' : ''}`}>
                 <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-                    <motion.div whileHover={{ scale: 1.05, rotate: 5 }} whileTap={{ scale: 0.95 }} className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-md">
+                    <motion.div whileHover={{ scale: 1.05, rotate: 5 }} whileTap={{ scale: 0.95 }} className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-md shrink-0">
                         <MessageSquare className="w-4 h-4 text-white" />
                     </motion.div>
-                    SupportHub
+                    {!isCollapsed && <span>SupportHub</span>}
                 </h1>
             </div>
 
             {/* User badge */}
             {user && (
-                <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
+                <div className={`px-4 py-3 border-b border-slate-100 dark:border-slate-800 flex ${isCollapsed ? 'justify-center px-0' : ''}`}>
                     <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center flex-shrink-0">
+                        <div className="w-9 h-9 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center flex-shrink-0" title={user.fullName}>
                             <span className="text-sm font-bold text-primary-700 dark:text-primary-300">
                                 {user.fullName?.charAt(0)?.toUpperCase()}
                             </span>
                         </div>
-                        <div className="min-w-0">
-                            <p className="text-sm font-semibold text-slate-800 dark:text-white truncate">{user.fullName}</p>
-                            <span className={`inline-flex mt-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded-full border ${roleColors[user.role] || roleColors.DataEntry}`}>
-                                {user.role}
-                            </span>
-                        </div>
+                        {!isCollapsed && (
+                            <div className="min-w-0">
+                                <p className="text-sm font-semibold text-slate-800 dark:text-white truncate">{user.fullName}</p>
+                                <span className={`inline-flex mt-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded-full border ${roleColors[user.role] || roleColors.DataEntry}`}>
+                                    {user.role}
+                                </span>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
@@ -119,9 +123,12 @@ export default function Sidebar({ user }: SidebarProps) {
 
                     return (
                         <div key={idx}>
-                            <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1.5 px-2">
-                                {group.label}
-                            </p>
+                            {!isCollapsed && (
+                                <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1.5 px-2">
+                                    {group.label}
+                                </p>
+                            )}
+                            {isCollapsed && <div className="h-4" />} {/* Spacer for collapsed mode */}
                             <div className="space-y-0.5">
                                 {visibleItems.map((item) => {
                                     const isActive = item.href === '/dashboard'
@@ -130,16 +137,17 @@ export default function Sidebar({ user }: SidebarProps) {
                                     const Icon = item.icon;
 
                                     return (
-                                        <motion.div key={item.href} whileHover={{ x: 4 }} whileTap={{ scale: 0.98 }}>
+                                        <motion.div key={item.href} whileHover={{ x: isCollapsed ? 0 : 4 }} whileTap={{ scale: 0.98 }}>
                                             <Link
                                                 href={item.href}
-                                                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-200 text-sm font-medium group ${isActive
+                                                title={isCollapsed ? item.name : undefined}
+                                                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-200 text-sm font-medium group ${isCollapsed ? 'justify-center' : ''} ${isActive
                                                     ? 'bg-gradient-to-r from-primary-600 to-primary-600 text-white shadow-md shadow-primary-500/20'
                                                     : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-white'
                                                     }`}
                                             >
                                                 <Icon className={`w-4 h-4 flex-shrink-0 transition-colors ${isActive ? 'text-white' : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-white'}`} />
-                                                {item.name}
+                                                {!isCollapsed && <span>{item.name}</span>}
                                             </Link>
                                         </motion.div>
                                     );
@@ -151,15 +159,29 @@ export default function Sidebar({ user }: SidebarProps) {
             </nav>
 
             {/* Footer */}
-            <div className="px-3 py-3 border-t border-slate-100/50 dark:border-slate-800/50 flex items-center gap-2">
+            <div className={`px-3 py-3 border-t border-slate-100/50 dark:border-slate-800/50 flex flex-col gap-2 ${isCollapsed ? 'items-center' : ''}`}>
+                <div className={`flex items-center w-full ${isCollapsed ? 'justify-center' : 'justify-between px-2'} mb-1`}>
+                    {!isCollapsed && <span className="text-xs font-semibold text-slate-400">Theme</span>}
+                    <ThemeToggle />
+                </div>
+
+                <button
+                    onClick={() => setIsCollapsed(!isCollapsed)}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-all w-full ${isCollapsed ? 'justify-center' : ''}`}
+                    title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`}><path d="m15 18-6-6 6-6" /><path d="M3 6h2" /><path d="M3 12h2" /><path d="M3 18h2" /></svg>
+                    {!isCollapsed && <span>Collapse</span>}
+                </button>
+
                 <button
                     onClick={handleLogout}
-                    className="flex flex-1 items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-all"
+                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-all w-full ${isCollapsed ? 'justify-center' : ''}`}
+                    title={isCollapsed ? "Sign Out" : undefined}
                 >
-                    <LogOut className="w-4 h-4" />
-                    Sign Out
+                    <LogOut className="w-4 h-4 shrink-0" />
+                    {!isCollapsed && <span>Sign Out</span>}
                 </button>
-                <ThemeToggle />
             </div>
         </div>
     );

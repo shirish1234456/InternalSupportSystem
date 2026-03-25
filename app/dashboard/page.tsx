@@ -308,10 +308,10 @@ export default function DashboardPage() {
                             ))}
                         </div>
                     </div>
-                    <div className="h-72 w-full">
+                    <div className="h-96 w-full mt-4">
                         {comparativeData.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%">
-                                <LineChart data={comparativeData} margin={{ top: 5, right: 5, left: -20, bottom: 30 }}>
+                                <LineChart data={comparativeData} margin={{ top: 5, right: 5, left: -20, bottom: 40 }}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                                     <XAxis
                                         dataKey="date"

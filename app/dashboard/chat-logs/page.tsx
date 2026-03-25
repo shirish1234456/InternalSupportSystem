@@ -364,80 +364,89 @@ export default function ChatLogsPage() {
     };
 
     return (
-        <div className="space-y-6 flex flex-col h-[calc(100vh-8rem)]">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
-                <div>
-                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                        <MessageSquare className="w-6 h-6 text-primary-600" />
+        <div className="space-y-4 flex flex-col h-[calc(100vh-8rem)]">
+            {/* Header: Title left, all controls right in one bar */}
+            <div className="flex items-center justify-between gap-4 shrink-0">
+                <div className="min-w-0">
+                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2 truncate">
+                        <MessageSquare className="w-6 h-6 text-primary-600 shrink-0" />
                         Chat Logs
                     </h1>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                        Browse and search through all recorded support interactions.
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                        {totalRecords > 0 ? <><span className="font-semibold text-slate-700 dark:text-slate-200">{totalRecords.toLocaleString()}</span> recorded interactions</> : 'Browse and search all support interactions.'}
                     </p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3">
-                    <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700 h-10">
-                        <select
-                            value={statusFilter}
-                            onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-                            className="bg-transparent text-sm pl-2 pr-6 border-r border-slate-300 dark:border-slate-600 focus:outline-none text-slate-700 dark:text-slate-300 cursor-pointer"
-                        >
-                            <option value="All" className="bg-white dark:bg-slate-800">All Statuses</option>
-                            <option value="Open" className="bg-white dark:bg-slate-800">Open</option>
-                            <option value="Resolved" className="bg-white dark:bg-slate-800">Resolved</option>
-                            <option value="Escalated" className="bg-white dark:bg-slate-800">Escalated</option>
-                            <option value="OpenEscalated" className="bg-white dark:bg-slate-800">Escalated & Open</option>
-                        </select>
-                        <select
-                            value={departmentFilter}
-                            onChange={(e) => { setDepartmentFilter(e.target.value); setPage(1); }}
-                            className="bg-transparent text-sm pl-3 pr-6 focus:outline-none text-slate-700 dark:text-slate-300 cursor-pointer"
-                        >
-                            <option value="All" className="bg-white dark:bg-slate-800">All Departments</option>
-                            {departments.map(d => <option key={d.id} value={d.id} className="bg-white dark:bg-slate-800">{d.name}</option>)}
-                        </select>
-                    </div>
+                {/* Controls row */}
+                <div className="flex items-center gap-2 shrink-0">
+                    {/* Status filter */}
+                    <select
+                        value={statusFilter}
+                        onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
+                        className="h-9 px-3 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
+                    >
+                        <option value="All">All Statuses</option>
+                        <option value="Open">Open</option>
+                        <option value="Resolved">Resolved</option>
+                        <option value="Escalated">Escalated</option>
+                        <option value="OpenEscalated">Escalated &amp; Open</option>
+                    </select>
 
+                    {/* Department filter */}
+                    <select
+                        value={departmentFilter}
+                        onChange={(e) => { setDepartmentFilter(e.target.value); setPage(1); }}
+                        className="h-9 px-3 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
+                    >
+                        <option value="All">All Departments</option>
+                        {departments.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+                    </select>
+
+                    {/* Search */}
                     <div className="relative">
-                        <Search className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <Search className="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
                         <input
                             type="text"
-                            placeholder="Search reference..."
+                            placeholder="Search..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="pl-10 pr-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 transition-colors sm:text-sm w-48 xl:w-64 h-10"
+                            className="pl-8 pr-3 h-9 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm w-44"
                         />
                     </div>
 
-                    <div className="flex border-l border-slate-200 dark:border-slate-800 pl-3 gap-2">
-                        <button
-                            onClick={handleDeleteAll}
-                            disabled={isDeletingAll || totalRecords === 0}
-                            className="px-3 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg shadow-sm flex items-center gap-2 transition-colors disabled:opacity-50 h-10"
-                            title="Delete All Chat Sessions"
-                        >
-                            {isDeletingAll ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-                            <span className="hidden sm:inline">Delete All</span>
-                        </button>
-                        <button
-                            onClick={handleExportCSV}
-                            disabled={isExporting || totalRecords === 0}
-                            className="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg shadow-sm flex items-center gap-2 transition-colors disabled:opacity-50 h-10"
-                            title="Export to CSV"
-                        >
-                            {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                            <span className="hidden sm:inline">Export</span>
-                        </button>
+                    {/* Divider */}
+                    <div className="h-6 w-px bg-slate-200 dark:bg-slate-700" />
 
-                        <button
-                            onClick={fetchLogs}
-                            className="p-2 text-slate-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm h-10"
-                            title="Refresh"
-                        >
-                            <RefreshCw className="w-5 h-5" />
-                        </button>
-                    </div>
+                    {/* Export */}
+                    <button
+                        onClick={handleExportCSV}
+                        disabled={isExporting || totalRecords === 0}
+                        className="h-9 px-3 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                        title="Export to CSV"
+                    >
+                        {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                        Export
+                    </button>
+
+                    {/* Refresh */}
+                    <button
+                        onClick={fetchLogs}
+                        className="h-9 w-9 flex items-center justify-center text-slate-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg transition-colors"
+                        title="Refresh"
+                    >
+                        <RefreshCw className="w-4 h-4" />
+                    </button>
+
+                    {/* Delete All */}
+                    <button
+                        onClick={handleDeleteAll}
+                        disabled={isDeletingAll || totalRecords === 0}
+                        className="h-9 px-3 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                        title="Delete All Chat Sessions"
+                    >
+                        {isDeletingAll ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                        Delete All
+                    </button>
                 </div>
             </div>
 
@@ -466,9 +475,10 @@ export default function ChatLogsPage() {
                         </button>
                     </div>
                 </div>
-            )}
+            )
+            }
 
-            <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col flex-1">
+            < div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col flex-1" >
                 {loading && sessions.length === 0 ? (
                     <div className="flex items-center justify-center h-full text-slate-400">
                         <Loader2 className="w-8 h-8 animate-spin" />
@@ -589,281 +599,286 @@ export default function ChatLogsPage() {
                             </tbody>
                         </table>
                     </div>
-                )}
+                )
+                }
 
                 {/* Pagination Footer */}
-                {sessions.length > 0 && (
-                    <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex items-center justify-between shrink-0">
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
-                            Showing <span className="font-medium text-slate-700 dark:text-slate-300">{(page - 1) * 15 + 1}</span> to <span className="font-medium text-slate-700 dark:text-slate-300">{Math.min(page * 15, totalRecords)}</span> of <span className="font-medium text-slate-700 dark:text-slate-300">{totalRecords}</span> results
-                        </p>
-                        <div className="flex gap-2">
-                            <button
-                                onClick={() => setPage(p => Math.max(1, p - 1))}
-                                disabled={page === 1}
-                                className="px-3 py-1 border border-slate-300 dark:border-slate-700 rounded text-sm font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 disabled:opacity-50 transition-colors"
-                            >
-                                Previous
-                            </button>
-                            <button
-                                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                                disabled={page === totalPages}
-                                className="px-3 py-1 border border-slate-300 dark:border-slate-700 rounded text-sm font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 disabled:opacity-50 transition-colors"
-                            >
-                                Next
-                            </button>
+                {
+                    sessions.length > 0 && (
+                        <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex items-center justify-between shrink-0">
+                            <p className="text-sm text-slate-500 dark:text-slate-400">
+                                Showing <span className="font-medium text-slate-700 dark:text-slate-300">{(page - 1) * 15 + 1}</span> to <span className="font-medium text-slate-700 dark:text-slate-300">{Math.min(page * 15, totalRecords)}</span> of <span className="font-medium text-slate-700 dark:text-slate-300">{totalRecords}</span> results
+                            </p>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                                    disabled={page === 1}
+                                    className="px-3 py-1 border border-slate-300 dark:border-slate-700 rounded text-sm font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 disabled:opacity-50 transition-colors"
+                                >
+                                    Previous
+                                </button>
+                                <button
+                                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                                    disabled={page === totalPages}
+                                    className="px-3 py-1 border border-slate-300 dark:border-slate-700 rounded text-sm font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 disabled:opacity-50 transition-colors"
+                                >
+                                    Next
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                )}
-            </div>
+                    )
+                }
+            </div >
 
             {/* Chat Session Details Modal */}
-            {selectedSession && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-                    <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
-                        {/* Modal Header */}
-                        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 border-b dark:bg-slate-800/50">
-                            <div>
-                                <h2 className="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                                    {selectedSession.chatCode}
-                                </h2>
-                                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-3">
-                                    <span>{new Date(selectedSession.createdAt).toLocaleString('en-US')}</span>
-                                    <StatusBadge status={selectedSession.status} />
-                                </p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                {!isEditMode ? (
-                                    <button
-                                        onClick={() => setIsEditMode(true)}
-                                        className="p-2 text-slate-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg transition-colors"
-                                        title="Edit Details"
-                                    >
-                                        <Edit2 className="w-5 h-5" />
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={() => setIsEditMode(false)}
-                                        className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors font-medium text-sm flex items-center gap-1"
-                                    >
-                                        <XCircle className="w-4 h-4" /> Cancel
-                                    </button>
-                                )}
-                                <button
-                                    onClick={() => setSelectedSession(null)}
-                                    className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
-                                    title="Close"
-                                >
-                                    <X className="w-5 h-5" />
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Notifications */}
-                        {success && (
-                            <div className="px-6 py-3 bg-green-50 text-green-700 border-b border-green-100 flex items-center justify-center gap-2 text-sm font-medium animate-in fade-in slide-in-from-top-2">
-                                <FileText className="w-4 h-4" />
-                                {success}
-                            </div>
-                        )}
-                        {error && (
-                            <div className="px-6 py-3 bg-red-50 text-red-700 border-b border-red-100 flex items-center justify-center gap-2 text-sm font-medium animate-in fade-in slide-in-from-top-2">
-                                <XCircle className="w-4 h-4" />
-                                {error}
-                            </div>
-                        )}
-
-                        {/* Modal Body */}
-                        <div className="p-6 overflow-y-auto flex-1 space-y-6">
-                            {/* Customer Details */}
-                            <div>
-                                <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-3">Customer Details</h3>
-                                <div className="grid grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-100 dark:border-slate-700/50">
-                                    <div>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Name</p>
-                                        <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.customer.fullName}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Email</p>
-                                        <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.customer.email || 'N/A'}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">School / Organization</p>
-                                        <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.customer.school || 'N/A'}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Contact Number</p>
-                                        <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.customer.contactNumber || 'N/A'}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Country</p>
-                                        <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.customer.country || 'N/A'}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Role</p>
-                                        <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.customer.role || 'N/A'}</p>
-                                    </div>
+            {
+                selectedSession && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+                        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
+                            {/* Modal Header */}
+                            <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 border-b dark:bg-slate-800/50">
+                                <div>
+                                    <h2 className="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                                        {selectedSession.chatCode}
+                                    </h2>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-3">
+                                        <span>{new Date(selectedSession.createdAt).toLocaleString('en-US')}</span>
+                                        <StatusBadge status={selectedSession.status} />
+                                    </p>
                                 </div>
-                            </div>
-
-                            {/* Handling Info */}
-                            <div>
-                                <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-3">Handling Info</h3>
-                                <div className="grid grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-100 dark:border-slate-700/50">
-                                    {/* Agent */}
-                                    <div>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Agent</p>
-                                        {isEditMode ? (
-                                            <select
-                                                value={editForm.agentId}
-                                                onChange={(e) => setEditForm(prev => ({ ...prev, agentId: e.target.value }))}
-                                                className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
-                                            >
-                                                <option value="" disabled>Select Agent</option>
-                                                {agents.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-                                            </select>
-                                        ) : (
-                                            <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.agent.name}</p>
-                                        )}
-                                    </div>
-
-                                    {/* Department */}
-                                    <div>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Department</p>
-                                        {isEditMode ? (
-                                            <select
-                                                value={editForm.departmentId}
-                                                onChange={(e) => setEditForm(prev => ({ ...prev, departmentId: e.target.value }))}
-                                                className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
-                                            >
-                                                <option value="" disabled>Select Department</option>
-                                                {departments.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
-                                            </select>
-                                        ) : (
-                                            <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.department.name}</p>
-                                        )}
-                                    </div>
-
-                                    {/* Query Type */}
-                                    <div>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Query Type</p>
-                                        {isEditMode ? (
-                                            <select
-                                                value={editForm.queryTypeId}
-                                                onChange={(e) => setEditForm(prev => ({ ...prev, queryTypeId: e.target.value }))}
-                                                className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
-                                            >
-                                                <option value="" disabled>Select Query Type</option>
-                                                {queryTypes.map(q => <option key={q.id} value={q.id}>{q.name}</option>)}
-                                            </select>
-                                        ) : (
-                                            <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.queryType.name}</p>
-                                        )}
-                                    </div>
-
-                                    {/* Issue Type */}
-                                    <div>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Issue Type</p>
-                                        {isEditMode ? (
-                                            <select
-                                                value={editForm.issueTypeId}
-                                                onChange={(e) => setEditForm(prev => ({ ...prev, issueTypeId: e.target.value }))}
-                                                className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
-                                            >
-                                                <option value="" disabled>Select Issue Type</option>
-                                                {issueTypes.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
-                                            </select>
-                                        ) : (
-                                            <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.issueType.name}</p>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Query Description */}
-                            <div>
-                                <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-3">Query Description</h3>
-                                <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-100 dark:border-slate-700/50">
-                                    {isEditMode ? (
-                                        <textarea
-                                            value={editForm.queryDescription}
-                                            onChange={(e) => setEditForm(prev => ({ ...prev, queryDescription: e.target.value }))}
-                                            placeholder="What was the initial question or problem?"
-                                            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 transition-colors text-sm min-h-[80px]"
-                                        />
+                                <div className="flex items-center gap-2">
+                                    {!isEditMode ? (
+                                        <button
+                                            onClick={() => setIsEditMode(true)}
+                                            className="p-2 text-slate-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg transition-colors"
+                                            title="Edit Details"
+                                        >
+                                            <Edit2 className="w-5 h-5" />
+                                        </button>
                                     ) : (
-                                        <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap">{selectedSession.queryDescription}</p>
+                                        <button
+                                            onClick={() => setIsEditMode(false)}
+                                            className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors font-medium text-sm flex items-center gap-1"
+                                        >
+                                            <XCircle className="w-4 h-4" /> Cancel
+                                        </button>
                                     )}
+                                    <button
+                                        onClick={() => setSelectedSession(null)}
+                                        className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                                        title="Close"
+                                    >
+                                        <X className="w-5 h-5" />
+                                    </button>
                                 </div>
                             </div>
 
-                            {/* Resolution & Email Sent (Editable) */}
-                            <div>
-                                <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-3">Resolution Details</h3>
-                                <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-100 dark:border-slate-700/50 space-y-4">
+                            {/* Notifications */}
+                            {success && (
+                                <div className="px-6 py-3 bg-green-50 text-green-700 border-b border-green-100 flex items-center justify-center gap-2 text-sm font-medium animate-in fade-in slide-in-from-top-2">
+                                    <FileText className="w-4 h-4" />
+                                    {success}
+                                </div>
+                            )}
+                            {error && (
+                                <div className="px-6 py-3 bg-red-50 text-red-700 border-b border-red-100 flex items-center justify-center gap-2 text-sm font-medium animate-in fade-in slide-in-from-top-2">
+                                    <XCircle className="w-4 h-4" />
+                                    {error}
+                                </div>
+                            )}
 
-                                    <div>
-                                        <p className="text-xs font-medium text-slate-700 dark:text-slate-300 mb-2">Replied via Email?</p>
-                                        {isEditMode ? (
-                                            <label className="relative inline-flex items-center cursor-pointer">
-                                                <input
-                                                    type="checkbox"
-                                                    className="sr-only peer"
-                                                    checked={editForm.emailSent}
-                                                    onChange={(e) => setEditForm(prev => ({ ...prev, emailSent: e.target.checked }))}
-                                                />
-                                                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-primary-600"></div>
-                                                <span className="ml-3 text-sm font-medium text-slate-700 dark:text-slate-300">{editForm.emailSent ? 'Yes' : 'No'}</span>
-                                            </label>
-                                        ) : (
-                                            <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.emailSent ? 'Yes' : 'No'}</p>
-                                        )}
+                            {/* Modal Body */}
+                            <div className="p-6 overflow-y-auto flex-1 space-y-6">
+                                {/* Customer Details */}
+                                <div>
+                                    <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-3">Customer Details</h3>
+                                    <div className="grid grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-100 dark:border-slate-700/50">
+                                        <div>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Name</p>
+                                            <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.customer.fullName}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Email</p>
+                                            <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.customer.email || 'N/A'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">School / Organization</p>
+                                            <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.customer.school || 'N/A'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Contact Number</p>
+                                            <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.customer.contactNumber || 'N/A'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Country</p>
+                                            <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.customer.country || 'N/A'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Role</p>
+                                            <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.customer.role || 'N/A'}</p>
+                                        </div>
                                     </div>
+                                </div>
 
-                                    <div>
-                                        <p className="text-xs font-medium text-slate-700 dark:text-slate-300 mb-2">Resolution Provided</p>
+                                {/* Handling Info */}
+                                <div>
+                                    <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-3">Handling Info</h3>
+                                    <div className="grid grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-100 dark:border-slate-700/50">
+                                        {/* Agent */}
+                                        <div>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Agent</p>
+                                            {isEditMode ? (
+                                                <select
+                                                    value={editForm.agentId}
+                                                    onChange={(e) => setEditForm(prev => ({ ...prev, agentId: e.target.value }))}
+                                                    className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
+                                                >
+                                                    <option value="" disabled>Select Agent</option>
+                                                    {agents.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                                                </select>
+                                            ) : (
+                                                <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.agent.name}</p>
+                                            )}
+                                        </div>
+
+                                        {/* Department */}
+                                        <div>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Department</p>
+                                            {isEditMode ? (
+                                                <select
+                                                    value={editForm.departmentId}
+                                                    onChange={(e) => setEditForm(prev => ({ ...prev, departmentId: e.target.value }))}
+                                                    className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
+                                                >
+                                                    <option value="" disabled>Select Department</option>
+                                                    {departments.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+                                                </select>
+                                            ) : (
+                                                <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.department.name}</p>
+                                            )}
+                                        </div>
+
+                                        {/* Query Type */}
+                                        <div>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Query Type</p>
+                                            {isEditMode ? (
+                                                <select
+                                                    value={editForm.queryTypeId}
+                                                    onChange={(e) => setEditForm(prev => ({ ...prev, queryTypeId: e.target.value }))}
+                                                    className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
+                                                >
+                                                    <option value="" disabled>Select Query Type</option>
+                                                    {queryTypes.map(q => <option key={q.id} value={q.id}>{q.name}</option>)}
+                                                </select>
+                                            ) : (
+                                                <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.queryType.name}</p>
+                                            )}
+                                        </div>
+
+                                        {/* Issue Type */}
+                                        <div>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Issue Type</p>
+                                            {isEditMode ? (
+                                                <select
+                                                    value={editForm.issueTypeId}
+                                                    onChange={(e) => setEditForm(prev => ({ ...prev, issueTypeId: e.target.value }))}
+                                                    className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
+                                                >
+                                                    <option value="" disabled>Select Issue Type</option>
+                                                    {issueTypes.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
+                                                </select>
+                                            ) : (
+                                                <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.issueType.name}</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Query Description */}
+                                <div>
+                                    <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-3">Query Description</h3>
+                                    <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-100 dark:border-slate-700/50">
                                         {isEditMode ? (
                                             <textarea
-                                                value={editForm.resolution}
-                                                onChange={(e) => setEditForm(prev => ({ ...prev, resolution: e.target.value }))}
-                                                placeholder="Enter the resolution details..."
-                                                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 transition-colors text-sm min-h-[100px]"
+                                                value={editForm.queryDescription}
+                                                onChange={(e) => setEditForm(prev => ({ ...prev, queryDescription: e.target.value }))}
+                                                placeholder="What was the initial question or problem?"
+                                                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 transition-colors text-sm min-h-[80px]"
                                             />
                                         ) : (
-                                            <div className="bg-white dark:bg-slate-900 p-3 rounded border border-slate-200 dark:border-slate-700">
-                                                <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
-                                                    {selectedSession.resolution || <span className="text-slate-400 italic">No resolution provided.</span>}
-                                                </p>
-                                            </div>
+                                            <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap">{selectedSession.queryDescription}</p>
                                         )}
                                     </div>
+                                </div>
 
+                                {/* Resolution & Email Sent (Editable) */}
+                                <div>
+                                    <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-3">Resolution Details</h3>
+                                    <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-100 dark:border-slate-700/50 space-y-4">
+
+                                        <div>
+                                            <p className="text-xs font-medium text-slate-700 dark:text-slate-300 mb-2">Replied via Email?</p>
+                                            {isEditMode ? (
+                                                <label className="relative inline-flex items-center cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="sr-only peer"
+                                                        checked={editForm.emailSent}
+                                                        onChange={(e) => setEditForm(prev => ({ ...prev, emailSent: e.target.checked }))}
+                                                    />
+                                                    <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-primary-600"></div>
+                                                    <span className="ml-3 text-sm font-medium text-slate-700 dark:text-slate-300">{editForm.emailSent ? 'Yes' : 'No'}</span>
+                                                </label>
+                                            ) : (
+                                                <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.emailSent ? 'Yes' : 'No'}</p>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <p className="text-xs font-medium text-slate-700 dark:text-slate-300 mb-2">Resolution Provided</p>
+                                            {isEditMode ? (
+                                                <textarea
+                                                    value={editForm.resolution}
+                                                    onChange={(e) => setEditForm(prev => ({ ...prev, resolution: e.target.value }))}
+                                                    placeholder="Enter the resolution details..."
+                                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 transition-colors text-sm min-h-[100px]"
+                                                />
+                                            ) : (
+                                                <div className="bg-white dark:bg-slate-900 p-3 rounded border border-slate-200 dark:border-slate-700">
+                                                    <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
+                                                        {selectedSession.resolution || <span className="text-slate-400 italic">No resolution provided.</span>}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Modal Footer */}
-                        {isEditMode && (
-                            <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex justify-end gap-3">
-                                <button
-                                    onClick={() => setIsEditMode(false)}
-                                    className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={handleSaveEdit}
-                                    disabled={isSaving}
-                                    className="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50"
-                                >
-                                    {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                                    Save Changes
-                                </button>
-                            </div>
-                        )}
+                            {/* Modal Footer */}
+                            {isEditMode && (
+                                <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex justify-end gap-3">
+                                    <button
+                                        onClick={() => setIsEditMode(false)}
+                                        className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={handleSaveEdit}
+                                        disabled={isSaving}
+                                        className="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50"
+                                    >
+                                        {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                                        Save Changes
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             <ConfirmDialog
                 isOpen={confirmOpen}
@@ -881,6 +896,6 @@ export default function ChatLogsPage() {
                     setPendingAction(null);
                 }}
             />
-        </div>
+        </div >
     );
 }

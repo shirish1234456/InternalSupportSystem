@@ -246,9 +246,9 @@ export async function POST(req: NextRequest) {
                             if (parts[0].includes('/')) {
                                 const dParts = parts[0].split('/');
                                 if (dParts.length === 3) {
-                                    // User confirmed format is DD/MM/YYYY
-                                    const day = dParts[0].padStart(2, '0');
-                                    const month = dParts[1].padStart(2, '0');
+                                    // Format is MM/DD/YYYY
+                                    const month = dParts[0].padStart(2, '0');
+                                    const day = dParts[1].padStart(2, '0');
                                     let year = dParts[2];
                                     if (year.length === 2) {
                                         year = '20' + year; // assume 20xx

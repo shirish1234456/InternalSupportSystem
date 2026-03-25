@@ -25,7 +25,11 @@ export async function GET(req: NextRequest) {
                 _max: { createdAt: true }
             });
             startDate = bounds._min.createdAt || new Date(2000, 0, 1);
-            endDate = bounds._max.createdAt || new Date();
+            // Cap to today so incorrectly-dated records don't push the chart into future months
+            const today = new Date();
+            endDate = bounds._max.createdAt && bounds._max.createdAt < today
+                ? bounds._max.createdAt
+                : today;
         } else if (!startDateParam) {
             startDate.setDate(startDate.getDate() - 30);
         }

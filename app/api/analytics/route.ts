@@ -25,11 +25,8 @@ export async function GET(req: NextRequest) {
                 _max: { createdAt: true }
             });
             startDate = bounds._min.createdAt || new Date(2000, 0, 1);
-            // Cap to today so incorrectly-dated records don't push the chart into future months
-            const today = new Date();
-            endDate = bounds._max.createdAt && bounds._max.createdAt < today
-                ? bounds._max.createdAt
-                : today;
+            // Use a far-future date so ALL records (even those with bad import dates) are included in counts
+            endDate = new Date(9999, 11, 31);
         } else if (!startDateParam) {
             startDate.setDate(startDate.getDate() - 30);
         }
@@ -164,19 +161,25 @@ export async function GET(req: NextRequest) {
             deptTrendMaps.set(d.name, new Map<string, number>());
         });
 
-        // Pre-fill time gaps based on grouping
+        // Cap timeKeys to today so future months never appear regardless of bad DB dates
+        const now = new Date();
+        const todayKey = groupByMonth
+            ? `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+            : now.toISOString().split('T')[0];
+
+        // Pre-fill time gaps based on grouping, stopping at today
         const timeKeys: string[] = [];
         if (groupByMonth) {
             let curr = new Date(startDate);
             curr.setDate(1); // align to month start
-            while (curr <= endDate) {
+            while (curr <= now && (curr.getFullYear() < now.getFullYear() || curr.getMonth() <= now.getMonth())) {
                 const key = `${curr.getFullYear()}-${String(curr.getMonth() + 1).padStart(2, '0')}`;
                 timeKeys.push(key);
                 curr.setMonth(curr.getMonth() + 1);
             }
         } else {
             let curr = new Date(startDate);
-            while (curr <= endDate) {
+            while (curr <= now) {
                 const key = curr.toISOString().split('T')[0];
                 timeKeys.push(key);
                 curr.setDate(curr.getDate() + 1);
@@ -200,23 +203,26 @@ export async function GET(req: NextRequest) {
 
             const deptName = deptMap.get(chat.departmentId) || 'Unknown';
 
-            // Increment All Departments
+            // Map hourly spike for ALL records (including bad-dated ones) — this is time-of-day, not calendar date
+            const hour = chat.createdAt.getUTCHours();
+            hourlyMap[hour]++;
+
+            // Skip future-dated records from the trend chart
+            if (dateKey > todayKey) return;
+
+            // Increment All Departments trend
             const allMap = deptTrendMaps.get('All Departments')!;
             if (allMap.has(dateKey)) {
                 allMap.set(dateKey, allMap.get(dateKey)! + 1);
             }
 
-            // Increment Specific Department
+            // Increment Specific Department trend
             if (deptTrendMaps.has(deptName)) {
                 const specificMap = deptTrendMaps.get(deptName)!;
                 if (specificMap.has(dateKey)) {
                     specificMap.set(dateKey, specificMap.get(dateKey)! + 1);
                 }
             }
-
-            // Map hourly spike — use UTC hours to match how dates are stored in DB
-            const hour = chat.createdAt.getUTCHours();
-            hourlyMap[hour]++;
         });
 
         // Convert Map entries to Final Array

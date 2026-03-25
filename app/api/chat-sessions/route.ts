@@ -202,6 +202,13 @@ export async function DELETE(req: NextRequest) {
 
         const url = new URL(req.url);
         const singleId = url.searchParams.get('id');
+        const deleteAll = url.searchParams.get('all') === 'true';
+
+        // Delete ALL chat sessions
+        if (deleteAll) {
+            const result = await prisma.chatSession.deleteMany({});
+            return NextResponse.json({ message: `Successfully deleted all ${result.count} chat session(s)` });
+        }
 
         let idsToDelete: string[] = [];
 

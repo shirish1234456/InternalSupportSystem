@@ -70,6 +70,7 @@ export default function ChatLogsPage() {
     // Bulk Delete State
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
     const [isDeletingBulk, setIsDeletingBulk] = useState(false);
+    const [isDeletingAll, setIsDeletingAll] = useState(false);
 
     // Confirm Dialog State
     const [confirmOpen, setConfirmOpen] = useState(false);
@@ -207,6 +208,27 @@ export default function ChatLogsPage() {
             } catch (err: any) {
                 setSessions(previousSessions);
                 setError(err.message);
+            }
+        });
+        setConfirmOpen(true);
+    };
+
+    const handleDeleteAll = () => {
+        setConfirmMessage(`Are you sure you want to DELETE ALL ${totalRecords} chat sessions? This will wipe the entire database and cannot be undone.`);
+        setPendingAction(() => async () => {
+            setIsDeletingAll(true);
+            try {
+                const res = await fetch('/api/chat-sessions?all=true', { method: 'DELETE' });
+                if (!res.ok) {
+                    const data = await res.json();
+                    throw new Error(data.error || 'Failed to delete all chat sessions');
+                }
+                setSelectedIds(new Set());
+                await fetchLogs();
+            } catch (err: any) {
+                setError(err.message);
+            } finally {
+                setIsDeletingAll(false);
             }
         });
         setConfirmOpen(true);
@@ -389,6 +411,15 @@ export default function ChatLogsPage() {
                     </div>
 
                     <div className="flex border-l border-slate-200 dark:border-slate-800 pl-3 gap-2">
+                        <button
+                            onClick={handleDeleteAll}
+                            disabled={isDeletingAll || totalRecords === 0}
+                            className="px-3 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg shadow-sm flex items-center gap-2 transition-colors disabled:opacity-50 h-10"
+                            title="Delete All Chat Sessions"
+                        >
+                            {isDeletingAll ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                            <span className="hidden sm:inline">Delete All</span>
+                        </button>
                         <button
                             onClick={handleExportCSV}
                             disabled={isExporting || totalRecords === 0}

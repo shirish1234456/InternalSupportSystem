@@ -311,7 +311,7 @@ export default function DashboardPage() {
                     <div className="h-96 w-full mt-4">
                         {comparativeData.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%">
-                                <LineChart data={comparativeData} margin={{ top: 5, right: 5, left: -20, bottom: 40 }}>
+                                <LineChart data={comparativeData} margin={{ top: 5, right: 30, left: -20, bottom: 40 }}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                                     <XAxis
                                         dataKey="date"
@@ -322,6 +322,7 @@ export default function DashboardPage() {
                                         interval={0}
                                         angle={-35}
                                         textAnchor="end"
+                                        padding={{ right: 20 }}
                                         tickFormatter={(val) => {
                                             const parts = val.split('-');
                                             if (parts.length === 3) return `${parts[1]}/${parts[2]}`;

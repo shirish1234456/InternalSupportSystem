@@ -170,18 +170,21 @@ export default function DashboardPage() {
         show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } }
     };
 
-    const KpiCard = ({ title, value, icon: Icon, colorClass, subtitle }: any) => (
-        <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:-translate-y-1 hover:shadow-md transition-all duration-300 p-6 flex items-start gap-4">
-            <div className={`p-4 rounded-xl shrink-0 ${colorClass}`}>
-                <Icon className="w-6 h-6" />
-            </div>
-            <div>
-                <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">{title}</p>
-                <h3 className="text-3xl font-bold text-slate-800 dark:text-white">{value}</h3>
-                {subtitle && <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{subtitle}</p>}
-            </div>
-        </motion.div>
-    );
+    const KpiCard = ({ title, value, icon: Icon, colorClass, subtitle, href }: any) => {
+        const content = (
+            <motion.div variants={itemVariants} className={`bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 transition-all duration-300 p-6 flex items-start gap-4 ${href ? 'hover:-translate-y-1 hover:shadow-md cursor-pointer' : 'hover:-translate-y-1 hover:shadow-md'}`}>
+                <div className={`p-4 rounded-xl shrink-0 ${colorClass}`}>
+                    <Icon className="w-6 h-6" />
+                </div>
+                <div>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">{title}</p>
+                    <h3 className="text-3xl font-bold text-slate-800 dark:text-white">{value}</h3>
+                    {subtitle && <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{subtitle}</p>}
+                </div>
+            </motion.div>
+        );
+        return href ? <Link href={href} className="block">{content}</Link> : content;
+    };
 
     return (
         <div className="space-y-6 pb-12">
@@ -265,6 +268,7 @@ export default function DashboardPage() {
                     value={`${summary.escalatedChats} / ${summary.openChats}`}
                     icon={AlertTriangle}
                     colorClass="bg-red-50 text-red-600"
+                    href="/dashboard/chat-logs?status=OpenEscalated"
                 />
             </motion.div>
 
@@ -332,7 +336,7 @@ export default function DashboardPage() {
                                         return (
                                             <Line
                                                 key={dept.departmentName}
-                                                type="monotone"
+                                                type="linear"
                                                 dataKey={dept.departmentName}
                                                 name={dept.departmentName}
                                                 stroke={getDepartmentColor(dept.departmentName, index)}
@@ -498,7 +502,7 @@ export default function DashboardPage() {
                                     labelFormatter={(label) => `Hour: ${label}`}
                                 />
                                 <Line
-                                    type="monotone"
+                                    type="linear"
                                     dataKey="count"
                                     stroke="#f59e0b"
                                     strokeWidth={3}

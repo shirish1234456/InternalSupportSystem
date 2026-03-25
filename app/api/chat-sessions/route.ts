@@ -130,7 +130,11 @@ export async function GET(req: NextRequest) {
         }
 
         if (statusVal !== 'All') {
-            andConditions.push({ status: statusVal });
+            if (statusVal === 'OpenEscalated') {
+                andConditions.push({ status: { in: ['Open', 'Escalated'] } });
+            } else {
+                andConditions.push({ status: statusVal });
+            }
         }
 
         if (departmentId !== 'All') {

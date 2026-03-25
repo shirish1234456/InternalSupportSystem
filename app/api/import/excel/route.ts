@@ -97,7 +97,9 @@ export async function POST(req: NextRequest) {
                     emailSentRaw.includes('/')
                 );
 
-                const rawRole = row['Role'] || row['ROLE'] ? String(row['Role'] || row['ROLE']).trim() : null;
+                const rawRole = row['Source'] || row['SOURCE']
+                    ? String(row['Source'] || row['SOURCE']).trim()
+                    : (row['Login ID'] || row['LOGIN ID'] ? String(row['Login ID'] || row['LOGIN ID']).trim() : null);
 
                 // Map shorthand role codes from standard.xlsx to full labels
                 const roleCodeMap: Record<string, string> = {

@@ -33,6 +33,16 @@ export default function ChatLogsPage() {
     const [search, setSearch] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search);
+            const status = params.get('status');
+            if (status) {
+                setStatusFilter(status);
+            }
+        }
+    }, []);
     const [departmentFilter, setDepartmentFilter] = useState('All');
     const [isExporting, setIsExporting] = useState(false);
 
@@ -355,6 +365,7 @@ export default function ChatLogsPage() {
                             <option value="Open" className="bg-white dark:bg-slate-800">Open</option>
                             <option value="Resolved" className="bg-white dark:bg-slate-800">Resolved</option>
                             <option value="Escalated" className="bg-white dark:bg-slate-800">Escalated</option>
+                            <option value="OpenEscalated" className="bg-white dark:bg-slate-800">Escalated & Open</option>
                         </select>
                         <select
                             value={departmentFilter}

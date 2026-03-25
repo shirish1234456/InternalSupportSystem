@@ -39,6 +39,7 @@ export default function AddEntryPage() {
     const [queryDescription, setQueryDescription] = useState('');
     const [resolution, setResolution] = useState('');
     const [status, setStatus] = useState('Open');
+    const [feedback, setFeedback] = useState('');
 
     // Get current local datetime down to minutes for the default value
     const [createdAt, setCreatedAt] = useState(() => {
@@ -106,6 +107,7 @@ export default function AddEntryPage() {
                     queryDescription,
                     resolution,
                     status,
+                    feedback,
                     createdAt
                 })
             });
@@ -128,6 +130,7 @@ export default function AddEntryPage() {
             setQueryDescription('');
             setResolution('');
             setStatus('Open');
+            setFeedback('');
 
             // Reset time to current
             const now = new Date();
@@ -410,6 +413,22 @@ export default function AddEntryPage() {
                                     </label>
                                 ))}
                             </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                                Customer Feedback Rating
+                            </label>
+                            <select
+                                value={feedback}
+                                onChange={(e) => setFeedback(e.target.value)}
+                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
+                            >
+                                <option value="" className="bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-400">None provided</option>
+                                <option value="Happy" className="bg-white dark:bg-slate-800">😃 Happy</option>
+                                <option value="Neutral" className="bg-white dark:bg-slate-800">😐 Neutral</option>
+                                <option value="Sad" className="bg-white dark:bg-slate-800">☹️ Sad</option>
+                            </select>
                         </div>
                     </div>
                 </div>

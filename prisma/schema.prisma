@@ -23,6 +23,12 @@ enum Status {
   Escalated
 }
 
+enum Feedback {
+  Happy
+  Neutral
+  Sad
+}
+
 // 4. Tables / Models
 model User {
   id           String   @id @default(uuid())
@@ -108,6 +114,7 @@ model ChatSession {
   queryDescription String      @map("query_description") @db.Text
   resolution       String?     @db.Text
   status           Status      @default(Open)
+  feedback         Feedback?
   
   // Relations
   customerId       String      @map("customer_id")
@@ -146,6 +153,7 @@ model ChatSession {
   @@index([departmentId])
   @@index([agentId])
   @@index([queryTypeId])
+  @@index([feedback])
 }
 
 model EmailLog {

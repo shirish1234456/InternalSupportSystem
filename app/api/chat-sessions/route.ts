@@ -28,7 +28,8 @@ export async function POST(req: NextRequest) {
             queryDescription,
             resolution,
             status,
-            createdAt
+            createdAt,
+            feedback
         } = body;
 
         // Validate required fields
@@ -80,6 +81,7 @@ export async function POST(req: NextRequest) {
                 queryDescription,
                 resolution: resolution || null,
                 status: status || 'Open',
+                feedback: feedback || null,
                 customerId: customer.id,
                 departmentId,
                 agentId,

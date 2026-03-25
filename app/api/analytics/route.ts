@@ -14,6 +14,7 @@ export async function GET(req: NextRequest) {
         const url = new URL(req.url);
         const startDateParam = url.searchParams.get('startDate');
         const endDateParam = url.searchParams.get('endDate');
+        const tzOffset = parseInt(url.searchParams.get('tzOffset') || '0'); // minutes east of UTC (e.g. Nepal = 345)
         const isAllTime = url.searchParams.get('allTime') === 'true';
 
         let startDate = startDateParam ? new Date(startDateParam) : new Date();
@@ -203,16 +204,11 @@ export async function GET(req: NextRequest) {
 
             const deptName = deptMap.get(chat.departmentId) || 'Unknown';
 
-            // Only count hourly spikes for records with a real time component.
-            // Rows imported from date-only Excel cells are stored as midnight UTC (00:00:00)
-            // and would falsely inflate the 00:00 bucket.
-            const utcH = chat.createdAt.getUTCHours();
-            const utcM = chat.createdAt.getUTCMinutes();
-            const utcS = chat.createdAt.getUTCSeconds();
-            const hasMeaningfulTime = utcH !== 0 || utcM !== 0 || utcS !== 0;
-            if (hasMeaningfulTime) {
-                hourlyMap[utcH]++;
-            }
+            // Convert UTC time to local hour using the client's timezone offset
+            const utcMinutes = chat.createdAt.getUTCHours() * 60 + chat.createdAt.getUTCMinutes();
+            const localMinutes = ((utcMinutes + tzOffset) + 1440) % 1440;
+            const localHour = Math.floor(localMinutes / 60);
+            hourlyMap[localHour]++;
 
             // Skip future-dated records from the trend chart
             if (dateKey > todayKey) return;

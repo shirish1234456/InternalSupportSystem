@@ -78,6 +78,7 @@ export default function DashboardPage() {
             const query = new URLSearchParams({
                 startDate: startDate.toISOString(),
                 endDate: finalEndDate.toISOString(),
+                tzOffset: String(-new Date().getTimezoneOffset()), // minutes east of UTC
                 ...(dateRange === 'allTime' && { allTime: 'true' })
             });
 

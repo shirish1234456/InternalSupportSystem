@@ -267,7 +267,8 @@ export async function PUT(req: NextRequest) {
             departmentId,
             queryTypeId,
             issueTypeId,
-            queryDescription
+            queryDescription,
+            feedback
         } = body;
 
         if (!id) {
@@ -300,6 +301,7 @@ export async function PUT(req: NextRequest) {
                 queryTypeId: queryTypeId !== undefined ? queryTypeId : undefined,
                 issueTypeId: issueTypeId !== undefined ? issueTypeId : undefined,
                 queryDescription: queryDescription !== undefined ? queryDescription : undefined,
+                feedback: feedback !== undefined ? (feedback === '' ? null : feedback) : undefined,
                 updatedById: adminId,
                 // If resolving, calculate close time
                 ...(resolution ? { closedAt: new Date(), status: 'Resolved' } : {})

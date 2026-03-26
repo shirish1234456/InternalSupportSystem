@@ -63,7 +63,8 @@ export default function ChatLogsPage() {
         departmentId: '',
         queryTypeId: '',
         issueTypeId: '',
-        queryDescription: ''
+        queryDescription: '',
+        feedback: '' as 'Happy' | 'Neutral' | 'Sad' | ''
     });
     const [isSaving, setIsSaving] = useState(false);
     const [success, setSuccess] = useState('');
@@ -307,9 +308,10 @@ export default function ChatLogsPage() {
             const refreshedData = await res.json();
 
             // Update local state to reflect changes immediately including the joined records from backend
-            const updatedSession = {
+            const updatedSession: ChatSession = {
                 ...selectedSession,
                 ...editForm,
+                feedback: editForm.feedback === '' ? null : editForm.feedback,
                 agent: refreshedData.agent || selectedSession.agent,
                 department: refreshedData.department || selectedSession.department,
                 queryType: refreshedData.queryType || selectedSession.queryType,
@@ -347,7 +349,8 @@ export default function ChatLogsPage() {
             departmentId: qDept,
             queryTypeId: qQType,
             issueTypeId: qIType,
-            queryDescription: session.queryDescription || ''
+            queryDescription: session.queryDescription || '',
+            feedback: session.feedback || ''
         });
     };
 
@@ -796,12 +799,25 @@ export default function ChatLogsPage() {
                                         {/* Feedback Rating */}
                                         <div className="col-span-2 md:col-span-1">
                                             <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Customer Feedback</p>
-                                            <div className="text-sm font-medium text-slate-900 dark:text-white flex items-center gap-1.5">
-                                                {selectedSession.feedback === 'Happy' && <><span className="text-lg">😃</span> Happy</>}
-                                                {selectedSession.feedback === 'Neutral' && <><span className="text-lg">😐</span> Neutral</>}
-                                                {selectedSession.feedback === 'Sad' && <><span className="text-lg">☹️</span> Sad</>}
-                                                {!selectedSession.feedback && <span className="text-slate-400 font-normal italic">N/A</span>}
-                                            </div>
+                                            {isEditMode ? (
+                                                <select
+                                                    value={editForm.feedback}
+                                                    onChange={(e) => setEditForm(prev => ({ ...prev, feedback: e.target.value as 'Happy' | 'Neutral' | 'Sad' | '' }))}
+                                                    className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
+                                                >
+                                                    <option value="">N/A</option>
+                                                    <option value="Happy">😃 Happy</option>
+                                                    <option value="Neutral">😐 Neutral</option>
+                                                    <option value="Sad">☹️ Sad</option>
+                                                </select>
+                                            ) : (
+                                                <div className="text-sm font-medium text-slate-900 dark:text-white flex items-center gap-1.5">
+                                                    {selectedSession.feedback === 'Happy' && <><span className="text-lg">😃</span> Happy</>}
+                                                    {selectedSession.feedback === 'Neutral' && <><span className="text-lg">😐</span> Neutral</>}
+                                                    {selectedSession.feedback === 'Sad' && <><span className="text-lg">☹️</span> Sad</>}
+                                                    {!selectedSession.feedback && <span className="text-slate-400 font-normal italic">N/A</span>}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

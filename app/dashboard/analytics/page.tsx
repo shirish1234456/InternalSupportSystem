@@ -25,6 +25,7 @@ interface AnalyticsData {
         chatSpikes: { hour: string; count: number }[];
         emailsSentByDept: { name: string; value: number }[];
         chatsByCountry: { name: string; value: number }[];
+        chatsByRole: { name: string; value: number }[];
     };
 }
 
@@ -178,82 +179,84 @@ export default function AnalyticsPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-6">
-                {/* Extensive Issue Types Table */}
-                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden col-span-1 lg:col-span-2">
+                {/* Volume By Country Pie Chart */}
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 col-span-1 overflow-hidden">
                     <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
-                        <FileText className="w-5 h-5 text-slate-400" />
-                        <h3 className="text-lg font-semibold text-slate-800 dark:text-white">All Issue Types Ranking</h3>
+                        <PieChart className="w-5 h-5 text-slate-400" />
+                        <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Chats by Country</h3>
                     </div>
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-                            <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-200 font-medium border-b border-slate-200 dark:border-slate-700">
-                                <tr>
-                                    <th className="px-6 py-4">Rank</th>
-                                    <th className="px-6 py-4">Issue Type</th>
-                                    <th className="px-6 py-4 text-right">Count</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                                {(() => {
-                                    const allIssuesData = charts.topIssuesSegmented?.find(d => d.departmentName === 'All Departments')?.data || [];
-                                    return allIssuesData.length > 0 ? (
-                                        allIssuesData.map((item, index) => (
-                                            <tr key={index} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                                                <td className="px-6 py-3 font-medium text-slate-500">#{index + 1}</td>
-                                                <td className="px-6 py-3">{item.name}</td>
-                                                <td className="px-6 py-3 text-right font-semibold">{item.value}</td>
-                                            </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan={3} className="px-6 py-8 text-center text-slate-500">No issue type data found for this period.</td>
-                                        </tr>
-                                    );
-                                })()}
-                            </tbody>
-                        </table>
+                    <div className="h-80 p-6">
+                        {charts.chatsByCountry && charts.chatsByCountry.length > 0 ? (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <RechartsPieChart>
+                                    <Pie
+                                        data={charts.chatsByCountry}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={100}
+                                        paddingAngle={5}
+                                        dataKey="value"
+                                    >
+                                        {charts.chatsByCountry.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                        ))}
+                                    </Pie>
+                                    <RechartsTooltip
+                                        formatter={(value: any) => [`${value} chats`, 'Volume']}
+                                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                    />
+                                    <Legend />
+                                </RechartsPieChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="flex items-center justify-center h-full text-slate-500">
+                                No country data found for this period.
+                            </div>
+                        )}
                     </div>
                 </div>
 
-                {/* Extensive Agent Performance Table */}
-                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden">
+                {/* Volume By Role Pie Chart */}
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 col-span-1 overflow-hidden">
                     <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
                         <Users className="w-5 h-5 text-slate-400" />
-                        <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Full Agent Performance</h3>
+                        <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Chat Volume by Role</h3>
                     </div>
-                    <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
-                        <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-                            <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-200 font-medium border-b border-slate-200 dark:border-slate-700 sticky top-0">
-                                <tr>
-                                    <th className="px-6 py-4">Rank</th>
-                                    <th className="px-6 py-4">Agent Name</th>
-                                    <th className="px-6 py-4 text-right">Chats Handled</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                                {(() => {
-                                    const allAgentsData = charts.topAgentsSegmented?.find(d => d.departmentName === 'All Departments')?.data || [];
-                                    return allAgentsData.length > 0 ? (
-                                        allAgentsData.map((item, index) => (
-                                            <tr key={index} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                                                <td className="px-6 py-3 font-medium text-slate-500">#{index + 1}</td>
-                                                <td className="px-6 py-3">{item.name}</td>
-                                                <td className="px-6 py-3 text-right font-semibold">{item.chatsHandled}</td>
-                                            </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan={3} className="px-6 py-8 text-center text-slate-500">No agent data found for this period.</td>
-                                        </tr>
-                                    );
-                                })()}
-                            </tbody>
-                        </table>
+                    <div className="h-80 p-6">
+                        {charts.chatsByRole && charts.chatsByRole.length > 0 ? (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <RechartsPieChart>
+                                    <Pie
+                                        data={charts.chatsByRole}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={100}
+                                        paddingAngle={5}
+                                        dataKey="value"
+                                    >
+                                        {charts.chatsByRole.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={COLORS[(index + 2) % COLORS.length]} />
+                                        ))}
+                                    </Pie>
+                                    <RechartsTooltip
+                                        formatter={(value: any) => [`${value} chats`, 'Volume']}
+                                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                    />
+                                    <Legend />
+                                </RechartsPieChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="flex items-center justify-center h-full text-slate-500">
+                                No role data found for this period.
+                            </div>
+                        )}
                     </div>
                 </div>
 
                 {/* Volume By Department Full List */}
-                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden">
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden col-span-1 lg:col-span-2">
                     <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
                         <Building2 className="w-5 h-5 text-slate-400" />
                         <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Department Overview</h3>
@@ -316,41 +319,77 @@ export default function AnalyticsPage() {
                     </div>
                 </div>
 
-                {/* Volume By Country Pie Chart */}
-                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 col-span-1 lg:col-span-2 overflow-hidden">
+                {/* Extensive Agent Performance Table */}
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden col-span-1 lg:col-span-2">
                     <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
-                        <PieChart className="w-5 h-5 text-slate-400" />
-                        <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Chats by Country</h3>
+                        <Users className="w-5 h-5 text-slate-400" />
+                        <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Full Agent Performance</h3>
                     </div>
-                    <div className="h-80 p-6">
-                        {charts.chatsByCountry && charts.chatsByCountry.length > 0 ? (
-                            <ResponsiveContainer width="100%" height="100%">
-                                <RechartsPieChart>
-                                    <Pie
-                                        data={charts.chatsByCountry}
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius={60}
-                                        outerRadius={100}
-                                        paddingAngle={5}
-                                        dataKey="value"
-                                    >
-                                        {charts.chatsByCountry.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Pie>
-                                    <RechartsTooltip
-                                        formatter={(value: any) => [`${value} chats`, 'Volume']}
-                                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                                    />
-                                    <Legend />
-                                </RechartsPieChart>
-                            </ResponsiveContainer>
-                        ) : (
-                            <div className="flex items-center justify-center h-full text-slate-500">
-                                No country data found for this period.
-                            </div>
-                        )}
+                    <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
+                        <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
+                            <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-200 font-medium border-b border-slate-200 dark:border-slate-700 sticky top-0">
+                                <tr>
+                                    <th className="px-6 py-4">Rank</th>
+                                    <th className="px-6 py-4">Agent Name</th>
+                                    <th className="px-6 py-4 text-right">Chats Handled</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                                {(() => {
+                                    const allAgentsData = charts.topAgentsSegmented?.find(d => d.departmentName === 'All Departments')?.data || [];
+                                    return allAgentsData.length > 0 ? (
+                                        allAgentsData.map((item, index) => (
+                                            <tr key={index} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                                <td className="px-6 py-3 font-medium text-slate-500">#{index + 1}</td>
+                                                <td className="px-6 py-3">{item.name}</td>
+                                                <td className="px-6 py-3 text-right font-semibold">{item.chatsHandled}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan={3} className="px-6 py-8 text-center text-slate-500">No agent data found for this period.</td>
+                                        </tr>
+                                    );
+                                })()}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {/* Extensive Issue Types Table */}
+                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden col-span-1 lg:col-span-2">
+                    <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
+                        <FileText className="w-5 h-5 text-slate-400" />
+                        <h3 className="text-lg font-semibold text-slate-800 dark:text-white">All Issue Types Ranking</h3>
+                    </div>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
+                            <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-200 font-medium border-b border-slate-200 dark:border-slate-700">
+                                <tr>
+                                    <th className="px-6 py-4">Rank</th>
+                                    <th className="px-6 py-4">Issue Type</th>
+                                    <th className="px-6 py-4 text-right">Count</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                                {(() => {
+                                    const allIssuesData = charts.topIssuesSegmented?.find(d => d.departmentName === 'All Departments')?.data || [];
+                                    return allIssuesData.length > 0 ? (
+                                        allIssuesData.map((item, index) => (
+                                            <tr key={index} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                                <td className="px-6 py-3 font-medium text-slate-500">#{index + 1}</td>
+                                                <td className="px-6 py-3">{item.name}</td>
+                                                <td className="px-6 py-3 text-right font-semibold">{item.value}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan={3} className="px-6 py-8 text-center text-slate-500">No issue type data found for this period.</td>
+                                        </tr>
+                                    );
+                                })()}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

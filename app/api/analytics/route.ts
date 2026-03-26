@@ -152,7 +152,7 @@ export async function GET(req: NextRequest) {
         // Fetch chats for the whole selected date range to calculate hourly spikes, emails sent, and trends
         const allPeriodChats = await prisma.chatSession.findMany({
             where: dateFilter,
-            select: { createdAt: true, closedAt: true, status: true, emailSent: true, departmentId: true, customer: { select: { country: true } } }
+            select: { createdAt: true, closedAt: true, status: true, emailSent: true, departmentId: true, customer: { select: { country: true, role: true } } }
         });
 
         // Initialize maps for all departments + "All Departments" wrapper
@@ -239,9 +239,10 @@ export async function GET(req: NextRequest) {
             count
         }));
 
-        // Calculate Emails Sent by Department
+        // Calculate Emails Sent by Department, Country, and Role
         const emailSentByDeptMap = new Map<string, number>();
         const countryMap = new Map<string, number>();
+        const roleMap = new Map<string, number>();
         let totalEmailsSent = 0;
 
         allPeriodChats.forEach((chat: any) => {
@@ -256,6 +257,9 @@ export async function GET(req: NextRequest) {
 
             const country = chat.customer?.country || 'Unknown';
             countryMap.set(country, (countryMap.get(country) || 0) + 1);
+
+            const role = chat.customer?.role || 'Unknown';
+            roleMap.set(role, (roleMap.get(role) || 0) + 1);
         });
 
         const emailsSentByDept = Array.from(emailSentByDeptMap.entries())
@@ -272,6 +276,10 @@ export async function GET(req: NextRequest) {
             const othersCount = sortedCountries.slice(5).reduce((acc, curr) => acc + curr.value, 0);
             chatsByCountry = [...top5, { name: 'Other', value: othersCount }];
         }
+
+        const chatsByRole = Array.from(roleMap.entries())
+            .map(([name, value]) => ({ name, value }))
+            .sort((a, b) => b.value - a.value);
 
         return NextResponse.json({
             summary: {
@@ -290,7 +298,8 @@ export async function GET(req: NextRequest) {
                 departmentTrends,
                 chatSpikes,
                 emailsSentByDept,
-                chatsByCountry
+                chatsByCountry,
+                chatsByRole
             }
         });
 

@@ -181,11 +181,11 @@ export default function AddEntryPage() {
             )}
 
             <form onSubmit={handleSubmit} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden">
-                {/* Customer Information Section */}
+                {/* User Information Section */}
                 <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
                     <h2 className="text-lg font-semibold text-slate-800 dark:text-white flex items-center gap-2 mb-4">
                         <User className="w-5 h-5 text-slate-400" />
-                        Customer Details
+                        User Details
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div>
@@ -417,7 +417,7 @@ export default function AddEntryPage() {
 
                         <div>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                                Customer Feedback Rating
+                                User Feedback Rating
                             </label>
                             <select
                                 value={feedback}

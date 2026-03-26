@@ -162,7 +162,7 @@ export default function AgentsPage() {
                         Support Agents
                     </h1>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                        Manage agents who handle customer chats.
+                        Manage agents who handle user chats.
                     </p>
                 </div>
                 <div className="flex items-center gap-3">

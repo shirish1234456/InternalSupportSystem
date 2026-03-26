@@ -159,7 +159,7 @@ export default function ChatLogsPage() {
             if (!res.ok) throw new Error('Failed to fetch export data');
             const { data } = await res.json();
 
-            const headers = ['Chat Code', 'Date', 'Customer Name', 'Customer Email', 'Agent', 'Department', 'Query Type', 'Issue Type', 'Status', 'Description', 'Resolution'];
+            const headers = ['Chat Code', 'Date', 'User Name', 'User Email', 'Agent', 'Department', 'Query Type', 'Issue Type', 'Status', 'Description', 'Resolution'];
             const rows = data.map((s: any) => [
                 s.chatCode,
                 new Date(s.createdAt).toLocaleString().replace(',', ''),
@@ -518,7 +518,7 @@ export default function ChatLogsPage() {
                                         />
                                     </th>
                                     <th className="px-6 py-4 font-medium min-w-[140px]">Date / Code</th>
-                                    <th className="px-6 py-4 font-medium min-w-[200px]">Customer</th>
+                                    <th className="px-6 py-4 font-medium min-w-[200px]">User</th>
                                     <th className="px-6 py-4 font-medium min-w-[250px]">Handling Info</th>
                                     <th className="px-6 py-4 font-medium min-w-[300px]">Query Details</th>
                                     <th className="px-6 py-4 font-medium text-center">Status</th>
@@ -693,9 +693,9 @@ export default function ChatLogsPage() {
 
                             {/* Modal Body */}
                             <div className="p-6 overflow-y-auto flex-1 space-y-6">
-                                {/* Customer Details */}
+                                {/* User Details */}
                                 <div>
-                                    <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-3">Customer Details</h3>
+                                    <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-3">User Details</h3>
                                     <div className="grid grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-100 dark:border-slate-700/50">
                                         <div>
                                             <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Name</p>
@@ -798,7 +798,7 @@ export default function ChatLogsPage() {
 
                                         {/* Feedback Rating */}
                                         <div className="col-span-2 md:col-span-1">
-                                            <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Customer Feedback</p>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">User Feedback</p>
                                             {isEditMode ? (
                                                 <select
                                                     value={editForm.feedback}

@@ -246,7 +246,10 @@ export default function IssueTypesPage() {
                                         <input
                                             type="checkbox"
                                             className="w-4 h-4 text-primary-600 rounded border-slate-300 focus:ring-primary-500 cursor-pointer disabled:opacity-50"
-                                            checked={types.length > 0 && types.filter(t => (t._count?.sessions || 0) === 0).every(t => selectedIds.has(t.id))}
+                                            checked={(() => {
+                                                const deletable = types.filter(t => (t._count?.sessions || 0) === 0);
+                                                return deletable.length > 0 && deletable.every(t => selectedIds.has(t.id));
+                                            })()}
                                             onChange={toggleSelectAll}
                                             disabled={types.filter(t => (t._count?.sessions || 0) === 0).length === 0}
                                         />

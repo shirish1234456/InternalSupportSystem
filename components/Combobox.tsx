@@ -14,9 +14,10 @@ interface ComboboxProps {
     onChange: (value: string) => void;
     placeholder?: string;
     required?: boolean;
+    searchable?: boolean;
 }
 
-export default function Combobox({ options, value, onChange, placeholder = 'Select an option', required = false }: ComboboxProps) {
+export default function Combobox({ options, value, onChange, placeholder = 'Select an option', required = false, searchable = true }: ComboboxProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [search, setSearch] = useState('');
     const wrapperRef = useRef<HTMLDivElement>(null);
@@ -63,16 +64,17 @@ export default function Combobox({ options, value, onChange, placeholder = 'Sele
             >
                 <input
                     type="text"
-                    className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm placeholder-slate-400 pr-10"
+                    className={`w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm placeholder-slate-400 pr-10 ${searchable ? '' : 'cursor-pointer'}`}
                     placeholder={placeholder}
                     value={displayValue}
+                    readOnly={!searchable}
                     onChange={(e) => {
-                        setSearch(e.target.value);
+                        if (searchable) setSearch(e.target.value);
                         setIsOpen(true);
                     }}
                     onFocus={() => {
                         setIsOpen(true);
-                        setSearch(''); // Clear search on focus to show all options
+                        if (searchable) setSearch(''); // Clear search on focus to show all options
                     }}
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
@@ -81,7 +83,7 @@ export default function Combobox({ options, value, onChange, placeholder = 'Sele
             </div>
 
             {isOpen && (
-                <div className="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                <div className="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg max-h-60 overflow-y-auto">
                     {filteredOptions.length === 0 ? (
                         <div className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400 text-center">
                             No matching options found.
@@ -92,8 +94,8 @@ export default function Combobox({ options, value, onChange, placeholder = 'Sele
                                 <li
                                     key={opt.id}
                                     className={`px-4 py-2 text-sm cursor-pointer transition-colors ${value === opt.id
-                                            ? 'bg-primary-50 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 font-medium'
-                                            : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'
+                                        ? 'bg-primary-50 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 font-medium'
+                                        : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'
                                         }`}
                                     onClick={() => {
                                         onChange(opt.id);

@@ -385,27 +385,30 @@ export default function ChatLogsPage() {
                 {/* Controls row */}
                 <div className="flex items-center gap-2 shrink-0">
                     {/* Status filter */}
-                    <select
-                        value={statusFilter}
-                        onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-                        className="h-9 px-3 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
-                    >
-                        <option value="All">All Statuses</option>
-                        <option value="Open">Open</option>
-                        <option value="Resolved">Resolved</option>
-                        <option value="Escalated">Escalated</option>
-                        <option value="OpenEscalated">Escalated &amp; Open</option>
-                    </select>
+                    <div className="w-44">
+                        <Combobox
+                            options={[
+                                { id: 'All', name: 'All Statuses' },
+                                { id: 'Open', name: 'Open' },
+                                { id: 'Resolved', name: 'Resolved' },
+                                { id: 'Escalated', name: 'Escalated' },
+                                { id: 'OpenEscalated', name: 'Escalated & Open' }
+                            ]}
+                            value={statusFilter}
+                            onChange={(id) => { setStatusFilter(id); setPage(1); }}
+                            searchable={false}
+                        />
+                    </div>
 
                     {/* Department filter */}
-                    <select
-                        value={departmentFilter}
-                        onChange={(e) => { setDepartmentFilter(e.target.value); setPage(1); }}
-                        className="h-9 px-3 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
-                    >
-                        <option value="All">All Departments</option>
-                        {departments.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
-                    </select>
+                    <div className="w-44">
+                        <Combobox
+                            options={[{ id: 'All', name: 'All Departments' }, ...departments]}
+                            value={departmentFilter}
+                            onChange={(id) => { setDepartmentFilter(id); setPage(1); }}
+                            searchable={false}
+                        />
+                    </div>
 
                     {/* Search */}
                     <div className="relative">
@@ -733,14 +736,13 @@ export default function ChatLogsPage() {
                                         <div>
                                             <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Agent</p>
                                             {isEditMode ? (
-                                                <select
+                                                <Combobox
+                                                    options={agents}
                                                     value={editForm.agentId}
-                                                    onChange={(e) => setEditForm(prev => ({ ...prev, agentId: e.target.value }))}
-                                                    className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
-                                                >
-                                                    <option value="" disabled>Select Agent</option>
-                                                    {agents.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-                                                </select>
+                                                    onChange={(id) => setEditForm(prev => ({ ...prev, agentId: id }))}
+                                                    placeholder="Select Agent"
+                                                    searchable={false}
+                                                />
                                             ) : (
                                                 <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.agent.name}</p>
                                             )}
@@ -750,14 +752,13 @@ export default function ChatLogsPage() {
                                         <div>
                                             <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Department</p>
                                             {isEditMode ? (
-                                                <select
+                                                <Combobox
+                                                    options={departments}
                                                     value={editForm.departmentId}
-                                                    onChange={(e) => setEditForm(prev => ({ ...prev, departmentId: e.target.value }))}
-                                                    className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
-                                                >
-                                                    <option value="" disabled>Select Department</option>
-                                                    {departments.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
-                                                </select>
+                                                    onChange={(id) => setEditForm(prev => ({ ...prev, departmentId: id }))}
+                                                    placeholder="Select Department"
+                                                    searchable={false}
+                                                />
                                             ) : (
                                                 <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.department.name}</p>
                                             )}
@@ -767,14 +768,13 @@ export default function ChatLogsPage() {
                                         <div>
                                             <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Query Type</p>
                                             {isEditMode ? (
-                                                <select
+                                                <Combobox
+                                                    options={queryTypes}
                                                     value={editForm.queryTypeId}
-                                                    onChange={(e) => setEditForm(prev => ({ ...prev, queryTypeId: e.target.value }))}
-                                                    className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
-                                                >
-                                                    <option value="" disabled>Select Query Type</option>
-                                                    {queryTypes.map(q => <option key={q.id} value={q.id}>{q.name}</option>)}
-                                                </select>
+                                                    onChange={(id) => setEditForm(prev => ({ ...prev, queryTypeId: id }))}
+                                                    placeholder="Select Query Type"
+                                                    searchable={false}
+                                                />
                                             ) : (
                                                 <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.queryType.name}</p>
                                             )}
@@ -799,16 +799,18 @@ export default function ChatLogsPage() {
                                         <div className="col-span-2 md:col-span-1">
                                             <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">User Feedback</p>
                                             {isEditMode ? (
-                                                <select
+                                                <Combobox
+                                                    options={[
+                                                        { id: '', name: 'N/A' },
+                                                        { id: 'Happy', name: '😃 Happy' },
+                                                        { id: 'Neutral', name: '😐 Neutral' },
+                                                        { id: 'Sad', name: '☹️ Sad' }
+                                                    ]}
                                                     value={editForm.feedback}
-                                                    onChange={(e) => setEditForm(prev => ({ ...prev, feedback: e.target.value as 'Happy' | 'Neutral' | 'Sad' | '' }))}
-                                                    className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
-                                                >
-                                                    <option value="">N/A</option>
-                                                    <option value="Happy">😃 Happy</option>
-                                                    <option value="Neutral">😐 Neutral</option>
-                                                    <option value="Sad">☹️ Sad</option>
-                                                </select>
+                                                    onChange={(id) => setEditForm(prev => ({ ...prev, feedback: id as any }))}
+                                                    placeholder="N/A"
+                                                    searchable={false}
+                                                />
                                             ) : (
                                                 <div className="text-sm font-medium text-slate-900 dark:text-white flex items-center gap-1.5">
                                                     {selectedSession.feedback === 'Happy' && <><span className="text-lg">😃</span> Happy</>}

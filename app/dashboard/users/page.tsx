@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, Edit2, Shield, UserCircle, Loader2, RefreshCw, Power, PowerOff } from 'lucide-react';
 import ConfirmDialog from '@/components/ConfirmDialog';
+import Combobox from '@/components/Combobox';
 
 interface User {
     id: string;
@@ -313,16 +314,18 @@ export default function UsersPage() {
                                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                                     System Role <span className="text-red-500">*</span>
                                 </label>
-                                <select
-                                    required
+                                <Combobox
+                                    options={[
+                                        { id: 'DataEntry', name: 'Data Entry (Limited Access)' },
+                                        { id: 'Admin', name: 'Admin (View Analytics)' },
+                                        { id: 'SuperAdmin', name: 'SuperAdmin (Full Control)' }
+                                    ]}
                                     value={role}
-                                    onChange={(e) => setRole(e.target.value as any)}
-                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white transition-colors sm:text-sm"
-                                >
-                                    <option value="DataEntry">Data Entry (Limited Access)</option>
-                                    <option value="Admin">Admin (View Analytics)</option>
-                                    <option value="SuperAdmin">SuperAdmin (Full Control)</option>
-                                </select>
+                                    onChange={(id) => setRole(id as 'SuperAdmin' | 'Admin' | 'DataEntry')}
+                                    placeholder="Select Role"
+                                    searchable={false}
+                                    required
+                                />
                                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Determines what pages and features they can access.</p>
                             </div>
 

@@ -255,17 +255,18 @@ export default function AddEntryPage() {
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                                 Role
                             </label>
-                            <select
+                            <Combobox
+                                options={[
+                                    { id: 'Student', name: 'Student' },
+                                    { id: 'Teacher', name: 'Teacher' },
+                                    { id: 'Parent', name: 'Parent' },
+                                    { id: 'Other', name: 'Other' }
+                                ]}
                                 value={customerRole}
-                                onChange={(e) => setCustomerRole(e.target.value)}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
-                            >
-                                <option value="" className="bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-400">Select Role</option>
-                                <option value="Student" className="bg-white dark:bg-slate-800">Student</option>
-                                <option value="Teacher" className="bg-white dark:bg-slate-800">Teacher</option>
-                                <option value="Parent" className="bg-white dark:bg-slate-800">Parent</option>
-                                <option value="Other" className="bg-white dark:bg-slate-800">Other</option>
-                            </select>
+                                onChange={setCustomerRole}
+                                placeholder="Select Role"
+                                searchable={false}
+                            />
                         </div>
                     </div>
                 </div>
@@ -296,30 +297,28 @@ export default function AddEntryPage() {
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                                 Handling Agent <span className="text-red-500">*</span>
                             </label>
-                            <select
-                                required
+                            <Combobox
+                                options={agents}
                                 value={agentId}
-                                onChange={(e) => setAgentId(e.target.value)}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
-                            >
-                                <option value="" disabled className="bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-400">Select Agent</option>
-                                {agents.map(a => <option key={a.id} value={a.id} className="bg-white dark:bg-slate-800">{a.name}</option>)}
-                            </select>
+                                onChange={setAgentId}
+                                placeholder="Select Agent"
+                                searchable={false}
+                                required
+                            />
                         </div>
 
                         <div>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                                 Department <span className="text-red-500">*</span>
                             </label>
-                            <select
-                                required
+                            <Combobox
+                                options={departments}
                                 value={departmentId}
-                                onChange={(e) => setDepartmentId(e.target.value)}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
-                            >
-                                <option value="" disabled className="bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-400">Select Department</option>
-                                {departments.map(d => <option key={d.id} value={d.id} className="bg-white dark:bg-slate-800">{d.name}</option>)}
-                            </select>
+                                onChange={setDepartmentId}
+                                placeholder="Select Department"
+                                searchable={false}
+                                required
+                            />
                         </div>
                     </div>
 
@@ -328,15 +327,14 @@ export default function AddEntryPage() {
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                                 Query Type <span className="text-red-500">*</span>
                             </label>
-                            <select
-                                required
+                            <Combobox
+                                options={queryTypes}
                                 value={queryTypeId}
-                                onChange={(e) => setQueryTypeId(e.target.value)}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
-                            >
-                                <option value="" disabled className="bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-400">Select Query Type</option>
-                                {queryTypes.map(q => <option key={q.id} value={q.id} className="bg-white dark:bg-slate-800">{q.name}</option>)}
-                            </select>
+                                onChange={setQueryTypeId}
+                                placeholder="Select Query Type"
+                                searchable={false}
+                                required
+                            />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
@@ -418,16 +416,17 @@ export default function AddEntryPage() {
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                                 User Feedback Rating
                             </label>
-                            <select
+                            <Combobox
+                                options={[
+                                    { id: 'Happy', name: '😃 Happy' },
+                                    { id: 'Neutral', name: '😐 Neutral' },
+                                    { id: 'Sad', name: '☹️ Sad' }
+                                ]}
                                 value={feedback}
-                                onChange={(e) => setFeedback(e.target.value)}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
-                            >
-                                <option value="" className="bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-400">None provided</option>
-                                <option value="Happy" className="bg-white dark:bg-slate-800">😃 Happy</option>
-                                <option value="Neutral" className="bg-white dark:bg-slate-800">😐 Neutral</option>
-                                <option value="Sad" className="bg-white dark:bg-slate-800">☹️ Sad</option>
-                            </select>
+                                onChange={setFeedback}
+                                placeholder="None provided"
+                                searchable={false}
+                            />
                         </div>
                     </div>
                 </div>

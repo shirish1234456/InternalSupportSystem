@@ -7,6 +7,7 @@ import { BarChart3, Clock, Users, FileText, CheckCircle2, AlertTriangle, Message
 import {
     LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell
 } from 'recharts';
+import Combobox from '@/components/Combobox';
 
 interface AnalyticsData {
     summary: {
@@ -221,17 +222,20 @@ export default function DashboardPage() {
                             />
                         </div>
                     )}
-                    <select
-                        value={dateRange}
-                        onChange={(e) => setDateRange(e.target.value)}
-                        className="px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm font-medium shadow-sm"
-                    >
-                        <option value="allTime">All Time</option>
-                        <option value="7days">Last 7 Days</option>
-                        <option value="30days">Last 30 Days</option>
-                        <option value="thisYear">This Year</option>
-                        <option value="custom">Custom Range</option>
-                    </select>
+                    <div className="w-44">
+                        <Combobox
+                            options={[
+                                { id: 'allTime', name: 'All Time' },
+                                { id: '7days', name: 'Last 7 Days' },
+                                { id: '30days', name: 'Last 30 Days' },
+                                { id: 'thisYear', name: 'This Year' },
+                                { id: 'custom', name: 'Custom Range' }
+                            ]}
+                            value={dateRange}
+                            onChange={setDateRange}
+                            searchable={false}
+                        />
+                    </div>
 
                     <button
                         onClick={fetchAnalytics}

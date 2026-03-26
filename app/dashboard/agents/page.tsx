@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Users, Loader2, RefreshCw } from 'lucide-react';
 import ConfirmDialog from '@/components/ConfirmDialog';
+import Combobox from '@/components/Combobox';
 
 interface Department {
     id: string;
@@ -292,32 +293,34 @@ export default function AgentsPage() {
                                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                                     Department
                                 </label>
-                                <select
+                                <Combobox
+                                    options={[
+                                        { id: '', name: 'None (Unassigned)' },
+                                        ...departments
+                                    ]}
                                     value={departmentId || ''}
-                                    onChange={(e) => setDepartmentId(e.target.value)}
-                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white transition-colors sm:text-sm"
-                                >
-                                    <option value="">None (Unassigned)</option>
-                                    {departments.map(dept => (
-                                        <option key={dept.id} value={dept.id}>{dept.name}</option>
-                                    ))}
-                                </select>
+                                    onChange={setDepartmentId}
+                                    placeholder="None (Unassigned)"
+                                    searchable={false}
+                                />
                             </div>
 
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                                     Shift <span className="text-red-500">*</span>
                                 </label>
-                                <select
-                                    required
+                                <Combobox
+                                    options={[
+                                        { id: 'Morning', name: 'Morning' },
+                                        { id: 'Afternoon', name: 'Afternoon' },
+                                        { id: 'Night', name: 'Night' }
+                                    ]}
                                     value={shift}
-                                    onChange={(e) => setShift(e.target.value)}
-                                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white transition-colors sm:text-sm"
-                                >
-                                    <option value="Morning">Morning</option>
-                                    <option value="Afternoon">Afternoon</option>
-                                    <option value="Night">Night</option>
-                                </select>
+                                    onChange={setShift}
+                                    placeholder="Select Shift"
+                                    searchable={false}
+                                    required
+                                />
                             </div>
 
                             <div className="pt-4 flex gap-3 justify-end">

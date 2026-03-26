@@ -203,7 +203,7 @@ export default function AnalyticsPage() {
                                         ))}
                                     </Pie>
                                     <RechartsTooltip
-                                        formatter={(value: any) => [`${value} chats`, 'Volume']}
+                                        formatter={(value: any, name: any) => [`${value} chats`, name]}
                                         contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                                     />
                                     <Legend />
@@ -241,7 +241,7 @@ export default function AnalyticsPage() {
                                         ))}
                                     </Pie>
                                     <RechartsTooltip
-                                        formatter={(value: any) => [`${value} chats`, 'Volume']}
+                                        formatter={(value: any, name: any) => [`${value} chats`, name]}
                                         contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                                     />
                                     <Legend />

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Search, MessageSquare, Loader2, RefreshCw, FileText, Trash2, X, Edit2, Save, XCircle, Download, Filter } from 'lucide-react';
 import Link from 'next/link';
 import ConfirmDialog from '@/components/ConfirmDialog';
+import Combobox from '@/components/Combobox';
 
 interface ChatSession {
     id: string;
@@ -783,14 +784,12 @@ export default function ChatLogsPage() {
                                         <div>
                                             <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Issue Type</p>
                                             {isEditMode ? (
-                                                <select
+                                                <Combobox
+                                                    options={issueTypes}
                                                     value={editForm.issueTypeId}
-                                                    onChange={(e) => setEditForm(prev => ({ ...prev, issueTypeId: e.target.value }))}
-                                                    className="w-full px-2 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
-                                                >
-                                                    <option value="" disabled>Select Issue Type</option>
-                                                    {issueTypes.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
-                                                </select>
+                                                    onChange={(id) => setEditForm(prev => ({ ...prev, issueTypeId: id }))}
+                                                    placeholder="Select Issue Type"
+                                                />
                                             ) : (
                                                 <p className="text-sm font-medium text-slate-900 dark:text-white">{selectedSession.issueType.name}</p>
                                             )}

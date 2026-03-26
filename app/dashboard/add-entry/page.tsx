@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { PlusCircle, Loader2, Save, FileText, User } from 'lucide-react';
+import Combobox from '@/components/Combobox';
 
 interface DropdownItem {
     id: string;
@@ -341,15 +342,13 @@ export default function AddEntryPage() {
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                                 Issue Type <span className="text-red-500">*</span>
                             </label>
-                            <select
-                                required
+                            <Combobox
+                                options={issueTypes}
                                 value={issueTypeId}
-                                onChange={(e) => setIssueTypeId(e.target.value)}
-                                className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm"
-                            >
-                                <option value="" disabled className="bg-white text-slate-500 dark:bg-slate-800 dark:text-slate-400">Select Specific Issue</option>
-                                {issueTypes.map(i => <option key={i.id} value={i.id} className="bg-white dark:bg-slate-800">{i.name}</option>)}
-                            </select>
+                                onChange={setIssueTypeId}
+                                placeholder="Select Specific Issue"
+                                required
+                            />
                         </div>
                     </div>
 

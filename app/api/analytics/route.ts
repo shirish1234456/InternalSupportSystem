@@ -258,7 +258,13 @@ export async function GET(req: NextRequest) {
             const country = chat.customer?.country || 'Unknown';
             countryMap.set(country, (countryMap.get(country) || 0) + 1);
 
-            const role = chat.customer?.role || 'Unknown';
+            let role = chat.customer?.role || 'Unknown';
+            if (role !== 'Unknown') {
+                const normalized = role.trim().toLowerCase();
+                if (normalized === 'parent' || normalized === 'parents') role = 'Parent ID';
+                if (normalized === 'student' || normalized === 'students') role = 'Student ID';
+                if (normalized === 'teacher' || normalized === 'teachers') role = 'Teacher ID';
+            }
             roleMap.set(role, (roleMap.get(role) || 0) + 1);
         });
 

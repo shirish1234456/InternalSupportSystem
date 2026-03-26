@@ -1,14 +1,16 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 
-const jwtSecret = process.env.JWT_SECRET;
-if (!jwtSecret) {
-  throw new Error(
-    '[Security] JWT_SECRET environment variable is not set. ' +
-    'Set a long, random secret in your .env file before running the application.'
-  );
+function getSecretKey(): Uint8Array {
+  const jwtSecret = process.env.JWT_SECRET;
+  if (!jwtSecret) {
+    throw new Error(
+      '[Security] JWT_SECRET environment variable is not set. ' +
+      'Set a long, random secret in your .env file or deployment environment before running the application.'
+    );
+  }
+  return new TextEncoder().encode(jwtSecret);
 }
-const SECRET_KEY = new TextEncoder().encode(jwtSecret);
 
 export interface JWTPayload {
   id: string;
@@ -23,12 +25,12 @@ export async function signToken(payload: JWTPayload) {
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('24h') // Token expires in 24 hours
-    .sign(SECRET_KEY);
+    .sign(getSecretKey());
 }
 
 export async function verifyToken(token: string): Promise<JWTPayload | null> {
   try {
-    const { payload } = await jwtVerify(token, SECRET_KEY);
+    const { payload } = await jwtVerify(token, getSecretKey());
     return payload as unknown as JWTPayload;
   } catch (error) {
     return null;

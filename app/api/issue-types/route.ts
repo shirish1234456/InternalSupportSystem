@@ -106,19 +106,14 @@ export async function DELETE(req: NextRequest) {
             return NextResponse.json({ error: 'ID(s) are required' }, { status: 400 });
         }
 
-        const usage = await prisma.issueType.findMany({
-            where: { id: { in: idsToDelete } },
-            include: {
-                _count: { select: { sessions: true } }
-            }
-        });
-
-        const inUse = usage.filter(u => u._count.sessions > 0);
-        if (inUse.length > 0) {
-            return NextResponse.json({ error: `Cannot delete: ${inUse.length} Issue Type(s) are in use by Chat Sessions` }, { status: 400 });
-        }
-
-        await prisma.issueType.deleteMany({ where: { id: { in: idsToDelete } } });
+        // Nullify issueTypeId on linked sessions first, then delete — in a transaction
+        await prisma.$transaction([
+            prisma.chatSession.updateMany({
+                where: { issueTypeId: { in: idsToDelete } },
+                data: { issueTypeId: null }
+            }),
+            prisma.issueType.deleteMany({ where: { id: { in: idsToDelete } } })
+        ]);
 
         return NextResponse.json({ message: 'Issue Type(s) deleted successfully' });
     } catch (error) {

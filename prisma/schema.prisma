@@ -129,8 +129,8 @@ model ChatSession {
   queryTypeId      String      @map("query_type_id")
   queryType        QueryType   @relation(fields: [queryTypeId], references: [id])
   
-  issueTypeId      String      @map("issue_type_id")
-  issueType        IssueType   @relation(fields: [issueTypeId], references: [id])
+  issueTypeId      String?     @map("issue_type_id")
+  issueType        IssueType?  @relation(fields: [issueTypeId], references: [id], onDelete: SetNull)
 
   // System Tracking
   emailSent        Boolean     @default(false) @map("email_sent")

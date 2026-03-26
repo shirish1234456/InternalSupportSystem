@@ -81,12 +81,9 @@ export default function IssueTypesPage() {
 
     const toggleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.checked) {
-            const deletableIds = types.filter(t => (t._count?.sessions || 0) === 0).map(t => t.id);
-            setSelectedIds(new Set([...selectedIds, ...deletableIds]));
+            setSelectedIds(new Set(types.map(t => t.id)));
         } else {
-            const newSet = new Set(selectedIds);
-            types.forEach(t => newSet.delete(t.id));
-            setSelectedIds(newSet);
+            setSelectedIds(new Set());
         }
     };
 
@@ -97,8 +94,12 @@ export default function IssueTypesPage() {
         setSelectedIds(newSet);
     };
 
-    const handleDelete = (id: string, name: string) => {
-        setConfirmMessage(`Are you sure you want to delete "${name}"? This action cannot be undone.`);
+    const handleDelete = (id: string, name: string, sessionCount: number) => {
+        let message = `Are you sure you want to delete "${name}"? This action cannot be undone.`;
+        if (sessionCount > 0) {
+            message += `\n\n⚠️ Warning: This issue type is linked to ${sessionCount} chat session${sessionCount > 1 ? 's' : ''}. Deleting it will leave those sessions with no categorized issue type.`;
+        }
+        setConfirmMessage(message);
         setPendingAction(() => async () => {
             try {
                 const res = await fetch(`/api/issue-types?id=${id}`, { method: 'DELETE' });
@@ -114,7 +115,16 @@ export default function IssueTypesPage() {
 
     const handleBulkDelete = () => {
         if (selectedIds.size === 0) return;
-        setConfirmMessage(`Are you sure you want to delete ${selectedIds.size} issue type${selectedIds.size > 1 ? 's' : ''}? This action cannot be undone.`);
+
+        const selectedTypes = types.filter(t => selectedIds.has(t.id));
+        const totalSessions = selectedTypes.reduce((sum, t) => sum + (t._count?.sessions || 0), 0);
+
+        let message = `Are you sure you want to delete ${selectedIds.size} issue type${selectedIds.size > 1 ? 's' : ''}? This action cannot be undone.`;
+        if (totalSessions > 0) {
+            message += `\n\n⚠️ Warning: The selected types are linked to ${totalSessions} chat session${totalSessions > 1 ? 's' : ''} in total. Deleting them will leave those sessions without an issue type categorization.`;
+        }
+
+        setConfirmMessage(message);
         setPendingAction(() => async () => {
             setIsDeletingBulk(true);
             try {
@@ -245,13 +255,9 @@ export default function IssueTypesPage() {
                                     <th className="px-6 py-4 font-medium w-12 text-center">
                                         <input
                                             type="checkbox"
-                                            className="w-4 h-4 text-primary-600 rounded border-slate-300 focus:ring-primary-500 cursor-pointer disabled:opacity-50"
-                                            checked={(() => {
-                                                const deletable = types.filter(t => (t._count?.sessions || 0) === 0);
-                                                return deletable.length > 0 && deletable.every(t => selectedIds.has(t.id));
-                                            })()}
+                                            className="w-4 h-4 text-primary-600 rounded border-slate-300 focus:ring-primary-500 cursor-pointer"
+                                            checked={types.length > 0 && types.every(t => selectedIds.has(t.id))}
                                             onChange={toggleSelectAll}
-                                            disabled={types.filter(t => (t._count?.sessions || 0) === 0).length === 0}
                                         />
                                     </th>
                                     <th className="px-6 py-4 font-medium">Issue Type Name</th>
@@ -265,10 +271,9 @@ export default function IssueTypesPage() {
                                         <td className="px-6 py-4 text-center">
                                             <input
                                                 type="checkbox"
-                                                className="w-4 h-4 text-primary-600 rounded border-slate-300 focus:ring-primary-500 cursor-pointer disabled:opacity-50"
+                                                className="w-4 h-4 text-primary-600 rounded border-slate-300 focus:ring-primary-500 cursor-pointer"
                                                 checked={selectedIds.has(type.id)}
                                                 onChange={() => toggleSelect(type.id)}
-                                                disabled={(type._count?.sessions || 0) > 0}
                                             />
                                         </td>
                                         <td className="px-6 py-4 font-medium text-slate-900 dark:text-white">{type.name}</td>
@@ -284,11 +289,9 @@ export default function IssueTypesPage() {
                                                 <Edit2 className="w-4 h-4" />
                                             </button>
                                             <button
-                                                onClick={() => handleDelete(type.id, type.name)}
+                                                onClick={() => handleDelete(type.id, type.name, type._count?.sessions || 0)}
                                                 className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
                                                 title="Delete"
-                                                disabled={type._count?.sessions > 0}
-                                                aria-disabled={type._count?.sessions > 0}
                                             >
                                                 <Trash2 className="w-4 h-4" />
                                             </button>

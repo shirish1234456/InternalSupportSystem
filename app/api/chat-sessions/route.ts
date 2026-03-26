@@ -37,6 +37,17 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Missing required configuration fields' }, { status: 400 });
         }
 
+        // ✅ Input length limits
+        if (chatCode.length > 50) {
+            return NextResponse.json({ error: 'Chat Code must be 50 characters or fewer.' }, { status: 400 });
+        }
+        if (queryDescription.length > 5000) {
+            return NextResponse.json({ error: 'Query Description must be 5000 characters or fewer.' }, { status: 400 });
+        }
+        if (resolution && resolution.length > 5000) {
+            return NextResponse.json({ error: 'Resolution must be 5000 characters or fewer.' }, { status: 400 });
+        }
+
         // Check for duplicate chatCode
         const existingChat = await prisma.chatSession.findUnique({
             where: { chatCode }
@@ -273,6 +284,14 @@ export async function PUT(req: NextRequest) {
 
         if (!id) {
             return NextResponse.json({ error: 'Chat session ID is required' }, { status: 400 });
+        }
+
+        // ✅ Input length limits
+        if (queryDescription && queryDescription.length > 5000) {
+            return NextResponse.json({ error: 'Query Description must be 5000 characters or fewer.' }, { status: 400 });
+        }
+        if (resolution && resolution.length > 5000) {
+            return NextResponse.json({ error: 'Resolution must be 5000 characters or fewer.' }, { status: 400 });
         }
 
         // --- STALE SESSION FALLBACK (Fixes Foreign Key errors after DB re-seeds) ---

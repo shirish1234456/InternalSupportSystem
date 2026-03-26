@@ -2,9 +2,31 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { signToken } from '@/lib/auth';
+import { getRateLimiter } from '@/lib/rate-limit';
+
+const loginLimiter = getRateLimiter('login');
+const LOGIN_MAX_ATTEMPTS = 5;
+const LOGIN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 
 export async function POST(req: Request) {
   try {
+    // ✅ Rate limiting — check before doing any DB work
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+      || req.headers.get('x-real-ip')
+      || 'unknown';
+
+    const rateCheck = loginLimiter.check(ip, { max: LOGIN_MAX_ATTEMPTS, windowMs: LOGIN_WINDOW_MS });
+    if (!rateCheck.allowed) {
+      const retryAfterSec = Math.ceil(rateCheck.retryAfterMs / 1000);
+      return NextResponse.json(
+        { error: `Too many login attempts. Please try again in ${Math.ceil(retryAfterSec / 60)} minute(s).` },
+        {
+          status: 429,
+          headers: { 'Retry-After': String(retryAfterSec) }
+        }
+      );
+    }
+
     const { email, password } = await req.json();
 
     if (!email || !password) {
@@ -21,8 +43,12 @@ export async function POST(req: Request) {
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
+      // Don't reset limiter on bad password — let the count accumulate
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
+
+    // ✅ Successful login — reset the rate limiter for this IP
+    loginLimiter.reset(ip);
 
     // Generate JWT Token using `jose`
     const payload = {

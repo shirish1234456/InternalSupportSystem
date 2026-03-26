@@ -1,9 +1,14 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 
-const SECRET_KEY = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'super_secret_internal_support_key_2024'
-);
+const jwtSecret = process.env.JWT_SECRET;
+if (!jwtSecret) {
+  throw new Error(
+    '[Security] JWT_SECRET environment variable is not set. ' +
+    'Set a long, random secret in your .env file before running the application.'
+  );
+}
+const SECRET_KEY = new TextEncoder().encode(jwtSecret);
 
 export interface JWTPayload {
   id: string;

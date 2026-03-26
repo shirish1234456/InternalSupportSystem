@@ -2,11 +2,23 @@ import { NextResponse, NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import nodemailer from 'nodemailer';
 
-
-
-// In production, you would secure this endpoint, potentially with a Bearer token
-// matching a secret env variable (e.g. CRON_SECRET) that the scheduler sends.
+// Secure this endpoint with a bearer token that must match CRON_SECRET env var.
+// Set `Authorization: Bearer <your-cron-secret>` in your external cron scheduler.
 export async function GET(req: NextRequest) {
+    // ✅ Auth check — reject requests without the correct bearer token
+    const expectedSecret = process.env.CRON_SECRET;
+    if (!expectedSecret) {
+        console.error('[CRON] CRON_SECRET environment variable is not set.');
+        return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
+    }
+
+    const authHeader = req.headers.get('authorization');
+    const providedSecret = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+
+    if (!providedSecret || providedSecret !== expectedSecret) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     try {
         // 1. Fetch system settings to know who to send to
         const settings = await prisma.systemSettings.findUnique({

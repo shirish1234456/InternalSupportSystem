@@ -51,7 +51,7 @@ export default function LoginPage() {
                 }}
             />
 
-            <div className="max-w-md w-full relative z-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="max-w-md w-full relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out">
                 {/* Logo / Brand */}
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 shadow-lg shadow-blue-600/30 mb-5 animate-bounce-subtle">
@@ -62,7 +62,7 @@ export default function LoginPage() {
                 </div>
 
                 {/* Card */}
-                <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden shadow-blue-500/10">
+                <div className="glass-card rounded-2xl shadow-2xl overflow-hidden hover:shadow-primary-500/10 transition-shadow duration-500">
                     <div className="p-8">
                         <h2 className="text-lg font-semibold text-white mb-6">Sign in to your account</h2>
 

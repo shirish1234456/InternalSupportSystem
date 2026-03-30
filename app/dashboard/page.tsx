@@ -173,19 +173,24 @@ export default function DashboardPage() {
     };
 
     const KpiCard = ({ title, value, icon: Icon, colorClass, subtitle, href }: any) => {
-        const content = (
-            <motion.div variants={itemVariants} className={`h-full bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 transition-all duration-300 p-6 flex items-start gap-4 ${href ? 'hover:-translate-y-1 hover:shadow-md cursor-pointer' : 'hover:-translate-y-1 hover:shadow-md'}`}>
-                <div className={`p-4 rounded-xl shrink-0 ${colorClass}`}>
+        const cardContent = (
+            <motion.div
+                variants={itemVariants}
+                whileHover={{ scale: 1.02, rotate: 0.5, transition: { type: 'spring', stiffness: 400, damping: 10 } }}
+                whileTap={{ scale: 0.98 }}
+                className={`group h-full glass-card rounded-2xl transition-all duration-500 p-6 flex items-start gap-4 hover:shadow-2xl hover:shadow-primary-500/10 ${href ? 'cursor-pointer' : ''}`}
+            >
+                <div className={`p-4 rounded-xl shrink-0 ${colorClass} animate-bounce-subtle group-hover:scale-110 transition-transform duration-300`}>
                     <Icon className="w-6 h-6" />
                 </div>
                 <div className="flex flex-col h-full">
-                    <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">{title}</p>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1 tracking-tight">{title}</p>
                     <h3 className="text-3xl font-bold text-slate-800 dark:text-white">{value}</h3>
-                    {subtitle && <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{subtitle}</p>}
+                    {subtitle && <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 opacity-80">{subtitle}</p>}
                 </div>
             </motion.div>
         );
-        return href ? <Link href={href} className="block h-full">{content}</Link> : content;
+        return href ? <Link href={href} className="block h-full">{cardContent}</Link> : cardContent;
     };
 
     return (
@@ -281,7 +286,7 @@ export default function DashboardPage() {
             <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                 {/* Comparative Trend Chart (Full Width) */}
-                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 col-span-1 lg:col-span-3">
+                <motion.div variants={itemVariants} className="glass-card rounded-2xl p-6 col-span-1 lg:col-span-3 hover:shadow-xl transition-all duration-300">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
                         <div className="flex items-center gap-2">
                             <TrendingUp className="w-5 h-5 text-slate-400" />
@@ -364,7 +369,7 @@ export default function DashboardPage() {
                 </motion.div>
 
                 {/* Department Distribution Pie Chart */}
-                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
+                <motion.div variants={itemVariants} className="glass-card rounded-2xl p-6 hover:shadow-xl transition-all duration-300">
                     <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <Users className="w-5 h-5 text-slate-400" />
                         Volume by Department
@@ -395,7 +400,7 @@ export default function DashboardPage() {
                 </motion.div>
 
                 {/* Top Issues Breakdown */}
-                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
+                <motion.div variants={itemVariants} className="glass-card rounded-2xl p-6 lg:col-span-2 hover:shadow-xl transition-all duration-300">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <AlertTriangle className="w-5 h-5 text-slate-400" />
@@ -475,7 +480,7 @@ export default function DashboardPage() {
             <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-6">
 
                 {/* Emails Sent by Department Bar Chart */}
-                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
+                <motion.div variants={itemVariants} className="glass-card rounded-2xl p-6 lg:col-span-2 hover:shadow-xl transition-all duration-300">
                     <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <MessageSquare className="w-5 h-5 text-slate-400" />
                         Emails Sent by Department
@@ -494,7 +499,7 @@ export default function DashboardPage() {
                 </motion.div>
 
                 {/* Chat Spikes by Time Chart */}
-                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6 lg:col-span-2">
+                <motion.div variants={itemVariants} className="glass-card rounded-2xl p-6 lg:col-span-2 hover:shadow-xl transition-all duration-300">
                     <h3 className="text-base font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <Clock className="w-5 h-5 text-slate-400" />
                         Chat Spikes by Time of Day
@@ -542,7 +547,7 @@ export default function DashboardPage() {
                 </motion.div>
 
                 {/* Top Agents Bar Chart */}
-                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
+                <motion.div variants={itemVariants} className="glass-card rounded-2xl p-6 hover:shadow-xl transition-all duration-300">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <Users className="w-5 h-5 text-slate-400" />
@@ -584,7 +589,7 @@ export default function DashboardPage() {
                 </motion.div>
 
                 {/* Top Query Types Bar Chart */}
-                <motion.div variants={itemVariants} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 p-6">
+                <motion.div variants={itemVariants} className="glass-card rounded-2xl p-6 hover:shadow-xl transition-all duration-300">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <FileText className="w-5 h-5 text-slate-400" />

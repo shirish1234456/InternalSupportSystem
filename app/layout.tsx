@@ -26,8 +26,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-50`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 min-h-screen`}
       >
+        <div className="mesh-gradient-container">
+          <div className="mesh-blob blob-1"></div>
+          <div className="mesh-blob blob-2"></div>
+          <div className="mesh-blob blob-3"></div>
+        </div>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>

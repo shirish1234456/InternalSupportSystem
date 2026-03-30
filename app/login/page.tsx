@@ -40,32 +40,29 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden backdrop-blur-sm">
             {/* Subtle background grid */}
             <div
-                className="absolute inset-0 opacity-[0.03]"
+                className="absolute inset-0 opacity-[0.05] pointer-events-none"
                 style={{
-                    backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
-                                      linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
+                    backgroundImage: `linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px),
+                                      linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px)`,
                     backgroundSize: '40px 40px'
                 }}
             />
-            {/* Glow blobs */}
-            <div className="absolute top-1/4 -left-32 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="max-w-md w-full relative z-10">
+            <div className="max-w-md w-full relative z-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
                 {/* Logo / Brand */}
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 shadow-lg shadow-blue-600/30 mb-5">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 shadow-lg shadow-blue-600/30 mb-5 animate-bounce-subtle">
                         <ShieldCheck className="w-8 h-8 text-white" />
                     </div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">SupportHub</h1>
-                    <p className="text-slate-400 mt-2 text-sm">Internal Support &amp; Analytics System</p>
+                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">SupportHub</h1>
+                    <p className="text-slate-600 dark:text-slate-400 mt-2 text-sm">Internal Support &amp; Analytics System</p>
                 </div>
 
                 {/* Card */}
-                <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+                <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden shadow-blue-500/10">
                     <div className="p-8">
                         <h2 className="text-lg font-semibold text-white mb-6">Sign in to your account</h2>
 

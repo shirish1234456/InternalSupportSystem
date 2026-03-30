@@ -24,11 +24,17 @@ interface SidebarProps {
     user: JWTPayload | null;
     isCollapsed: boolean;
     setIsCollapsed: (val: boolean) => void;
+    isMobileOpen?: boolean;
+    setIsMobileOpen?: (val: boolean) => void;
 }
 
-export default function Sidebar({ user, isCollapsed, setIsCollapsed }: SidebarProps) {
+export default function Sidebar({ user, isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
+
+    const closeMobile = () => {
+        if (setIsMobileOpen) setIsMobileOpen(false);
+    };
 
     const handleLogout = async () => {
         try {
@@ -79,7 +85,11 @@ export default function Sidebar({ user, isCollapsed, setIsCollapsed }: SidebarPr
     };
 
     return (
-        <div className={`${isCollapsed ? 'w-20' : 'w-64'} bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-800/50 h-screen fixed left-0 top-0 flex flex-col shadow-sm z-20 transition-all duration-300`}>
+        <div className={`
+            ${isCollapsed ? 'lg:w-20' : 'lg:w-64'} 
+            ${isMobileOpen ? 'translate-x-0 w-64 shadow-2xl opacity-100' : '-translate-x-full lg:translate-x-0 opacity-0 lg:opacity-100'} 
+            bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-800/50 h-screen fixed left-0 top-0 flex flex-col shadow-sm z-50 transition-all duration-300 ease-in-out
+        `}>
             {/* Brand */}
             <div className={`px-5 py-5 border-b border-slate-100/50 dark:border-slate-800/50 flex items-center ${isCollapsed ? 'justify-center px-0' : ''}`}>
                 <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
@@ -140,14 +150,15 @@ export default function Sidebar({ user, isCollapsed, setIsCollapsed }: SidebarPr
                                         <motion.div key={item.href} whileHover={{ x: isCollapsed ? 0 : 4 }} whileTap={{ scale: 0.98 }}>
                                             <Link
                                                 href={item.href}
+                                                onClick={closeMobile}
                                                 title={isCollapsed ? item.name : undefined}
-                                                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-200 text-sm font-medium group ${isCollapsed ? 'justify-center' : ''} ${isActive
+                                                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-200 text-sm font-medium group ${isCollapsed ? 'lg:justify-center' : ''} ${isActive
                                                     ? 'bg-gradient-to-r from-primary-600 to-primary-600 text-white shadow-md shadow-primary-500/20'
                                                     : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-white'
                                                     }`}
                                             >
                                                 <Icon className={`w-4 h-4 flex-shrink-0 transition-colors ${isActive ? 'text-white' : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-white'}`} />
-                                                {!isCollapsed && <span>{item.name}</span>}
+                                                <span className={`${isCollapsed ? 'lg:hidden' : 'inline'}`}>{item.name}</span>
                                             </Link>
                                         </motion.div>
                                     );
@@ -163,7 +174,7 @@ export default function Sidebar({ user, isCollapsed, setIsCollapsed }: SidebarPr
 
                 <button
                     onClick={() => setIsCollapsed(!isCollapsed)}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-all w-full ${isCollapsed ? 'justify-center' : ''}`}
+                    className={`hidden lg:flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-all w-full ${isCollapsed ? 'justify-center' : ''}`}
                     title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`}><path d="m15 18-6-6 6-6" /><path d="M3 6h2" /><path d="M3 12h2" /><path d="M3 18h2" /></svg>

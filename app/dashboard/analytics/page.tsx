@@ -122,7 +122,7 @@ export default function AnalyticsPage() {
     return (
         <div className="space-y-6 pb-12">
             {/* Header */}
-            <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                 <div>
                     <div className="flex items-center gap-2 mb-2">
                         <Link href="/dashboard" className="text-sm text-slate-500 hover:text-primary-600 flex items-center transition-colors font-medium">
@@ -130,7 +130,7 @@ export default function AnalyticsPage() {
                             Back to Dashboard
                         </Link>
                     </div>
-                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                    <h1 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
                         <PieChart className="w-6 h-6 text-primary-600" />
                         Extensive Analytics View
                     </h1>
@@ -141,23 +141,23 @@ export default function AnalyticsPage() {
 
                 <div className="flex flex-wrap items-center gap-3">
                     {dateRange === 'custom' && (
-                        <div className="flex flex-wrap md:flex-nowrap items-center gap-2">
+                        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-auto">
                             <input
                                 type="date"
                                 value={customStart}
                                 onChange={(e) => setCustomStart(e.target.value)}
-                                className="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm shadow-sm"
+                                className="flex-1 sm:w-auto px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm shadow-sm"
                             />
                             <span className="text-slate-500 dark:text-slate-400">to</span>
                             <input
                                 type="date"
                                 value={customEnd}
                                 onChange={(e) => setCustomEnd(e.target.value)}
-                                className="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm shadow-sm"
+                                className="flex-1 sm:w-auto px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm shadow-sm"
                             />
                         </div>
                     )}
-                    <div className="w-44">
+                    <div className="w-full xs:w-44">
                         <Combobox
                             options={[
                                 { id: 'allTime', name: 'All Time' },
@@ -174,7 +174,7 @@ export default function AnalyticsPage() {
 
                     <button
                         onClick={fetchAnalytics}
-                        className="p-2 text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm"
+                        className="p-2 text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm ml-auto sm:ml-0"
                         title="Refresh Analytics"
                     >
                         <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />

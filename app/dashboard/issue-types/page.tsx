@@ -174,9 +174,9 @@ export default function IssueTypesPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                    <h1 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
                         <AlertTriangle className="w-6 h-6 text-primary-600" />
                         Issue Types
                     </h1>
@@ -187,30 +187,30 @@ export default function IssueTypesPage() {
                 <div className="flex items-center gap-3">
                     <button
                         onClick={fetchTypes}
-                        className="p-2 text-slate-500 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                        className="p-2 text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm"
                         title="Refresh"
                     >
-                        <RefreshCw className="w-5 h-5" />
+                        <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
                     </button>
                     <button
                         onClick={() => openModal()}
-                        className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors shadow-sm text-sm font-medium"
+                        className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors shadow-sm text-sm font-medium"
                     >
                         <Plus className="w-4 h-4" />
-                        Add Issue Type
+                        <span className="whitespace-nowrap">Add Issue Type</span>
                     </button>
                 </div>
             </div>
 
             {selectedIds.size > 0 && (
-                <div className="bg-primary-50 dark:bg-primary-950/60 border border-primary-200 dark:border-primary-800 rounded-lg p-3 flex items-center justify-between shrink-0 mb-4 animate-in fade-in slide-in-from-top-4">
+                <div className="bg-primary-50 dark:bg-primary-950/60 border border-primary-200 dark:border-primary-800 rounded-lg p-3 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0 mb-4 animate-in fade-in slide-in-from-top-4">
                     <div className="flex items-center gap-3">
                         <span className="bg-primary-600 text-white text-xs font-bold px-2 py-1 rounded-full">
                             {selectedIds.size}
                         </span>
                         <span className="text-sm font-medium text-primary-900 dark:text-primary-200">issue types selected</span>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
                         <button
                             onClick={() => setSelectedIds(new Set())}
                             className="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-200 transition-colors"
@@ -220,7 +220,7 @@ export default function IssueTypesPage() {
                         <button
                             onClick={handleBulkDelete}
                             disabled={isDeletingBulk}
-                            className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+                            className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors disabled:opacity-50 flex-1 sm:flex-none"
                         >
                             {isDeletingBulk ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                             Delete Selected

@@ -371,9 +371,9 @@ export default function ChatLogsPage() {
     return (
         <div className="space-y-4 flex flex-col h-[calc(100vh-8rem)]">
             {/* Header: Title left, all controls right in one bar */}
-            <div className="flex items-center justify-between gap-4 shrink-0">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 shrink-0">
                 <div className="min-w-0">
-                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2 truncate">
+                    <h1 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2 truncate">
                         <MessageSquare className="w-6 h-6 text-primary-600 shrink-0" />
                         Chat Logs
                     </h1>
@@ -383,78 +383,83 @@ export default function ChatLogsPage() {
                 </div>
 
                 {/* Controls row */}
-                <div className="flex items-center gap-2 shrink-0">
-                    {/* Status filter */}
-                    <div className="w-44">
-                        <Combobox
-                            options={[
-                                { id: 'All', name: 'All Statuses' },
-                                { id: 'Open', name: 'Open' },
-                                { id: 'Resolved', name: 'Resolved' },
-                                { id: 'Escalated', name: 'Escalated' },
-                                { id: 'OpenEscalated', name: 'Escalated & Open' }
-                            ]}
-                            value={statusFilter}
-                            onChange={(id) => { setStatusFilter(id); setPage(1); }}
-                            searchable={false}
-                        />
+                <div className="flex flex-wrap items-center gap-2 shrink-0">
+                    {/* Filter Group */}
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                        <div className="flex-1 sm:w-44">
+                            <Combobox
+                                options={[
+                                    { id: 'All', name: 'All Statuses' },
+                                    { id: 'Open', name: 'Open' },
+                                    { id: 'Resolved', name: 'Resolved' },
+                                    { id: 'Escalated', name: 'Escalated' },
+                                    { id: 'OpenEscalated', name: 'Escalated & Open' }
+                                ]}
+                                value={statusFilter}
+                                onChange={(id) => { setStatusFilter(id); setPage(1); }}
+                                searchable={false}
+                            />
+                        </div>
+
+                        <div className="flex-1 sm:w-44">
+                            <Combobox
+                                options={[{ id: 'All', name: 'All Departments' }, ...departments]}
+                                value={departmentFilter}
+                                onChange={(id) => { setDepartmentFilter(id); setPage(1); }}
+                                searchable={false}
+                            />
+                        </div>
                     </div>
 
-                    {/* Department filter */}
-                    <div className="w-44">
-                        <Combobox
-                            options={[{ id: 'All', name: 'All Departments' }, ...departments]}
-                            value={departmentFilter}
-                            onChange={(id) => { setDepartmentFilter(id); setPage(1); }}
-                            searchable={false}
-                        />
+                    {/* Search Group */}
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                        <div className="relative flex-1 sm:w-44">
+                            <Search className="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="w-full pl-8 pr-3 h-9 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                            />
+                        </div>
+
+                        {/* Divider - Hidden on mobile */}
+                        <div className="hidden sm:block h-6 w-px bg-slate-200 dark:bg-slate-700" />
+
+                        <div className="flex items-center gap-2 ml-auto sm:ml-0">
+                            {/* Refresh */}
+                            <button
+                                onClick={fetchLogs}
+                                className="h-9 w-9 flex items-center justify-center text-slate-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg transition-colors"
+                                title="Refresh"
+                            >
+                                <RefreshCw className="w-4 h-4" />
+                            </button>
+
+                            {/* Export */}
+                            <button
+                                onClick={handleExportCSV}
+                                disabled={isExporting || totalRecords === 0}
+                                className="h-9 px-3 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                                title="Export to CSV"
+                            >
+                                {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                                <span className="hidden xs:inline">Export</span>
+                            </button>
+
+                            {/* Delete All - Restricted to larger screens or shown as Icon only? Let's keep it visible but maybe text-hidden */}
+                            <button
+                                onClick={handleDeleteAll}
+                                disabled={isDeletingAll || totalRecords === 0}
+                                className="h-9 px-3 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                                title="Delete All Chat Sessions"
+                            >
+                                {isDeletingAll ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                                <span className="hidden md:inline">Delete All</span>
+                            </button>
+                        </div>
                     </div>
-
-                    {/* Search */}
-                    <div className="relative">
-                        <Search className="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                        <input
-                            type="text"
-                            placeholder="Search..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className="pl-8 pr-3 h-9 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm w-44"
-                        />
-                    </div>
-
-                    {/* Divider */}
-                    <div className="h-6 w-px bg-slate-200 dark:bg-slate-700" />
-
-                    {/* Export */}
-                    <button
-                        onClick={handleExportCSV}
-                        disabled={isExporting || totalRecords === 0}
-                        className="h-9 px-3 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center gap-1.5 transition-colors disabled:opacity-50"
-                        title="Export to CSV"
-                    >
-                        {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                        Export
-                    </button>
-
-                    {/* Refresh */}
-                    <button
-                        onClick={fetchLogs}
-                        className="h-9 w-9 flex items-center justify-center text-slate-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg transition-colors"
-                        title="Refresh"
-                    >
-                        <RefreshCw className="w-4 h-4" />
-                    </button>
-
-                    {/* Delete All */}
-                    <button
-                        onClick={handleDeleteAll}
-                        disabled={isDeletingAll || totalRecords === 0}
-                        className="h-9 px-3 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg flex items-center gap-1.5 transition-colors disabled:opacity-50"
-                        title="Delete All Chat Sessions"
-                    >
-                        {isDeletingAll ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-                        Delete All
-                    </button>
                 </div>
             </div>
 
@@ -509,8 +514,9 @@ export default function ChatLogsPage() {
                         )}
                     </div>
                 ) : (
-                    <div className="flex-1 overflow-y-auto">
-                        <table className="w-full text-sm text-left">
+                    <div className="flex-1 overflow-auto">
+                        <div className="min-w-max">
+                            <table className="w-full text-sm text-left">
                             <thead className="text-xs text-slate-500 dark:text-slate-400 uppercase bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10 shadow-sm">
                                 <tr>
                                     <th className="px-6 py-4 font-medium w-12 text-center">
@@ -607,6 +613,7 @@ export default function ChatLogsPage() {
                             </tbody>
                         </table>
                     </div>
+                </div>
                 )
                 }
 

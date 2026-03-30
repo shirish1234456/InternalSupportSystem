@@ -183,12 +183,12 @@ export default function AddEntryPage() {
 
             <form onSubmit={handleSubmit} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden">
                 {/* User Information Section */}
-                <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+                <div className="p-4 md:p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
                     <h2 className="text-lg font-semibold text-slate-800 dark:text-white flex items-center gap-2 mb-4">
                         <User className="w-5 h-5 text-slate-400" />
                         User Details
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                         <div>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                                 Full Name <span className="text-red-500">*</span>
@@ -272,13 +272,13 @@ export default function AddEntryPage() {
                 </div>
 
                 {/* Chat Session Section */}
-                <div className="p-6 space-y-6">
+                <div className="p-4 md:p-6 space-y-6">
                     <h2 className="text-lg font-semibold text-slate-800 dark:text-white flex items-center gap-2">
                         <FileText className="w-5 h-5 text-slate-400" />
                         Chat Session Metadata
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                         <div>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                                 Chat Code (Unique ID) <span className="text-red-500">*</span>
@@ -322,7 +322,7 @@ export default function AddEntryPage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-2 border-b border-slate-100 dark:border-slate-800">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 pb-2 border-b border-slate-100 dark:border-slate-800">
                         <div>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                                 Query Type <span className="text-red-500">*</span>
@@ -395,7 +395,7 @@ export default function AddEntryPage() {
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                                 Current Status <span className="text-red-500">*</span>
                             </label>
-                            <div className="flex items-center gap-6">
+                            <div className="flex flex-wrap items-center gap-4 sm:gap-6">
                                 {['Open', 'Resolved', 'Escalated'].map((s) => (
                                     <label key={s} className="flex items-center gap-2 cursor-pointer">
                                         <input
@@ -432,25 +432,25 @@ export default function AddEntryPage() {
                 </div>
 
                 {/* Form Actions */}
-                <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-3">
+                <div className="px-4 md:px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-3">
                     <button
                         type="button"
                         onClick={() => router.back()}
-                        className="px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+                        className="flex-1 sm:flex-none px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
                         disabled={isSubmitting || !chatCode || !customerName || !country || !agentId || !departmentId || !queryTypeId || !issueTypeId || !queryDescription}
-                        className="px-6 py-2.5 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center gap-2 shadow-sm"
+                        className="flex-1 sm:flex-none px-6 py-2.5 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 transition-colors flex items-center justify-center gap-2 shadow-sm"
                     >
                         {isSubmitting ? (
                             <Loader2 className="w-5 h-5 animate-spin" />
                         ) : (
                             <Save className="w-5 h-5" />
                         )}
-                        Save Record
+                        <span className="whitespace-nowrap">Save Record</span>
                     </button>
                 </div>
             </form>

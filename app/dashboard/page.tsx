@@ -190,9 +190,9 @@ export default function DashboardPage() {
 
     return (
         <div className="space-y-6 pb-12">
-            <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                    <h1 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
                         <BarChart3 className="w-6 h-6 text-primary-600" />
                         Performance Dashboard
                     </h1>
@@ -202,27 +202,27 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
-                    <Link href="/dashboard/analytics" className="hidden sm:flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium shadow-sm">
+                    <Link href="/dashboard/analytics" className="hidden md:flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium shadow-sm">
                         View Extensive Analytics
                     </Link>
                     {dateRange === 'custom' && (
-                        <div className="flex flex-wrap md:flex-nowrap items-center gap-2">
+                        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-auto">
                             <input
                                 type="date"
                                 value={customStart}
                                 onChange={(e) => setCustomStart(e.target.value)}
-                                className="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm shadow-sm"
+                                className="flex-1 sm:w-auto px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm shadow-sm"
                             />
                             <span className="text-slate-500 dark:text-slate-400">to</span>
                             <input
                                 type="date"
                                 value={customEnd}
                                 onChange={(e) => setCustomEnd(e.target.value)}
-                                className="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm shadow-sm"
+                                className="flex-1 sm:w-auto px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm shadow-sm"
                             />
                         </div>
                     )}
-                    <div className="w-44">
+                    <div className="w-full xs:w-44">
                         <Combobox
                             options={[
                                 { id: 'allTime', name: 'All Time' },
@@ -239,7 +239,7 @@ export default function DashboardPage() {
 
                     <button
                         onClick={fetchAnalytics}
-                        className="p-2 text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm"
+                        className="p-2 text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm ml-auto sm:ml-0"
                         title="Refresh Dashboard"
                     >
                         <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
@@ -248,31 +248,31 @@ export default function DashboardPage() {
             </div>
 
             {/* KPI Cards */}
-            <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 <KpiCard
                     title="Total Chats"
                     value={summary.totalChats}
                     icon={MessageSquare}
-                    colorClass="bg-primary-50 text-primary-600"
+                    colorClass="bg-primary-50 text-primary-600 dark:bg-primary-900/20"
                 />
                 <KpiCard
                     title="Resolution Rate"
                     value={`${summary.resolutionRate}%`}
                     icon={CheckCircle2}
-                    colorClass="bg-green-50 text-green-600"
+                    colorClass="bg-green-50 text-green-600 dark:bg-green-900/20"
                     subtitle={`${summary.resolvedChats} resolved chats`}
                 />
                 <KpiCard
                     title="Total Emails Sent"
                     value={summary.totalEmailsSent}
                     icon={MessageSquare}
-                    colorClass="bg-purple-50 text-purple-600"
+                    colorClass="bg-purple-50 text-purple-600 dark:bg-purple-900/20"
                 />
                 <KpiCard
                     title="Escalated / Open"
                     value={`${summary.escalatedChats} / ${summary.openChats}`}
                     icon={AlertTriangle}
-                    colorClass="bg-red-50 text-red-600"
+                    colorClass="bg-red-50 text-red-600 dark:bg-red-900/20"
                     href="/dashboard/chat-logs?status=OpenEscalated"
                 />
             </motion.div>
@@ -285,7 +285,7 @@ export default function DashboardPage() {
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
                         <div className="flex items-center gap-2">
                             <TrendingUp className="w-5 h-5 text-slate-400" />
-                            <h3 className="text-lg font-semibold text-slate-800 dark:text-white">
+                            <h3 className="text-base md:text-lg font-semibold text-slate-800 dark:text-white">
                                 Comparative Chat Volume Trend
                             </h3>
                         </div>
@@ -312,7 +312,7 @@ export default function DashboardPage() {
                             ))}
                         </div>
                     </div>
-                    <div className="h-96 w-full mt-4">
+                    <div className="h-[300px] md:h-[400px] w-full mt-4">
                         {comparativeData.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={comparativeData} margin={{ top: 5, right: 30, left: -20, bottom: 40 }}>
@@ -369,7 +369,7 @@ export default function DashboardPage() {
                         <Users className="w-5 h-5 text-slate-400" />
                         Volume by Department
                     </h3>
-                    <div className="h-72 w-full">
+                    <div className="h-64 md:h-72 w-full">
                         {charts.departmentDistribution.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
@@ -480,7 +480,7 @@ export default function DashboardPage() {
                         <MessageSquare className="w-5 h-5 text-slate-400" />
                         Emails Sent by Department
                     </h3>
-                    <div className="h-64 w-full">
+                    <div className="h-48 md:h-64 w-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={charts.emailsSentByDept} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
@@ -499,7 +499,7 @@ export default function DashboardPage() {
                         <Clock className="w-5 h-5 text-slate-400" />
                         Chat Spikes by Time of Day
                     </h3>
-                    <div className="h-64 w-full">
+                    <div className="h-48 md:h-64 w-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <LineChart data={charts.chatSpikes} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />

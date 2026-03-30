@@ -35,7 +35,10 @@ export default function ChatLogsPage() {
     const [search, setSearch] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
+    const [departmentFilter, setDepartmentFilter] = useState('All');
+    const [isExporting, setIsExporting] = useState(false);
 
+    // Initial Filter from URL
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search);
@@ -45,8 +48,6 @@ export default function ChatLogsPage() {
             }
         }
     }, []);
-    const [departmentFilter, setDepartmentFilter] = useState('All');
-    const [isExporting, setIsExporting] = useState(false);
 
     // Form Metadata Dropdowns
     const [departments, setDepartments] = useState<{ id: string, name: string }[]>([]);
@@ -80,6 +81,9 @@ export default function ChatLogsPage() {
     const [confirmMessage, setConfirmMessage] = useState('');
     const [pendingAction, setPendingAction] = useState<(() => Promise<void>) | null>(null);
 
+    const lastFetchId = useState(0)[0]; // Using a simple counter
+    const currentFetchId = useState({ id: 0 })[0];
+
     // Fetch master dropdowns
     useEffect(() => {
         const fetchMasterData = async () => {
@@ -111,6 +115,7 @@ export default function ChatLogsPage() {
     }, [search]);
 
     const fetchLogs = async () => {
+        const fetchId = ++currentFetchId.id;
         setLoading(true);
         try {
             const query = new URLSearchParams({
@@ -132,13 +137,21 @@ export default function ChatLogsPage() {
             if (!res.ok) throw new Error('Failed to fetch chat logs');
 
             const data = await res.json();
-            setSessions(data.data);
-            setTotalPages(data.pagination.totalPages);
-            setTotalRecords(data.pagination.total);
+            
+            if (fetchId === currentFetchId.id) {
+                setSessions(data.data);
+                setTotalPages(data.pagination.totalPages);
+                setTotalRecords(data.pagination.total);
+                setError('');
+            }
         } catch (err: any) {
-            setError(err.message);
+            if (fetchId === currentFetchId.id) {
+                setError(err.message);
+            }
         } finally {
-            setLoading(false);
+            if (fetchId === currentFetchId.id) {
+                setLoading(false);
+            }
         }
     };
 

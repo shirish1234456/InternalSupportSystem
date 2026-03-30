@@ -503,12 +503,29 @@ export default function DashboardPage() {
                         <ResponsiveContainer width="100%" height="100%">
                             <LineChart data={charts.chatSpikes} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                                <XAxis dataKey="hour" tick={{ fontSize: 12 }} tickMargin={10} axisLine={false} tickLine={false} />
+                                <XAxis 
+                                    dataKey="hour" 
+                                    tick={{ fontSize: 10 }} 
+                                    tickMargin={10} 
+                                    axisLine={false} 
+                                    tickLine={false} 
+                                    tickFormatter={(hour) => {
+                                        const h = parseInt(hour, 10);
+                                        const ampm = h >= 12 ? 'PM' : 'AM';
+                                        const h12 = h % 12 || 12;
+                                        return `${h12}${ampm}`;
+                                    }}
+                                />
                                 <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
                                 <RechartsTooltip
                                     contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                                     formatter={(value: any) => [`${value}`, 'Sessions']}
-                                    labelFormatter={(label) => `Hour: ${label}`}
+                                    labelFormatter={(label) => {
+                                        const h = parseInt(label, 10);
+                                        const ampm = h >= 12 ? 'PM' : 'AM';
+                                        const h12 = h % 12 || 12;
+                                        return `Time: ${h12}:00 ${ampm}`;
+                                    }}
                                 />
                                 <Line
                                     type="linear"

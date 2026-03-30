@@ -63,6 +63,7 @@ export default function BulkImportPage() {
         const formData = new FormData();
         formData.append('file', selectedFile);
         formData.append('validateOnly', 'true');
+        formData.append('timezoneOffset', new Date().getTimezoneOffset().toString());
 
         try {
             const res = await fetch('/api/import/excel', {
@@ -89,6 +90,7 @@ export default function BulkImportPage() {
 
         const formData = new FormData();
         formData.append('file', file);
+        formData.append('timezoneOffset', new Date().getTimezoneOffset().toString());
 
         try {
             const res = await fetch('/api/import/excel', {

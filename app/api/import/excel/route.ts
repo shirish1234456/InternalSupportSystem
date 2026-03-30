@@ -15,6 +15,7 @@ export async function POST(req: NextRequest) {
         const formData = await req.formData();
         const file = formData.get('file') as File | null;
         const validateOnly = formData.get('validateOnly') === 'true';
+        const timezoneOffset = parseInt(formData.get('timezoneOffset') as string || '0', 10);
 
         if (!file) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
@@ -213,7 +214,6 @@ export async function POST(req: NextRequest) {
                     if (dateVal) {
                         if (typeof dateVal === 'number') {
                             // Excel serial date → JS Date (excel epoch is Jan 1 1900, JS epoch is Jan 1 1970)
-                            // The integer part is the date, the fractional part is the time-of-day
                             const dateSerial = Math.floor(dateVal);
                             const datePart = new Date(Math.round((dateSerial - 25569) * 86400 * 1000));
 
@@ -222,10 +222,8 @@ export async function POST(req: NextRequest) {
 
                             if (timeVal !== null && timeVal !== undefined) {
                                 if (typeof timeVal === 'number') {
-                                    // Fractional serial: 0.5 = 12:00:00, multiply by ms in a day
                                     totalMs += Math.round(timeVal * 86400 * 1000);
                                 } else if (typeof timeVal === 'string' && timeVal.includes(':')) {
-                                    // "HH:MM" or "HH:MM:SS" string
                                     const tParts = timeVal.trim().split(':');
                                     const hours = parseInt(tParts[0] || '0', 10);
                                     const minutes = parseInt(tParts[1] || '0', 10);
@@ -233,31 +231,32 @@ export async function POST(req: NextRequest) {
                                     totalMs += (hours * 3600 + minutes * 60 + seconds) * 1000;
                                 }
                             } else if (dateVal % 1 !== 0) {
-                                // Fractional part of dateVal itself carries the time
                                 const timeFraction = dateVal - dateSerial;
                                 totalMs += Math.round(timeFraction * 86400 * 1000);
                             }
 
-                            combinedDate = new Date(totalMs);
+                            // Normalize by the user's timezone offset to maintain "Visual Time" parity
+                            combinedDate = new Date(totalMs + (timezoneOffset * 60 * 1000));
 
                         } else if (typeof dateVal === 'string' && dateVal.includes('/')) {
-                            // Try to parse "DD/MM/YYYY HH:mm:ss" like history.xlsx often uses
+                            // Try to parse "DD/MM/YYYY HH:mm:ss"
                             const parts = dateVal.split(' ');
                             if (parts[0].includes('/')) {
                                 const dParts = parts[0].split('/');
                                 if (dParts.length === 3) {
-                                    // Format is MM/DD/YYYY
                                     const month = dParts[0].padStart(2, '0');
                                     const day = dParts[1].padStart(2, '0');
                                     let year = dParts[2];
-                                    if (year.length === 2) {
-                                        year = '20' + year; // assume 20xx
-                                    }
+                                    if (year.length === 2) year = '20' + year;
+                                    
                                     const timeStr = parts[1] || (timeVal ? String(timeVal) : '00:00:00');
-                                    // Parse without Z suffix so it's interpreted as local time
-                                    combinedDate = new Date(`${year}-${month}-${day}T${timeStr}`);
+                                    
+                                    // Parse as a neutral "floating" date and then apply the offset
+                                    const baseDate = new Date(`${year}-${month}-${day}T${timeStr}Z`);
+                                    combinedDate = new Date(baseDate.getTime() + (timezoneOffset * 60 * 1000));
+                                    
                                     if (isNaN(combinedDate.getTime())) {
-                                        combinedDate = new Date(dateVal); // ultimate fallback
+                                        combinedDate = new Date(dateVal); 
                                     }
                                 } else {
                                     combinedDate = new Date(dateVal);

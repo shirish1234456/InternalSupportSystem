@@ -163,7 +163,7 @@ export default function ChatLogsPage() {
             const headers = ['Chat Code', 'Date', 'User Name', 'User Email', 'Agent', 'Department', 'Query Type', 'Issue Type', 'Status', 'Description', 'Resolution'];
             const rows = data.map((s: any) => [
                 s.chatCode,
-                new Date(s.createdAt).toLocaleString().replace(',', ''),
+                new Date(s.createdAt).toLocaleString('en-US', { hour12: true }).replace(',', ''),
                 `"${(s.customer?.fullName || '').replace(/"/g, '""')}"`,
                 s.customer?.email || '',
                 `"${s.agent?.name || ''}"`,
@@ -552,7 +552,7 @@ export default function ChatLogsPage() {
                                                 {new Date(session.createdAt).toLocaleDateString('en-US')}
                                             </div>
                                             <div className="text-xs text-slate-400">
-                                                {new Date(session.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                                                {new Date(session.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
@@ -657,7 +657,7 @@ export default function ChatLogsPage() {
                                         {selectedSession.chatCode}
                                     </h2>
                                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-3">
-                                        <span>{new Date(selectedSession.createdAt).toLocaleString('en-US')}</span>
+                                        <span>{new Date(selectedSession.createdAt).toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true, month: 'short', day: 'numeric', year: 'numeric' })}</span>
                                         <StatusBadge status={selectedSession.status} />
                                     </p>
                                 </div>

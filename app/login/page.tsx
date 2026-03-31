@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Lock, Mail, AlertCircle, Eye, EyeOff, ShieldCheck } from 'lucide-react';
+import { Lock, AlertCircle, Eye, EyeOff, Activity, MessageSquare, MapPin, Network, BarChart3, Zap } from 'lucide-react';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -27,69 +27,79 @@ export default function LoginPage() {
             const data = await res.json();
 
             if (!res.ok) {
-                setError(data.error || 'Failed to login');
+                setError(data.error || 'Failed to authenticate');
             } else {
                 router.push('/dashboard');
                 router.refresh();
             }
         } catch (err) {
-            setError('An unexpected error occurred. Please try again.');
+            setError('System anomaly detected. Please try again.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden backdrop-blur-sm">
-            {/* Subtle background grid */}
-            <div
-                className="absolute inset-0 opacity-[0.05] pointer-events-none"
-                style={{
-                    backgroundImage: `linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px),
-                                      linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px)`,
-                    backgroundSize: '40px 40px'
-                }}
-            />
+        <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden font-sans text-slate-900 dark:text-white">
+            {/* Corner Markers */}
+            <div className="absolute top-6 left-6 w-8 h-8 border-t border-l border-slate-400/30 dark:border-slate-700/50 pointer-events-none hidden md:block" />
+            <div className="absolute top-6 right-6 w-8 h-8 border-t border-r border-slate-400/30 dark:border-slate-700/50 pointer-events-none hidden md:block" />
+            <div className="absolute bottom-6 left-6 w-8 h-8 border-b border-l border-slate-400/30 dark:border-slate-700/50 pointer-events-none hidden md:block" />
+            <div className="absolute bottom-6 right-6 w-8 h-8 border-b border-r border-slate-400/30 dark:border-slate-700/50 pointer-events-none hidden md:block" />
 
-            {/* Wavy Background Elements */}
-            <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-0">
-                <svg className="relative block w-full h-[150px] md:h-[250px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-blue-500/20 animate-wave object-cover"></path>
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-blue-600/20 animate-wave-slow object-cover"></path>
-                </svg>
+            {/* Faint Background Icons (Adapted for Light/Dark) */}
+            <MessageSquare className="absolute top-20 left-[15%] w-32 h-32 text-slate-400 dark:text-slate-500 opacity-20 dark:opacity-[0.05] blur-sm pointer-events-none" />
+            <MapPin className="absolute top-[40%] left-[5%] w-24 h-24 text-slate-400 dark:text-slate-500 opacity-20 dark:opacity-[0.05] blur-sm pointer-events-none" />
+            <Network className="absolute right-[15%] top-[60%] w-28 h-28 text-primary-500 dark:text-cyan-500 opacity-10 dark:opacity-[0.03] blur-[2px] pointer-events-none" />
+            
+            <div className="absolute bottom-10 right-[10%] opacity-20 dark:opacity-10 blur-[1px] pointer-events-none bg-primary-100/50 dark:bg-indigo-900/10 rounded-3xl p-6">
+                 <BarChart3 className="w-32 h-32 text-primary-500 dark:text-indigo-400" />
             </div>
 
-            <div className="max-w-md w-full relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out">
-                {/* Logo / Brand */}
-                <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 shadow-lg shadow-blue-600/30 mb-5 animate-bounce-subtle">
-                        <ShieldCheck className="w-8 h-8 text-white" />
-                    </div>
-                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">SupportHub</h1>
-                    <p className="text-slate-600 dark:text-slate-400 mt-2 text-sm">Internal Support &amp; Analytics System</p>
-                </div>
+            {/* Bottom Screen Text */}
+            <div className="absolute bottom-6 left-12 text-[10px] tracking-widest text-slate-400 dark:text-slate-600 font-mono hidden md:flex items-center gap-6">
+                <span className="cursor-default hover:text-slate-600 dark:hover:text-slate-400 transition-colors">PRIVACY_PROTOCOL</span>
+                <span className="cursor-default hover:text-slate-600 dark:hover:text-slate-400 transition-colors">TERMS OF MATRIX</span>
+            </div>
+            <div className="absolute bottom-6 right-12 text-[10px] tracking-widest text-slate-400 dark:text-slate-600 font-mono hidden md:block cursor-default hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
+                © 2024 AETHER INSIGHTS LABS
+            </div>
 
-                {/* Card */}
-                <div className="glass-card rounded-2xl shadow-2xl overflow-hidden hover:shadow-primary-500/10 transition-shadow duration-500">
-                    <div className="p-8">
-                        <h2 className="text-lg font-semibold text-white mb-6">Sign in to your account</h2>
+            <div className="max-w-[420px] w-full relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out">
+                {/* Main Card */}
+                <div className="glass-card rounded-[2rem] shadow-2xl overflow-hidden relative border border-white/40 dark:border-slate-800/80">
+                    {/* Subtle top edge highlight */}
+                    <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 dark:via-slate-600/30 to-transparent" />
+                    
+                    <div className="p-8 sm:p-10">
+                        {/* Header */}
+                        <div className="flex items-center justify-center gap-3 mb-4">
+                            <Activity className="w-7 h-7 text-primary-500 dark:text-cyan-400 dark:shadow-cyan-400/50 drop-shadow-sm" />
+                            <h1 className="text-[22px] font-bold tracking-tight">
+                                <span>ChatSupport</span>{' '}
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-indigo-500 dark:from-sky-400 dark:to-indigo-400">Analytics</span>
+                            </h1>
+                        </div>
+                        <p className="text-[9px] sm:text-[10px] tracking-[0.2em] font-semibold text-slate-500 dark:text-slate-500 text-center mb-10 text-nowrap">
+                            UNLOCK INSIGHTS. EMPOWER CONVERSATIONS.
+                        </p>
 
                         {error && (
-                            <div className="mb-5 p-3.5 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center gap-3 text-red-400 text-sm">
+                            <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 rounded-2xl flex items-center gap-3 text-red-600 dark:text-red-400 text-sm">
                                 <AlertCircle className="w-5 h-5 flex-shrink-0" />
                                 <p>{error}</p>
                             </div>
                         )}
 
-                        <form onSubmit={handleLogin} className="space-y-5">
+                        <form onSubmit={handleLogin} className="space-y-6">
                             {/* Email */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-2">
-                                    Email Address
+                                <label className="block text-[11px] font-bold tracking-widest text-primary-600 dark:text-cyan-500 mb-2.5 uppercase">
+                                    Operator ID / Email
                                 </label>
                                 <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                                        <Mail className="h-4.5 w-4.5 text-slate-500" />
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <span className="text-slate-400 font-bold text-lg leading-none">@</span>
                                     </div>
                                     <input
                                         type="email"
@@ -97,21 +107,27 @@ export default function LoginPage() {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         disabled={loading}
+                                        autoComplete="email"
                                         required
-                                        className="block w-full pl-10 pr-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm disabled:opacity-60"
-                                        placeholder="admin@company.com"
+                                        className="block w-full pl-12 pr-4 py-3.5 bg-white/70 dark:bg-slate-900/60 backdrop-blur-sm border border-slate-200 dark:border-slate-700/80 rounded-[1rem] sm:rounded-[1.25rem] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 dark:focus:ring-sky-500/50 focus:border-primary-400 dark:focus:border-sky-400 transition-all text-sm font-medium disabled:opacity-60 shadow-sm"
+                                        placeholder="nexus.id@aether.ai"
                                     />
                                 </div>
                             </div>
 
                             {/* Password */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-2">
-                                    Password
-                                </label>
+                                <div className="flex justify-between items-center mb-2.5">
+                                    <label className="block text-[11px] font-bold tracking-widest text-primary-600 dark:text-cyan-500 uppercase">
+                                        Access Cipher
+                                    </label>
+                                    <span className="text-[9px] tracking-wide text-slate-400 dark:text-slate-500 uppercase cursor-pointer hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
+                                        Lost access?
+                                    </span>
+                                </div>
                                 <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                                        <Lock className="h-4.5 w-4.5 text-slate-500" />
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <Lock className="h-4 w-4 text-slate-400" />
                                     </div>
                                     <input
                                         type={showPassword ? 'text' : 'password'}
@@ -119,19 +135,20 @@ export default function LoginPage() {
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         disabled={loading}
+                                        autoComplete="current-password"
                                         required
-                                        className="block w-full pl-10 pr-11 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm disabled:opacity-60"
-                                        placeholder="••••••••"
+                                        className="block w-full pl-12 pr-12 py-3.5 bg-white/70 dark:bg-slate-900/60 backdrop-blur-sm border border-slate-200 dark:border-slate-700/80 rounded-[1rem] sm:rounded-[1.25rem] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 dark:focus:ring-sky-500/50 focus:border-primary-400 dark:focus:border-sky-400 transition-all text-[15px] font-bold tracking-widest disabled:opacity-60 shadow-sm"
+                                        placeholder="•••••••••••••"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-500 hover:text-slate-300 transition-colors"
+                                        className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
                                     >
                                         {showPassword ? (
-                                            <EyeOff className="h-4.5 w-4.5" />
+                                            <EyeOff className="h-5 w-5" />
                                         ) : (
-                                            <Eye className="h-4.5 w-4.5" />
+                                            <Eye className="h-5 w-5" />
                                         )}
                                     </button>
                                 </div>
@@ -141,26 +158,34 @@ export default function LoginPage() {
                                 type="submit"
                                 id="login-btn"
                                 disabled={loading}
-                                className="mt-2 w-full flex justify-center items-center gap-2 py-2.5 px-4 bg-blue-600 hover:bg-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 rounded-xl text-sm font-semibold text-white transition-all shadow-lg shadow-blue-600/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="mt-8 w-full flex justify-center items-center gap-2 py-4 px-4 bg-gradient-to-r from-primary-500 to-indigo-500 dark:from-[#60a5fa] dark:to-[#a78bfa] text-white dark:text-slate-900 hover:opacity-90 active:scale-[0.98] rounded-full text-[12px] font-bold tracking-[0.15em] uppercase transition-all shadow-lg shadow-primary-500/30 dark:shadow-[0_0_20px_rgba(96,165,250,0.4)] hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(96,165,250,0.6)] border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {loading ? (
                                     <>
-                                        <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                                         </svg>
-                                        Authenticating...
+                                        Authorizing
                                     </>
-                                ) : 'Sign In'}
+                                ) : (
+                                    <>
+                                        Authenticate
+                                    </>
+                                )}
                             </button>
                         </form>
                     </div>
 
-                    <div className="px-8 py-4 bg-slate-950/60 border-t border-slate-800 text-center">
-                        <p className="text-xs text-slate-600 flex items-center justify-center gap-1.5">
-                            <Lock className="w-3 h-3" />
-                            Secure Internal Access Only
-                        </p>
+                    {/* Card Footer Status */}
+                    <div className="px-8 py-5 border-t border-slate-200/50 dark:border-slate-800/80 bg-slate-50/50 dark:bg-[#0d1017]/80 flex justify-between items-center text-[9px] tracking-widest text-slate-500 font-mono uppercase">
+                        <div className="flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-primary-500 dark:bg-cyan-500 shadow-[0_0_8px_rgba(14,165,233,0.8)] dark:shadow-[0_0_8px_rgba(6,182,212,0.8)] animate-pulse" />
+                            System Ready
+                        </div>
+                        <div className="flex items-center gap-1.5 text-slate-400 dark:text-slate-500">
+                            v4.2.0-Alpha <Zap className="w-2.5 h-2.5 text-primary-500/50 dark:text-cyan-600/50" />
+                        </div>
                     </div>
                 </div>
             </div>

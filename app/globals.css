@@ -319,20 +319,3 @@ body {
 .recharts-tooltip-label {
   color: #475569 !important;
 }
-
-/* Wavy Animation */
-.animate-wave {
-  animation: wave 10s linear infinite;
-  transform-origin: center bottom;
-}
-
-.animate-wave-slow {
-  animation: wave 15s linear infinite reverse;
-  transform-origin: center bottom;
-}
-
-@keyframes wave {
-  0% { transform: scaleX(1) translateX(0); }
-  50% { transform: scaleX(1.5) translateX(-5%); }
-  100% { transform: scaleX(1) translateX(0); }
-}

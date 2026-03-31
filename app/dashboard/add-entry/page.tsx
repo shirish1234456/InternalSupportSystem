@@ -181,9 +181,9 @@ export default function AddEntryPage() {
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden">
+            <form onSubmit={handleSubmit} className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300">
                 {/* User Information Section */}
-                <div className="p-4 md:p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+                <div className="p-4 md:p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 rounded-t-2xl">
                     <h2 className="text-lg font-semibold text-slate-800 dark:text-white flex items-center gap-2 mb-4">
                         <User className="w-5 h-5 text-slate-400" />
                         User Details
@@ -432,7 +432,7 @@ export default function AddEntryPage() {
                 </div>
 
                 {/* Form Actions */}
-                <div className="px-4 md:px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-3">
+                <div className="px-4 md:px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-3 rounded-b-2xl">
                     <button
                         type="button"
                         onClick={() => router.back()}

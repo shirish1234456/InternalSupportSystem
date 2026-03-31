@@ -110,7 +110,7 @@ export default function LoginPage() {
                         <div className="p-8 sm:p-10">
                             {/* Header */}
                             <div className="flex items-center justify-center gap-3 mb-4">
-                                <Activity className="w-7 h-7 text-primary-500 dark:text-cyan-400 dark:shadow-cyan-400/50 drop-shadow-sm" />
+                                <Activity className="w-7 h-7 text-primary-500 dark:text-cyan-400 dark:shadow-cyan-400/50 drop-shadow-sm animate-pulse" />
                                 <h1 className="text-[22px] font-bold tracking-tight">
                                     <span>ChatSupport</span>{' '}
                                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-indigo-500 dark:from-sky-400 dark:to-indigo-400">Analytics</span>
@@ -146,7 +146,6 @@ export default function LoginPage() {
                                             autoComplete="email"
                                             required
                                             className="block w-full pl-12 pr-4 py-3.5 bg-white/70 dark:bg-slate-900/60 backdrop-blur-sm border border-slate-200 dark:border-slate-700/80 rounded-[1rem] sm:rounded-[1.25rem] placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 dark:focus:ring-sky-500/50 focus:border-primary-400 dark:focus:border-sky-400 transition-all text-sm font-medium disabled:opacity-60 shadow-sm relative z-0"
-                                            placeholder="nexus.id@system.ai"
                                         />
                                     </div>
                                 </div>

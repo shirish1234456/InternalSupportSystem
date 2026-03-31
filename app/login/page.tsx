@@ -81,11 +81,6 @@ export default function LoginPage() {
                         Streamline your entire support operation with real-time telemetry, unified insights, and uncompromising security protocols.
                     </p>
                 </div>
-                
-                {/* Footer text specific to left pane */}
-                <div className="absolute bottom-8 text-xs text-slate-500 font-mono tracking-widest z-20 uppercase">
-                    Aether Insights Architecture
-                </div>
             </div>
 
             {/* Right Side: The Login Card Interface */}
@@ -139,7 +134,7 @@ export default function LoginPage() {
                                         Operator ID / Email
                                     </label>
                                     <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
                                             <span className="text-slate-400 font-bold text-lg leading-none">@</span>
                                         </div>
                                         <input
@@ -150,8 +145,8 @@ export default function LoginPage() {
                                             disabled={loading}
                                             autoComplete="email"
                                             required
-                                            className="block w-full pl-12 pr-4 py-3.5 bg-white/70 dark:bg-slate-900/60 backdrop-blur-sm border border-slate-200 dark:border-slate-700/80 rounded-[1rem] sm:rounded-[1.25rem] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 dark:focus:ring-sky-500/50 focus:border-primary-400 dark:focus:border-sky-400 transition-all text-sm font-medium disabled:opacity-60 shadow-sm"
-                                            placeholder="nexus.id@aether.ai"
+                                            className="block w-full pl-12 pr-4 py-3.5 bg-white/70 dark:bg-slate-900/60 backdrop-blur-sm border border-slate-200 dark:border-slate-700/80 rounded-[1rem] sm:rounded-[1.25rem] placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 dark:focus:ring-sky-500/50 focus:border-primary-400 dark:focus:border-sky-400 transition-all text-sm font-medium disabled:opacity-60 shadow-sm relative z-0"
+                                            placeholder="nexus.id@system.ai"
                                         />
                                     </div>
                                 </div>
@@ -160,14 +155,11 @@ export default function LoginPage() {
                                 <div>
                                     <div className="flex justify-between items-center mb-2.5">
                                         <label className="block text-[11px] font-bold tracking-widest text-primary-600 dark:text-cyan-500 uppercase">
-                                            Access Cipher
+                                            Password
                                         </label>
-                                        <span className="text-[9px] tracking-wide text-slate-400 dark:text-slate-500 uppercase cursor-pointer hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
-                                            Lost access?
-                                        </span>
                                     </div>
                                     <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
                                             <Lock className="h-4 w-4 text-slate-400" />
                                         </div>
                                         <input
@@ -178,13 +170,13 @@ export default function LoginPage() {
                                             disabled={loading}
                                             autoComplete="current-password"
                                             required
-                                            className="block w-full pl-12 pr-12 py-3.5 bg-white/70 dark:bg-slate-900/60 backdrop-blur-sm border border-slate-200 dark:border-slate-700/80 rounded-[1rem] sm:rounded-[1.25rem] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 dark:focus:ring-sky-500/50 focus:border-primary-400 dark:focus:border-sky-400 transition-all text-[15px] font-bold tracking-widest disabled:opacity-60 shadow-sm"
+                                            className="block w-full pl-12 pr-12 py-3.5 bg-white/70 dark:bg-slate-900/60 backdrop-blur-sm border border-slate-200 dark:border-slate-700/80 rounded-[1rem] sm:rounded-[1.25rem] placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 dark:focus:ring-sky-500/50 focus:border-primary-400 dark:focus:border-sky-400 transition-all text-[15px] font-bold tracking-widest disabled:opacity-60 shadow-sm relative z-0"
                                             placeholder="•••••••••••••"
                                         />
                                         <button
                                             type="button"
                                             onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors z-10"
                                         >
                                             {showPassword ? (
                                                 <EyeOff className="h-5 w-5" />
@@ -199,11 +191,11 @@ export default function LoginPage() {
                                     type="submit"
                                     id="login-btn"
                                     disabled={loading}
-                                    className="mt-8 w-full flex justify-center items-center gap-2 py-4 px-4 bg-gradient-to-r from-primary-500 to-indigo-500 dark:from-[#60a5fa] dark:to-[#a78bfa] text-white dark:text-slate-900 hover:opacity-90 active:scale-[0.98] rounded-full text-[12px] font-bold tracking-[0.15em] uppercase transition-all shadow-lg shadow-primary-500/30 dark:shadow-[0_0_20px_rgba(96,165,250,0.4)] hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(96,165,250,0.6)] border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="mt-8 w-full flex justify-center items-center gap-2 py-4 px-4 bg-blue-600 hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-500 text-white active:scale-[0.98] rounded-full text-[12px] font-bold tracking-[0.15em] uppercase transition-all shadow-lg shadow-blue-500/30 dark:shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {loading ? (
                                         <>
-                                            <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                                             </svg>
@@ -236,9 +228,6 @@ export default function LoginPage() {
             <div className="absolute bottom-6 left-6 lg:left-1/2 lg:ml-6 text-[10px] tracking-widest text-slate-400 dark:text-slate-600 font-mono flex items-center gap-6">
                 <span className="cursor-pointer hover:text-slate-600 dark:hover:text-slate-400 transition-colors">PRIVACY_PROTOCOL</span>
                 <span className="cursor-pointer hover:text-slate-600 dark:hover:text-slate-400 transition-colors">TERMS OF MATRIX</span>
-            </div>
-            <div className="absolute bottom-6 right-6 text-[10px] tracking-widest text-slate-400 dark:text-slate-600 font-mono hidden md:block cursor-default hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
-                © 2024 AETHER INSIGHTS
             </div>
         </div>
     );

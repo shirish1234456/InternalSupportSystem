@@ -29,6 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 min-h-screen`}
       >
         <div className="mesh-gradient-container">
+          <div className="neon-grid"></div>
           <div className="mesh-blob blob-1"></div>
           <div className="mesh-blob blob-2"></div>
           <div className="mesh-blob blob-3"></div>

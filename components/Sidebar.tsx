@@ -147,18 +147,25 @@ export default function Sidebar({ user, isCollapsed, setIsCollapsed, isMobileOpe
                                     const Icon = item.icon;
 
                                     return (
-                                        <motion.div key={item.href} whileHover={{ x: isCollapsed ? 0 : 4 }} whileTap={{ scale: 0.98 }}>
+                                        <motion.div key={item.href} whileHover={{ x: isCollapsed ? 0 : 5, scale: 1.02 }} whileTap={{ scale: 0.95 }}>
                                             <Link
                                                 href={item.href}
                                                 onClick={closeMobile}
                                                 title={isCollapsed ? item.name : undefined}
-                                                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-200 text-sm font-medium group ${isCollapsed ? 'lg:justify-center' : ''} ${isActive
-                                                    ? 'bg-gradient-to-r from-primary-600 to-primary-600 text-white shadow-md shadow-primary-500/20'
-                                                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-white'
+                                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 text-sm font-medium group relative overflow-hidden ${isCollapsed ? 'lg:justify-center' : ''} ${isActive
+                                                    ? 'text-white shadow-[0_4px_20px_-4px_var(--color-primary-500)] bg-gradient-to-r from-primary-500 to-primary-600 border border-primary-500/50'
+                                                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 hover:text-primary-600 dark:hover:text-primary-400 border border-transparent'
                                                     }`}
                                             >
-                                                <Icon className={`w-4 h-4 flex-shrink-0 transition-colors ${isActive ? 'text-white' : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-white'}`} />
-                                                <span className={`${isCollapsed ? 'lg:hidden' : 'inline'}`}>{item.name}</span>
+                                                {isActive && (
+                                                    <motion.div
+                                                        layoutId="activeTabIndicator"
+                                                        className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent pointer-events-none"
+                                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                                    />
+                                                )}
+                                                <Icon className={`w-5 h-5 flex-shrink-0 transition-all duration-300 relative z-10 ${isActive ? 'text-white' : 'text-slate-400 dark:text-slate-500 group-hover:text-primary-500 dark:group-hover:text-primary-400 group-hover:scale-110 drop-shadow-sm'}`} />
+                                                <span className={`relative z-10 ${isCollapsed ? 'lg:hidden' : 'inline'}`}>{item.name}</span>
                                             </Link>
                                         </motion.div>
                                     );

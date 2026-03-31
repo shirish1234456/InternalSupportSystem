@@ -42,33 +42,48 @@ export default function LoginPage() {
     return (
         <div className="min-h-screen flex font-sans text-slate-900 dark:text-white bg-slate-50 dark:bg-transparent">
             
-            {/* Left Side: Dramatic Image Presentation */}
-            <div className="hidden lg:flex flex-1 relative items-center justify-center overflow-hidden bg-slate-900 border-r border-slate-200 dark:border-slate-800">
-                {/* Dark gradient overlay to ensure text is readable */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/60 to-slate-950 z-10" />
-                <div className="absolute inset-0 bg-primary-900/20 mix-blend-overlay z-10" />
+            {/* Left Side: Dramatic Presentation */}
+            <div className="hidden lg:flex flex-1 relative items-center justify-center overflow-hidden bg-[#0A0F1C] border-r border-slate-200 dark:border-slate-800">
                 
-                {/* Abstract tech image */}
-                <img 
-                    src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" 
-                    alt="Abstract data architecture" 
-                    className="absolute inset-0 w-full h-full object-cover scale-105 transform hover:scale-100 transition-transform duration-[10s] ease-out opacity-80"
+                {/* --- NATIVE CSS FUTURISTIC BACKGROUND --- */}
+                {/* Base Mesh Gradient */}
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/40 via-indigo-950/80 to-[#0A0F1C] z-0"></div>
+                
+                {/* Animated Glowing Orbs */}
+                <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] rounded-full bg-cyan-600/20 blur-[120px] animate-pulse z-0 pointer-events-none" />
+                <div className="absolute bottom-[10%] right-[10%] w-[400px] h-[400px] rounded-full bg-indigo-600/20 blur-[100px] animate-pulse z-0 pointer-events-none" style={{ animationDelay: '2s' }} />
+                
+                {/* Geometric Grid Overlay */}
+                <div className="absolute inset-0 opacity-[0.05] z-0 pointer-events-none" 
+                     style={{ 
+                         backgroundImage: `linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)`, 
+                         backgroundSize: '40px 40px' 
+                     }} 
                 />
 
+                {/* Cyberpunk Scanlines */}
+                <div className="absolute inset-0 opacity-10 pointer-events-none z-10"
+                     style={{
+                         background: `linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.5) 51%)`,
+                         backgroundSize: '100% 4px'
+                     }}
+                />
+                {/* -------------------------------------- */}
+
                 <div className="relative z-20 max-w-xl p-12 text-center">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl mb-8 animate-float">
-                        <Shield className="w-8 h-8 text-white" />
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_0_30px_rgba(6,182,212,0.3)] mb-8 animate-bounce-subtle">
+                        <Shield className="w-8 h-8 text-cyan-400" />
                     </div>
-                    <h2 className="text-4xl font-extrabold text-white mb-6 tracking-tight drop-shadow-md">
+                    <h2 className="text-4xl font-extrabold text-white mb-6 tracking-tight drop-shadow-lg">
                         Intelligence at Scale
                     </h2>
-                    <p className="text-slate-300 text-lg leading-relaxed font-medium drop-shadow-sm max-w-md mx-auto">
+                    <p className="text-slate-300 text-lg leading-relaxed font-medium drop-shadow-md max-w-md mx-auto">
                         Streamline your entire support operation with real-time telemetry, unified insights, and uncompromising security protocols.
                     </p>
                 </div>
                 
                 {/* Footer text specific to left pane */}
-                <div className="absolute bottom-8 text-xs text-slate-400 font-mono tracking-widest z-20 uppercase">
+                <div className="absolute bottom-8 text-xs text-slate-500 font-mono tracking-widest z-20 uppercase">
                     Aether Insights Architecture
                 </div>
             </div>

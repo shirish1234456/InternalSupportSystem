@@ -74,7 +74,7 @@ export async function POST(req: Request) {
       secure: isProd,
       sameSite: 'lax',
       path: '/',
-      maxAge: 60 * 60 * 24, // 24 hours
+      maxAge: 60 * 60 * 24 * 3, // 72 hours (3 days)
     });
 
     return response;

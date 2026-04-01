@@ -16,7 +16,7 @@ export default async function DashboardLayout({
     }
 
     return (
-        <div className={`flex h-screen bg-slate-50 dark:bg-slate-950 overflow-hidden font-sans relative theme-${session.accentColor || 'blue'}`}>
+        <div className={`flex h-screen bg-transparent overflow-hidden font-sans relative theme-${session.accentColor || 'blue'}`}>
             {/* Main Content Area handled by Wrapper */}
 
             <DashboardClientWrapper user={session}>

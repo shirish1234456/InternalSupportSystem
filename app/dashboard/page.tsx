@@ -321,10 +321,10 @@ export default function DashboardPage() {
                         {comparativeData.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={comparativeData} margin={{ top: 20, right: 30, left: -20, bottom: 40 }}>
-                                    <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.05)" />
+                                    <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.03)" />
                                     <XAxis
                                         dataKey="date"
-                                        tick={{ fontSize: 10, fill: 'rgba(255,255,255,0.5)' }}
+                                        tick={{ fontSize: 10, fill: 'var(--chart-tick)' }}
                                         tickMargin={12}
                                         axisLine={false}
                                         tickLine={false}
@@ -339,11 +339,18 @@ export default function DashboardPage() {
                                             return val;
                                         }}
                                     />
-                                    <YAxis tick={{ fontSize: 11, fill: 'rgba(255,255,255,0.5)' }} axisLine={false} tickLine={false} />
+                                    <YAxis tick={{ fontSize: 11, fill: 'var(--chart-tick)' }} axisLine={false} tickLine={false} />
                                     <RechartsTooltip
-                                        contentStyle={{ backgroundColor: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}
+                                        contentStyle={{ 
+                                            backgroundColor: 'rgba(255,255,255,0.02)', 
+                                            backdropFilter: 'blur(12px)', 
+                                            borderRadius: '16px', 
+                                            border: '1px solid rgba(255,255,255,0.1)', 
+                                            boxShadow: '0 10px 40px rgba(0,0,0,0.4)',
+                                            padding: '12px'
+                                        }}
                                         labelFormatter={(label) => `Date: ${label}`}
-                                        itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
+                                        itemStyle={{ fontSize: '11px', fontWeight: 'bold' }}
                                     />
                                     {charts.departmentTrends?.map((dept, index) => {
                                         if (!selectedDepartments.includes(dept.departmentName)) return null;
@@ -355,10 +362,10 @@ export default function DashboardPage() {
                                                 dataKey={dept.departmentName}
                                                 name={dept.departmentName}
                                                 stroke={color}
-                                                strokeWidth={4}
+                                                strokeWidth={3}
                                                 dot={false}
-                                                activeDot={{ r: 6, strokeWidth: 0, fill: color }}
-                                                style={{ filter: `drop-shadow(0 0 8px ${color})` }}
+                                                activeDot={{ r: 5, strokeWidth: 0, fill: color }}
+                                                style={{ filter: `drop-shadow(0 0 6px ${color})` }}
                                             />
                                         );
                                     })}
@@ -491,8 +498,8 @@ export default function DashboardPage() {
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={charts.emailsSentByDept} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                                <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#64748b' }} tickMargin={10} axisLine={false} tickLine={false} />
-                                <YAxis tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} />
+                                <XAxis dataKey="name" tick={{ fontSize: 12, fill: 'var(--chart-tick)' }} tickMargin={10} axisLine={false} tickLine={false} />
+                                <YAxis tick={{ fontSize: 12, fill: 'var(--chart-tick)' }} axisLine={false} tickLine={false} />
                                 <RechartsTooltip cursor={{ fill: 'rgba(148, 163, 184, 0.1)' }} contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                                 <Bar dataKey="value" fill="#8b5cf6" radius={[4, 4, 0, 0]} name="Emails Sent" barSize={40} />
                             </BarChart>
@@ -582,8 +589,8 @@ export default function DashboardPage() {
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={charts.topAgentsSegmented?.[currentAgentsIndex]?.data?.slice(0, 5) || []} layout="vertical" margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
-                                <XAxis type="number" tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} />
-                                <YAxis dataKey="name" type="category" tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} width={100} />
+                                <XAxis type="number" tick={{ fontSize: 12, fill: 'var(--chart-tick)' }} axisLine={false} tickLine={false} />
+                                <YAxis dataKey="name" type="category" tick={{ fontSize: 12, fill: 'var(--chart-tick)' }} axisLine={false} tickLine={false} width={100} />
                                 <RechartsTooltip cursor={{ fill: 'rgba(148, 163, 184, 0.1)' }} contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                                 <Bar dataKey="chatsHandled" fill="#8b5cf6" radius={[0, 4, 4, 0]} name="Handled" barSize={24} />
                             </BarChart>

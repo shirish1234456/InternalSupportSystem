@@ -26,6 +26,7 @@
   --foreground: #0f172a;
   --sidebar-bg: #ffffff;
   --sidebar-border: #e2e8f0;
+  --chart-tick: #64748b;
 }
 
 @theme inline {
@@ -108,10 +109,11 @@
   --foreground: #f1f5f9;
   --sidebar-bg: rgba(15, 23, 42, 0.2);
   --sidebar-border: rgba(255, 255, 255, 0.1);
+  --chart-tick: rgba(255, 255, 255, 0.5);
 }
 
 body {
-  background: var(--background);
+  background: transparent;
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -218,10 +220,10 @@ body {
 
 /* Glassmorphism Utilities */
 .glass-card {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
 }
 

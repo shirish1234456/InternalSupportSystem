@@ -130,11 +130,11 @@ export default function AnalyticsPage() {
                             Back to Dashboard
                         </Link>
                     </div>
-                    <h1 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                        <PieChart className="w-6 h-6 text-primary-600" />
+                    <h1 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2 font-futuristic">
+                        <PieChart className="w-6 h-6 text-primary-600 glow-primary" />
                         Extensive Analytics View
                     </h1>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium opacity-70">
                         Deep dive into support metrics and detailed records.
                     </p>
                 </div>
@@ -184,10 +184,10 @@ export default function AnalyticsPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-6">
                 {/* Volume By Country Pie Chart */}
-                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 col-span-1 overflow-hidden">
-                    <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
-                        <PieChart className="w-5 h-5 text-slate-400" />
-                        <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Chats by Country</h3>
+                <div className="glass-card rounded-2xl shadow-antigravity hover:shadow-[0_20px_60px_rgba(0,0,0,0.6)] transition-all duration-500 col-span-1 overflow-hidden group">
+                    <div className="p-6 border-b border-white/10 flex items-center gap-2 bg-white/5">
+                        <PieChart className="w-5 h-5 text-slate-400 group-hover:text-primary-500 transition-colors" />
+                        <h3 className="text-lg font-semibold text-slate-800 dark:text-white font-futuristic">Chats by Country</h3>
                     </div>
                     <div className="h-80 p-6">
                         {charts.chatsByCountry && charts.chatsByCountry.length > 0 ? (
@@ -208,7 +208,7 @@ export default function AnalyticsPage() {
                                     </Pie>
                                     <RechartsTooltip
                                         formatter={(value: any, name: any) => [`${value} chats`, name]}
-                                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                        contentStyle={{ backgroundColor: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}
                                     />
                                     <Legend />
                                 </RechartsPieChart>
@@ -222,10 +222,10 @@ export default function AnalyticsPage() {
                 </div>
 
                 {/* Volume By Role Pie Chart */}
-                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 col-span-1 overflow-hidden">
-                    <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
-                        <Users className="w-5 h-5 text-slate-400" />
-                        <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Chat Volume by Role</h3>
+                <div className="glass-card rounded-2xl shadow-antigravity hover:shadow-[0_20px_60px_rgba(0,0,0,0.6)] transition-all duration-500 col-span-1 overflow-hidden group">
+                    <div className="p-6 border-b border-white/10 flex items-center gap-2 bg-white/5">
+                        <Users className="w-5 h-5 text-slate-400 group-hover:text-primary-500 transition-colors" />
+                        <h3 className="text-lg font-semibold text-slate-800 dark:text-white font-futuristic">Chat Volume by Role</h3>
                     </div>
                     <div className="h-80 p-6">
                         {charts.chatsByRole && charts.chatsByRole.length > 0 ? (
@@ -246,7 +246,7 @@ export default function AnalyticsPage() {
                                     </Pie>
                                     <RechartsTooltip
                                         formatter={(value: any, name: any) => [`${value} chats`, name]}
-                                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                        contentStyle={{ backgroundColor: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}
                                     />
                                     <Legend />
                                 </RechartsPieChart>
@@ -260,20 +260,20 @@ export default function AnalyticsPage() {
                 </div>
 
                 {/* Volume By Department Full List */}
-                <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-sm border border-white/20 dark:border-slate-800/50 hover:shadow-md transition-all duration-300 overflow-hidden col-span-1 lg:col-span-2">
-                    <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
-                        <Building2 className="w-5 h-5 text-slate-400" />
-                        <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Department Overview</h3>
+                <div className="glass-card rounded-2xl shadow-antigravity col-span-1 lg:col-span-2 overflow-hidden group">
+                    <div className="p-6 border-b border-white/10 flex items-center gap-2 bg-white/5">
+                        <Building2 className="w-5 h-5 text-slate-400 group-hover:text-primary-500 transition-colors" />
+                        <h3 className="text-lg font-semibold text-slate-800 dark:text-white font-futuristic">Department Overview</h3>
                     </div>
                     <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
                         <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-                            <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-200 font-medium border-b border-slate-200 dark:border-slate-700 sticky top-0">
+                            <thead className="bg-white/5 text-slate-700 dark:text-slate-200 font-bold border-b border-white/10 sticky top-0 uppercase tracking-widest text-[10px]">
                                 <tr>
                                     <th className="px-6 py-4">Department</th>
                                     <th className="px-6 py-4 text-right">Volume</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                            <tbody className="divide-y divide-white/5">
                                 {charts.departmentDistribution.length > 0 ? (
                                     charts.departmentDistribution.map((item, index) => (
                                         <tr key={index} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">

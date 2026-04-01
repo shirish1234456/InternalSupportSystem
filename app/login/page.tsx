@@ -215,19 +215,13 @@ export default function LoginPage() {
                                 <span className="w-1.5 h-1.5 rounded-full bg-primary-500 dark:bg-cyan-500 shadow-[0_0_8px_rgba(14,165,233,0.8)] dark:shadow-[0_0_8px_rgba(6,182,212,0.8)] animate-pulse" />
                                 System Ready
                             </div>
-                            <div className="flex items-center gap-1.5 text-slate-400 dark:text-slate-500">
-                                v4.2.0-Alpha <Zap className="w-2.5 h-2.5 text-primary-500/50 dark:text-cyan-600/50" />
-                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
             
-            {/* Absolute Terms text */}
-            <div className="absolute bottom-6 left-6 lg:left-1/2 lg:ml-6 text-[10px] tracking-widest text-slate-400 dark:text-slate-600 font-mono flex items-center gap-6">
-                <span className="cursor-pointer hover:text-slate-600 dark:hover:text-slate-400 transition-colors">PRIVACY_PROTOCOL</span>
-                <span className="cursor-pointer hover:text-slate-600 dark:hover:text-slate-400 transition-colors">TERMS OF MATRIX</span>
-            </div>
+
         </div>
     );
 }

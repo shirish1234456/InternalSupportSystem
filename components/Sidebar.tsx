@@ -86,9 +86,9 @@ export default function Sidebar({ user, isCollapsed, setIsCollapsed, isMobileOpe
 
     return (
         <div className={`
-            ${isCollapsed ? 'lg:w-20' : 'lg:w-64'} 
+            ${isCollapsed ? 'lg:w-[4.5rem]' : 'lg:w-64'} 
             ${isMobileOpen ? 'translate-x-0 w-64 shadow-2xl opacity-100' : '-translate-x-full lg:translate-x-0 opacity-0 lg:opacity-100'} 
-            bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-800/50 h-screen fixed left-0 top-0 flex flex-col shadow-sm z-50 transition-all duration-300 ease-in-out
+            bg-white/5 dark:bg-white/[0.02] backdrop-blur-3xl border border-white/10 dark:border-white/5 h-[calc(100vh-1.5rem)] fixed left-3 top-3 flex flex-col shadow-antigravity z-50 transition-all duration-500 ease-in-out rounded-2xl overflow-hidden
         `}>
             {/* Brand */}
             <div className={`px-5 py-5 border-b border-slate-100/50 dark:border-slate-800/50 flex items-center ${isCollapsed ? 'justify-center px-0' : ''}`}>
@@ -112,7 +112,7 @@ export default function Sidebar({ user, isCollapsed, setIsCollapsed, isMobileOpe
                         {!isCollapsed && (
                             <div className="min-w-0">
                                 <p className="text-sm font-semibold text-slate-800 dark:text-white truncate">{user.fullName}</p>
-                                <span className={`inline-flex mt-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded-full border ${roleColors[user.role] || roleColors.DataEntry}`}>
+                                <span className={`inline-flex mt-0.5 text-[10px] font-bold px-2 py-0.5 rounded-full border shadow-sm ${user.role === 'SuperAdmin' ? 'glow-violet' : ''} ${roleColors[user.role] || roleColors.DataEntry}`}>
                                     {user.role}
                                 </span>
                             </div>
@@ -152,15 +152,15 @@ export default function Sidebar({ user, isCollapsed, setIsCollapsed, isMobileOpe
                                                 href={item.href}
                                                 onClick={closeMobile}
                                                 title={isCollapsed ? item.name : undefined}
-                                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 text-sm font-medium group relative overflow-hidden ${isCollapsed ? 'lg:justify-center' : ''} ${isActive
-                                                    ? 'text-white shadow-[0_4px_20px_-4px_var(--color-primary-500)] bg-gradient-to-r from-primary-500 to-primary-600 border border-primary-500/50'
-                                                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 hover:text-primary-600 dark:hover:text-primary-400 border border-transparent'
+                                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-500 text-sm font-medium group relative overflow-hidden ${isCollapsed ? 'lg:justify-center' : ''} ${isActive
+                                                    ? 'text-white shadow-[0_0_20px_rgba(79,70,229,0.4)] bg-gradient-to-r from-primary-500 to-primary-600 border border-primary-400/50 glow-primary'
+                                                    : 'text-slate-600 dark:text-slate-400 hover:bg-white/5 dark:hover:bg-white/[0.03] hover:text-primary-600 dark:hover:text-primary-400 border border-transparent'
                                                     }`}
                                             >
                                                 {isActive && (
                                                     <motion.div
                                                         layoutId="activeTabIndicator"
-                                                        className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent pointer-events-none"
+                                                        className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent pointer-events-none"
                                                         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                                     />
                                                 )}

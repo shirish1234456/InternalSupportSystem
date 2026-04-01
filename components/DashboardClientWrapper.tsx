@@ -53,9 +53,9 @@ export default function DashboardClientWrapper({ user, children }: DashboardClie
 
             {/* Main Content Area */}
             <div
-                className={`flex-1 flex flex-col min-h-screen overflow-hidden z-10 relative transition-all duration-300 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-64'} ml-0`}
+                className={`flex-1 flex flex-col min-h-screen overflow-hidden z-10 relative transition-all duration-300 ${isCollapsed ? 'lg:ml-[5.5rem]' : 'lg:ml-[17rem]'} ml-0 mr-3 my-3 rounded-2xl overflow-hidden`}
             >
-                <header className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800/50 h-14 flex items-center px-4 md:px-8 z-30 flex-shrink-0">
+                <header className="bg-white/40 dark:bg-slate-900/10 backdrop-blur-3xl border-b border-white/10 dark:border-white/5 h-14 flex items-center px-4 md:px-8 z-30 flex-shrink-0">
                     {/* Mobile Menu Toggle */}
                     <button
                         onClick={() => setIsMobileOpen(!isMobileOpen)}

@@ -176,17 +176,17 @@ export default function DashboardPage() {
         const cardContent = (
             <motion.div
                 variants={itemVariants}
-                whileHover={{ scale: 1.02, rotate: 0.5, transition: { type: 'spring', stiffness: 400, damping: 10 } }}
+                whileHover={{ y: -8, scale: 1.02, transition: { type: 'spring', stiffness: 400, damping: 10 } }}
                 whileTap={{ scale: 0.98 }}
-                className={`group h-full glass-card rounded-2xl transition-all duration-500 p-6 flex items-start gap-4 hover:shadow-2xl hover:shadow-primary-500/10 ${href ? 'cursor-pointer' : ''}`}
+                className={`group h-full glass-card rounded-2xl transition-all duration-500 p-6 flex items-start gap-4 shadow-antigravity hover:shadow-[0_20px_60px_rgba(0,0,0,0.6)] ${href ? 'cursor-pointer' : ''}`}
             >
-                <div className={`p-4 rounded-xl shrink-0 ${colorClass} animate-bounce-subtle group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`p-4 rounded-xl shrink-0 ${colorClass} animate-bounce-subtle group-hover:scale-110 transition-transform duration-300 ${colorClass.includes('primary') ? 'glow-primary' : colorClass.includes('green') ? 'glow-success' : colorClass.includes('amber') ? 'glow-amber' : colorClass.includes('purple') ? 'glow-violet' : ''}`}>
                     <Icon className="w-6 h-6" />
                 </div>
                 <div className="flex flex-col h-full">
-                    <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1 tracking-tight">{title}</p>
-                    <h3 className="text-3xl font-bold text-slate-800 dark:text-white">{value}</h3>
-                    {subtitle && <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 opacity-80">{subtitle}</p>}
+                    <p className="text-slate-500 dark:text-slate-400 text-sm font-bold mb-1 tracking-widest uppercase opacity-70">{title}</p>
+                    <h3 className="text-3xl font-bold text-slate-800 dark:text-white tracking-tight">{value}</h3>
+                    {subtitle && <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 font-medium italic opacity-60">{subtitle}</p>}
                 </div>
             </motion.div>
         );
@@ -320,12 +320,12 @@ export default function DashboardPage() {
                     <div className="h-[300px] md:h-[400px] w-full mt-4">
                         {comparativeData.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%">
-                                <LineChart data={comparativeData} margin={{ top: 5, right: 30, left: -20, bottom: 40 }}>
-                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                                <LineChart data={comparativeData} margin={{ top: 20, right: 30, left: -20, bottom: 40 }}>
+                                    <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.05)" />
                                     <XAxis
                                         dataKey="date"
-                                        tick={{ fontSize: 11 }}
-                                        tickMargin={8}
+                                        tick={{ fontSize: 10, fill: 'rgba(255,255,255,0.5)' }}
+                                        tickMargin={12}
                                         axisLine={false}
                                         tickLine={false}
                                         interval={0}
@@ -339,24 +339,26 @@ export default function DashboardPage() {
                                             return val;
                                         }}
                                     />
-                                    <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+                                    <YAxis tick={{ fontSize: 11, fill: 'rgba(255,255,255,0.5)' }} axisLine={false} tickLine={false} />
                                     <RechartsTooltip
-                                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                        contentStyle={{ backgroundColor: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}
                                         labelFormatter={(label) => `Date: ${label}`}
-                                        itemStyle={{ fontSize: '12px' }}
+                                        itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
                                     />
                                     {charts.departmentTrends?.map((dept, index) => {
                                         if (!selectedDepartments.includes(dept.departmentName)) return null;
+                                        const color = getDepartmentColor(dept.departmentName, index);
                                         return (
                                             <Line
                                                 key={dept.departmentName}
-                                                type="linear"
+                                                type="monotone"
                                                 dataKey={dept.departmentName}
                                                 name={dept.departmentName}
-                                                stroke={getDepartmentColor(dept.departmentName, index)}
-                                                strokeWidth={3}
-                                                dot={{ r: 4, strokeWidth: 2 }}
-                                                activeDot={{ r: 6, strokeWidth: 0 }}
+                                                stroke={color}
+                                                strokeWidth={4}
+                                                dot={false}
+                                                activeDot={{ r: 6, strokeWidth: 0, fill: color }}
+                                                style={{ filter: `drop-shadow(0 0 8px ${color})` }}
                                             />
                                         );
                                     })}
@@ -457,9 +459,9 @@ export default function DashboardPage() {
                                                     <span className="text-sm font-medium text-slate-700 dark:text-slate-300 truncate pr-2">{issue.name}</span>
                                                     <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex-shrink-0">{issue.value.toLocaleString()}</span>
                                                 </div>
-                                                <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
                                                     <div
-                                                        className={`h-full rounded-full transition-all duration-500 ${barColors[index % barColors.length]}`}
+                                                        className={`h-full rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(255,255,255,0.2)] ${barColors[index % barColors.length]}`}
                                                         style={{ width: `${pct}%` }}
                                                     />
                                                 </div>
@@ -533,13 +535,14 @@ export default function DashboardPage() {
                                     }}
                                 />
                                 <Line
-                                    type="linear"
+                                    type="monotone"
                                     dataKey="count"
                                     stroke="#f59e0b"
-                                    strokeWidth={3}
-                                    dot={{ r: 4, strokeWidth: 2, fill: '#f59e0b' }}
+                                    strokeWidth={4}
+                                    dot={false}
                                     activeDot={{ r: 6, strokeWidth: 0, fill: '#f59e0b' }}
                                     name="Sessions"
+                                    style={{ filter: `drop-shadow(0 0 10px #f59e0b)` }}
                                 />
                             </LineChart>
                         </ResponsiveContainer>

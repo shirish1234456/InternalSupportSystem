@@ -387,7 +387,7 @@ export default function ChatLogsPage() {
             return (
                 <div className="flex items-center gap-2" title="Resolved">
                     <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse-breathe" />
-                    <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Recorded</span>
+                    <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Resolved</span>
                 </div>
             );
         }
@@ -642,7 +642,7 @@ export default function ChatLogsPage() {
                                                         {activeMenuId === session.id && (
                                                             <>
                                                                 <div className="fixed inset-0 z-30" onClick={() => setActiveMenuId(null)} />
-                                                                <div className="absolute right-0 top-full mt-2 w-36 rounded-xl bg-slate-900 border border-slate-800 shadow-2xl z-40 p-1 animate-in fade-in zoom-in-95 duration-100">
+                                                                <div className="absolute right-0 bottom-full mb-2 w-36 rounded-xl bg-slate-900 border border-slate-800 shadow-2xl z-40 p-1 animate-in fade-in slide-in-from-bottom-2 duration-200">
                                                                     <button
                                                                         onClick={() => {
                                                                             openModal(session);

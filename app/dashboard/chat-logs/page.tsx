@@ -603,12 +603,15 @@ export default function ChatLogsPage() {
                                                         </div>
                                                     </div>
 
-                                                    <div className="w-32 shrink-0 flex items-center gap-3">
+                                                    <div className="w-32 shrink-0 flex items-center gap-2">
                                                         <div className="p-1.5 rounded-full bg-slate-800/50 border border-slate-700/50 text-slate-400 group-hover:text-cyan-400 group-hover:border-cyan-500/30 transition-all" title={`Agent: ${session.agent.name}`}>
-                                                            <User className="w-3.5 h-3.5" />
-                                                        </div>
-                                                        <div className="p-1.5 rounded-full bg-slate-800/50 border border-slate-700/50 text-slate-400" title={`Dept: ${session.department.name}`}>
                                                             <Bot className="w-3.5 h-3.5" />
+                                                        </div>
+                                                        <div className="px-2 py-1 rounded-md bg-slate-800/30 border border-slate-700/50 text-slate-500 text-[10px] font-bold tracking-tighter" title={`Department: ${session.department.name}`}>
+                                                            {session.department.name.includes('Alston Digital') ? 'AD' : 
+                                                             session.department.name.includes('mysecondTeacher') ? 'MST' : 
+                                                             session.department.name.includes('Homeschool.asia') ? 'HSA' : 
+                                                             session.department.name.substring(0, 3).toUpperCase()}
                                                         </div>
                                                     </div>
 

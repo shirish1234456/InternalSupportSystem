@@ -111,8 +111,8 @@ export default function LoginPage() {
                             {/* Header */}
                             <div className="flex items-center justify-center gap-3 mb-4">
                                 <Activity className="w-7 h-7 text-primary-500 dark:text-cyan-400 dark:shadow-cyan-400/50 drop-shadow-sm animate-pulse" />
-                                <h1 className="text-[22px] font-bold tracking-tight">
-                                    <span>ChatSupport</span>{' '}
+                                <h1 className="text-[22px] font-bold tracking-tight text-slate-900 dark:text-white">
+                                    <span>Support Hub</span>{' '}
                                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-indigo-500 dark:from-sky-400 dark:to-indigo-400">Analytics</span>
                                 </h1>
                             </div>

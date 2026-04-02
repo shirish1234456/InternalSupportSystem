@@ -590,7 +590,7 @@ export default function ChatLogsPage() {
 
                                                     <div className="w-20 shrink-0">
                                                         <div className="font-mono-id text-white text-sm font-bold tracking-tight opacity-90 group-hover:opacity-100 group-hover:text-cyan-400 transition-colors">
-                                                            #{session.chatCode}
+                                                            {session.chatCode.startsWith('#') ? session.chatCode : `#${session.chatCode}`}
                                                         </div>
                                                         <div className="text-[10px] text-slate-500 font-medium">ID-SECURE</div>
                                                     </div>
@@ -708,7 +708,7 @@ export default function ChatLogsPage() {
                         <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800/50">
                             <div>
                                 <h2 className="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                                    {selectedSession.chatCode}
+                                    {selectedSession.chatCode.startsWith('#') ? selectedSession.chatCode : `#${selectedSession.chatCode}`}
                                 </h2>
                                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-3">
                                     <span>{new Date(selectedSession.createdAt).toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true, month: 'short', day: 'numeric', year: 'numeric' })}</span>

@@ -578,7 +578,7 @@ export default function ChatLogsPage() {
                                             </div>
 
                                             {timeSessions.map((session) => (
-                                                <div key={session.id} className={`blade-row p-4 flex items-center gap-6 group ${selectedIds.has(session.id) ? 'bg-primary-500/10 border-primary-500/30' : ''}`}>
+                                                <div key={session.id} className={`blade-row p-4 flex items-center gap-6 group transition-all duration-300 ${selectedIds.has(session.id) ? 'bg-primary-500/10 border-primary-500/30' : ''} ${activeMenuId === session.id ? 'z-50 brightness-110 shadow-2xl' : 'z-10'}`}>
                                                     <div className={`absolute -left-10 top-1/2 -translate-y-1/2 transition-opacity duration-300 ${selectedIds.size > 0 || selectedIds.has(session.id) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
                                                         <input
                                                             type="checkbox"

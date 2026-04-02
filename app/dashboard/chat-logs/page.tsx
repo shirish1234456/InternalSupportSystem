@@ -608,9 +608,9 @@ export default function ChatLogsPage() {
                                                             <Bot className="w-3.5 h-3.5" />
                                                         </div>
                                                         <div className="px-2 py-1 rounded-md bg-slate-800/30 border border-slate-700/50 text-slate-500 text-[10px] font-bold tracking-tighter" title={`Department: ${session.department.name}`}>
-                                                            {session.department.name.includes('Alston Digital') ? 'AD' : 
-                                                             session.department.name.includes('mysecondTeacher') ? 'MST' : 
-                                                             session.department.name.includes('Homeschool.asia') ? 'HSA' : 
+                                                            {session.department.name.match(/Alston\s?Digital/i) ? 'AD' : 
+                                                             session.department.name.match(/mySecondTeacher|mysecondTeacher/i) ? 'MST' : 
+                                                             session.department.name.match(/Home\s?School\s?Asia|Homeschool\.asia/i) ? 'HSA' : 
                                                              session.department.name.substring(0, 3).toUpperCase()}
                                                         </div>
                                                     </div>

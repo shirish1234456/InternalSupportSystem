@@ -412,8 +412,8 @@ export default function ChatLogsPage() {
         const colors = ['bg-blue-500', 'bg-purple-500', 'bg-indigo-500', 'bg-cyan-500', 'bg-violet-500'];
         const color = colors[name.length % colors.length];
         return (
-            <div className={`w-6 h-6 rounded-full ${color} flex items-center justify-center text-[10px] font-bold text-white shrink-0 shadow-lg shadow-black/20 pb-0.5`}>
-                {initial}
+            <div className={`w-6 h-6 rounded-full ${color} flex items-center justify-center text-[10px] font-bold text-white shrink-0 shadow-lg shadow-black/20`}>
+                <span className="leading-none">{initial}</span>
             </div>
         );
     };

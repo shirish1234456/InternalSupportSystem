@@ -153,7 +153,7 @@ export default function Sidebar({ user, isCollapsed, setIsCollapsed, isMobileOpe
                                                 onClick={closeMobile}
                                                 title={isCollapsed ? item.name : undefined}
                                                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-500 text-sm font-medium group relative overflow-hidden ${isCollapsed ? 'lg:justify-center' : ''} ${isActive
-                                                    ? 'text-white shadow-[0_0_20px_rgba(79,70,229,0.4)] bg-gradient-to-r from-primary-500 to-primary-600 border border-primary-400/50 glow-primary'
+                                                    ? 'text-white shadow-[0_0_15px_rgba(79,70,229,0.25)] bg-gradient-to-r from-primary-500 to-primary-600 border border-primary-400/50 glow-primary'
                                                     : 'text-slate-600 dark:text-slate-400 hover:bg-white/5 dark:hover:bg-white/[0.03] hover:text-primary-600 dark:hover:text-primary-400 border border-transparent'
                                                     }`}
                                             >

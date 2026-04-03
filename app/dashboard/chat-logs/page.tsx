@@ -621,7 +621,14 @@ export default function ChatLogsPage() {
                                                             <Avatar name={session.customer.fullName} />
                                                             <div className="min-w-0">
                                                                 <div className="text-sm font-medium text-slate-900 dark:text-white truncate" title={session.customer.fullName}>{session.customer.fullName}</div>
-                                                                <div className="text-[10px] text-slate-500 truncate" title={session.customer.email}>{session.customer.email || 'NO_IDENTITY'}</div>
+                                                                <div className="text-[10px] text-slate-500 truncate flex items-center gap-2" title={session.customer.email}>
+                                                                    <span className="truncate">{session.customer.email || 'NO_IDENTITY'}</span>
+                                                                    {session.customer.role && (
+                                                                        <span className="shrink-0 px-1.5 py-0.25 rounded-md bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700/50 uppercase tracking-tighter font-bold">
+                                                                            {session.customer.role}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
                                                             </div>
                                                         </div>
 

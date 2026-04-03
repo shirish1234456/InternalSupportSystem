@@ -501,7 +501,11 @@ export default function DashboardPage() {
                                 <XAxis dataKey="name" tick={{ fontSize: 12, fill: 'var(--chart-tick)' }} tickMargin={10} axisLine={false} tickLine={false} />
                                 <YAxis tick={{ fontSize: 12, fill: 'var(--chart-tick)' }} axisLine={false} tickLine={false} />
                                 <RechartsTooltip cursor={{ fill: 'rgba(148, 163, 184, 0.1)' }} contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                                <Bar dataKey="value" fill="#8b5cf6" radius={[4, 4, 0, 0]} name="Emails Sent" barSize={40} />
+                                <Bar dataKey="value" radius={[4, 4, 0, 0]} name="Emails Sent" barSize={40}>
+                                    {charts.emailsSentByDept.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={getDepartmentColor(entry.name, index)} />
+                                    ))}
+                                </Bar>
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
@@ -592,7 +596,11 @@ export default function DashboardPage() {
                                 <XAxis type="number" tick={{ fontSize: 12, fill: 'var(--chart-tick)' }} axisLine={false} tickLine={false} />
                                 <YAxis dataKey="name" type="category" tick={{ fontSize: 12, fill: 'var(--chart-tick)' }} axisLine={false} tickLine={false} width={100} />
                                 <RechartsTooltip cursor={{ fill: 'rgba(148, 163, 184, 0.1)' }} contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                                <Bar dataKey="chatsHandled" fill="#8b5cf6" radius={[0, 4, 4, 0]} name="Handled" barSize={24} />
+                                <Bar dataKey="chatsHandled" radius={[0, 4, 4, 0]} name="Handled" barSize={24}>
+                                    {(charts.topAgentsSegmented?.[currentAgentsIndex]?.data?.slice(0, 5) || []).map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={getDepartmentColor(charts.topAgentsSegmented?.[currentAgentsIndex]?.departmentName || '', index)} />
+                                    ))}
+                                </Bar>
                             </BarChart>
                         </ResponsiveContainer>
                     </div>

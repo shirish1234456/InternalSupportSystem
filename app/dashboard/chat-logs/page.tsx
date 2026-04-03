@@ -477,7 +477,7 @@ export default function ChatLogsPage() {
                         <div className="flex items-center gap-2 ml-auto sm:ml-0">
                             <button
                                 onClick={fetchLogs}
-                                className="h-9 w-9 flex items-center justify-center text-slate-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg transition-colors"
+                                className="h-9 w-9 flex items-center justify-center text-slate-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg transition-colors cursor-pointer"
                                 title="Refresh"
                             >
                                 <RefreshCw className="w-4 h-4" />
@@ -486,7 +486,7 @@ export default function ChatLogsPage() {
                             <button
                                 onClick={handleExportCSV}
                                 disabled={isExporting || totalRecords === 0}
-                                className="h-9 px-3 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                                className="h-9 px-3 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center gap-1.5 transition-colors disabled:opacity-50 cursor-pointer"
                                 title="Export to CSV"
                             >
                                 {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
@@ -496,7 +496,7 @@ export default function ChatLogsPage() {
                             <button
                                 onClick={handleDeleteAll}
                                 disabled={isDeletingAll || totalRecords === 0}
-                                className="h-9 px-3 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                                className="h-9 px-3 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg flex items-center gap-1.5 transition-colors disabled:opacity-50 cursor-pointer"
                                 title="Delete All Chat Sessions"
                             >
                                 {isDeletingAll ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
@@ -518,14 +518,14 @@ export default function ChatLogsPage() {
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setSelectedIds(new Set())}
-                            className="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-200 transition-colors"
+                            className="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-200 transition-colors cursor-pointer"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={handleBulkDelete}
                             disabled={isDeletingBulk}
-                            className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+                            className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
                         >
                             {isDeletingBulk ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                             Delete Selected

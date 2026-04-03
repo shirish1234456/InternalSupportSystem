@@ -26,6 +26,8 @@ export default function Combobox({ options, value, onChange, placeholder = 'Sele
     const selectedOption = options.find(opt => opt.id === value);
     const displayValue = isOpen ? search : (selectedOption?.name || '');
 
+    const wasOpenRef = useRef(false);
+
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
@@ -56,28 +58,48 @@ export default function Combobox({ options, value, onChange, placeholder = 'Sele
             </select>
 
             <div
-                className="relative cursor-text"
+                className="relative"
+                onMouseDown={() => {
+                    wasOpenRef.current = isOpen;
+                }}
                 onClick={() => {
-                    setIsOpen(true);
-                    setSearch('');
+                    if (wasOpenRef.current) {
+                        // If it was already open, and we're not using it as a search field currently, close it
+                        if (!searchable || search === '') {
+                            setIsOpen(false);
+                        }
+                    } else {
+                        setIsOpen(true);
+                        if (searchable) setSearch('');
+                    }
                 }}
             >
                 <input
                     type="text"
-                    className={`w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm placeholder-slate-400 pr-10 ${searchable ? '' : 'cursor-pointer'}`}
+                    className={`w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors sm:text-sm placeholder-slate-400 pr-10 cursor-pointer ${searchable ? 'sm:cursor-text' : ''}`}
                     placeholder={placeholder}
                     value={displayValue}
                     readOnly={!searchable}
                     onChange={(e) => {
-                        if (searchable) setSearch(e.target.value);
-                        setIsOpen(true);
+                        if (searchable) {
+                            setSearch(e.target.value);
+                            setIsOpen(true);
+                        }
                     }}
                     onFocus={() => {
-                        setIsOpen(true);
-                        if (searchable) setSearch(''); // Clear search on focus to show all options
+                        if (!isOpen) {
+                            setIsOpen(true);
+                            if (searchable) setSearch('');
+                        }
                     }}
                 />
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+                <div 
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setIsOpen(!isOpen);
+                    }}
+                >
                     <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
                 </div>
             </div>

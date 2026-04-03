@@ -598,7 +598,7 @@ export default function ChatLogsPage() {
                                                 return (
                                                     <div 
                                                         key={session.id} 
-                                                        className={`blade-row p-4 flex items-center gap-6 group transition-all duration-300 ${selectedIds.has(session.id) ? 'bg-primary-500/10 border-primary-500/30' : ''} ${activeMenuId === session.id ? 'z-50 brightness-110 shadow-2xl' : 'z-10'}`}
+                                                        className={`blade-row p-4 flex items-center gap-6 group transition-all duration-300 cursor-pointer ${selectedIds.has(session.id) ? 'bg-primary-500/10 border-primary-500/30' : ''} ${activeMenuId === session.id ? 'z-50 brightness-110 shadow-2xl' : 'z-10'}`}
                                                         style={{ '--dept-color': deptColor } as React.CSSProperties}
                                                     >
                                                         <div className={`absolute -left-10 top-1/2 -translate-y-1/2 transition-opacity duration-300 ${selectedIds.size > 0 || selectedIds.has(session.id) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
@@ -656,7 +656,7 @@ export default function ChatLogsPage() {
                                                                 e.stopPropagation();
                                                                 setActiveMenuId(activeMenuId === session.id ? null : session.id);
                                                             }}
-                                                            className="p-2 text-slate-500 hover:text-white transition-colors"
+                                                            className="p-2 text-slate-500 hover:text-white transition-colors cursor-pointer"
                                                         >
                                                             <MoreVertical className="w-4 h-4" />
                                                         </button>
@@ -670,7 +670,7 @@ export default function ChatLogsPage() {
                                                                             openModal(session);
                                                                             setActiveMenuId(null);
                                                                         }}
-                                                                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-slate-400 hover:bg-slate-800 hover:text-white transition-colors text-left"
+                                                                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-slate-400 hover:bg-slate-800 hover:text-white transition-colors text-left cursor-pointer"
                                                                     >
                                                                         <FileText className="w-3.5 h-3.5" />
                                                                         Inspect
@@ -680,7 +680,7 @@ export default function ChatLogsPage() {
                                                                             handleDelete(session.id, session.chatCode);
                                                                             setActiveMenuId(null);
                                                                         }}
-                                                                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-slate-400 hover:bg-rose-500/10 hover:text-rose-500 transition-colors text-left"
+                                                                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-slate-400 hover:bg-rose-500/10 hover:text-rose-500 transition-colors text-left cursor-pointer"
                                                                     >
                                                                         <Trash2 className="w-3.5 h-3.5" />
                                                                         Purge
@@ -710,14 +710,14 @@ export default function ChatLogsPage() {
                         <button
                             onClick={() => setPage(p => Math.max(1, p - 1))}
                             disabled={page === 1}
-                            className="px-3 py-1 border border-slate-300 dark:border-slate-700 rounded text-sm font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 disabled:opacity-50 transition-colors"
+                            className="px-3 py-1 border border-slate-300 dark:border-slate-700 rounded text-sm font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 disabled:opacity-50 transition-colors cursor-pointer"
                         >
                             Previous
                         </button>
                         <button
                             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                             disabled={page === totalPages}
-                            className="px-3 py-1 border border-slate-300 dark:border-slate-700 rounded text-sm font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 disabled:opacity-50 transition-colors"
+                            className="px-3 py-1 border border-slate-300 dark:border-slate-700 rounded text-sm font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 disabled:opacity-50 transition-colors cursor-pointer"
                         >
                             Next
                         </button>
@@ -742,7 +742,7 @@ export default function ChatLogsPage() {
                                 {!isEditMode ? (
                                     <button
                                         onClick={() => setIsEditMode(true)}
-                                        className="p-2 text-slate-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg transition-colors"
+                                        className="p-2 text-slate-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg transition-colors cursor-pointer"
                                         title="Edit Details"
                                     >
                                         <Edit2 className="w-5 h-5" />

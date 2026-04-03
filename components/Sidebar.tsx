@@ -152,7 +152,7 @@ export default function Sidebar({ user, isCollapsed, setIsCollapsed, isMobileOpe
                                                 href={item.href}
                                                 onClick={closeMobile}
                                                 title={isCollapsed ? item.name : undefined}
-                                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-500 text-sm font-medium group relative overflow-hidden ${isCollapsed ? 'lg:justify-center' : ''} ${isActive
+                                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-500 text-sm font-medium group relative overflow-hidden cursor-pointer ${isCollapsed ? 'lg:justify-center' : ''} ${isActive
                                                     ? 'text-white shadow-[0_0_15px_rgba(79,70,229,0.25)] bg-gradient-to-r from-primary-500 to-primary-600 border border-primary-400/50 glow-primary'
                                                     : 'text-slate-600 dark:text-slate-400 hover:bg-white/5 dark:hover:bg-white/[0.03] hover:text-primary-600 dark:hover:text-primary-400 border border-transparent'
                                                     }`}
@@ -181,7 +181,7 @@ export default function Sidebar({ user, isCollapsed, setIsCollapsed, isMobileOpe
 
                 <button
                     onClick={() => setIsCollapsed(!isCollapsed)}
-                    className={`hidden lg:flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-all w-full ${isCollapsed ? 'justify-center' : ''}`}
+                    className={`hidden lg:flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-all w-full cursor-pointer ${isCollapsed ? 'justify-center' : ''}`}
                     title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`}><path d="m15 18-6-6 6-6" /><path d="M3 6h2" /><path d="M3 12h2" /><path d="M3 18h2" /></svg>
@@ -190,7 +190,7 @@ export default function Sidebar({ user, isCollapsed, setIsCollapsed, isMobileOpe
 
                 <button
                     onClick={handleLogout}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-all w-full ${isCollapsed ? 'justify-center' : ''}`}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-all w-full cursor-pointer ${isCollapsed ? 'justify-center' : ''}`}
                     title={isCollapsed ? "Sign Out" : undefined}
                 >
                     <LogOut className="w-4 h-4 shrink-0" />

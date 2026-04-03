@@ -244,7 +244,7 @@ export default function DashboardPage() {
 
                     <button
                         onClick={fetchAnalytics}
-                        className="p-2 text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm ml-auto sm:ml-0"
+                        className="p-2 text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm ml-auto sm:ml-0 cursor-pointer"
                         title="Refresh Dashboard"
                     >
                         <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
@@ -421,7 +421,7 @@ export default function DashboardPage() {
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => setCurrentIssuesIndex(prev => prev > 0 ? prev - 1 : charts.topIssuesSegmented.length - 1)}
-                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors cursor-pointer"
                                 >
                                     <ChevronLeft className="w-5 h-5 text-slate-500" />
                                 </button>
@@ -430,7 +430,7 @@ export default function DashboardPage() {
                                 </span>
                                 <button
                                     onClick={() => setCurrentIssuesIndex(prev => prev < charts.topIssuesSegmented.length - 1 ? prev + 1 : 0)}
-                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors cursor-pointer"
                                 >
                                     <ChevronRight className="w-5 h-5 text-slate-500" />
                                 </button>
@@ -573,7 +573,7 @@ export default function DashboardPage() {
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => setCurrentAgentsIndex(prev => prev > 0 ? prev - 1 : charts.topAgentsSegmented.length - 1)}
-                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors cursor-pointer"
                                 >
                                     <ChevronLeft className="w-5 h-5 text-slate-500" />
                                 </button>
@@ -582,7 +582,7 @@ export default function DashboardPage() {
                                 </span>
                                 <button
                                     onClick={() => setCurrentAgentsIndex(prev => prev < charts.topAgentsSegmented.length - 1 ? prev + 1 : 0)}
-                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors cursor-pointer"
                                 >
                                     <ChevronRight className="w-5 h-5 text-slate-500" />
                                 </button>
@@ -619,7 +619,7 @@ export default function DashboardPage() {
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => setCurrentIssuesIndex(prev => prev > 0 ? prev - 1 : charts.topIssuesSegmented.length - 1)}
-                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors cursor-pointer"
                                 >
                                     <ChevronLeft className="w-5 h-5 text-slate-500" />
                                 </button>
@@ -628,7 +628,7 @@ export default function DashboardPage() {
                                 </span>
                                 <button
                                     onClick={() => setCurrentIssuesIndex(prev => prev < charts.topIssuesSegmented.length - 1 ? prev + 1 : 0)}
-                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                                    className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors cursor-pointer"
                                 >
                                     <ChevronRight className="w-5 h-5 text-slate-500" />
                                 </button>

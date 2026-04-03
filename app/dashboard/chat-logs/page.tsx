@@ -611,7 +611,7 @@ export default function ChatLogsPage() {
                                                         </div>
 
                                                         <div className="w-20 shrink-0">
-                                                            <div className="font-mono-id text-white text-sm font-bold tracking-tight opacity-90 group-hover:opacity-100 dark:group-hover:text-[var(--dept-color)] transition-colors">
+                                                            <div className="font-mono-id text-slate-700 dark:text-white text-sm font-bold tracking-tight opacity-90 group-hover:opacity-100 dark:group-hover:text-[var(--dept-color)] transition-colors">
                                                                 {session.chatCode.startsWith('#') ? session.chatCode : `#${session.chatCode}`}
                                                             </div>
                                                             <div className="text-[10px] text-slate-500 font-medium">ID-SECURE</div>
@@ -620,7 +620,7 @@ export default function ChatLogsPage() {
                                                         <div className="w-48 shrink-0 flex items-center gap-3">
                                                             <Avatar name={session.customer.fullName} />
                                                             <div className="min-w-0">
-                                                                <div className="text-sm font-medium text-white truncate" title={session.customer.fullName}>{session.customer.fullName}</div>
+                                                                <div className="text-sm font-medium text-slate-900 dark:text-white truncate" title={session.customer.fullName}>{session.customer.fullName}</div>
                                                                 <div className="text-[10px] text-slate-500 truncate" title={session.customer.email}>{session.customer.email || 'NO_IDENTITY'}</div>
                                                             </div>
                                                         </div>
@@ -638,7 +638,7 @@ export default function ChatLogsPage() {
                                                     </div>
 
                                                     <div className="flex-1 min-w-0 flex items-center gap-4">
-                                                        <div className="px-2 py-0.5 rounded-md bg-violet-500/10 border border-violet-500/20 text-violet-300 text-[10px] font-bold uppercase tracking-wider whitespace-nowrap">
+                                                        <div className="px-2 py-0.5 rounded-md bg-violet-500/10 border border-violet-500/20 text-violet-600 dark:text-violet-300 text-[10px] font-bold uppercase tracking-wider whitespace-nowrap">
                                                             {session.issueType.name}
                                                         </div>
                                                         <p className="text-sm text-slate-400 truncate font-light" title={session.queryDescription}>

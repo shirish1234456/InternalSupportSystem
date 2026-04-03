@@ -577,64 +577,64 @@ export default function ChatLogsPage() {
                                                 <div className="gravity-line opacity-40"></div>
                                             </div>
 
-                                            {timeSessions.map((session) => (
-                                                <div key={session.id} className={`blade-row p-4 flex items-center gap-6 group transition-all duration-300 ${selectedIds.has(session.id) ? 'bg-primary-500/10 border-primary-500/30' : ''} ${activeMenuId === session.id ? 'z-50 brightness-110 shadow-2xl' : 'z-10'}`}>
-                                                    <div className={`absolute -left-10 top-1/2 -translate-y-1/2 transition-opacity duration-300 ${selectedIds.size > 0 || selectedIds.has(session.id) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-                                                        <input
-                                                            type="checkbox"
-                                                            className="w-4 h-4 text-primary-500 rounded border-slate-700 bg-slate-900 focus:ring-primary-500 cursor-pointer"
-                                                            checked={selectedIds.has(session.id)}
-                                                            onChange={() => toggleSelect(session.id)}
-                                                        />
-                                                    </div>
+                                            {timeSessions.map((session) => {
+                                                const deptName = session.department.name;
+                                                let deptAbbr = 'OTH';
+                                                let deptColor = 'rgba(6, 182, 212, 1)'; // Default cyan
+                                                
+                                                if (deptName.match(/Alston\s?Digital/i)) {
+                                                    deptAbbr = 'AD';
+                                                    deptColor = '#eb2226';
+                                                } else if (deptName.match(/mySecondTeacher|mysecondTeacher/i)) {
+                                                    deptAbbr = 'MST';
+                                                    deptColor = '#7a50ec';
+                                                } else if (deptName.match(/Home\s?School\s?Asia|Homeschool\.asia/i)) {
+                                                    deptAbbr = 'HSA';
+                                                    deptColor = '#55ca8f';
+                                                } else {
+                                                    deptAbbr = deptName.substring(0, 3).toUpperCase();
+                                                }
 
-                                                    <div className="w-20 shrink-0">
-                                                        <div className="font-mono-id text-white text-sm font-bold tracking-tight opacity-90 group-hover:opacity-100 group-hover:text-cyan-400 transition-colors">
-                                                            {session.chatCode.startsWith('#') ? session.chatCode : `#${session.chatCode}`}
+                                                return (
+                                                    <div 
+                                                        key={session.id} 
+                                                        className={`blade-row p-4 flex items-center gap-6 group transition-all duration-300 ${selectedIds.has(session.id) ? 'bg-primary-500/10 border-primary-500/30' : ''} ${activeMenuId === session.id ? 'z-50 brightness-110 shadow-2xl' : 'z-10'}`}
+                                                        style={{ '--dept-color': deptColor } as React.CSSProperties}
+                                                    >
+                                                        <div className={`absolute -left-10 top-1/2 -translate-y-1/2 transition-opacity duration-300 ${selectedIds.size > 0 || selectedIds.has(session.id) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                                                            <input
+                                                                type="checkbox"
+                                                                className="w-4 h-4 text-primary-500 rounded border-slate-700 bg-slate-900 focus:ring-primary-500 cursor-pointer"
+                                                                checked={selectedIds.has(session.id)}
+                                                                onChange={() => toggleSelect(session.id)}
+                                                            />
                                                         </div>
-                                                        <div className="text-[10px] text-slate-500 font-medium">ID-SECURE</div>
-                                                    </div>
 
-                                                    <div className="w-48 shrink-0 flex items-center gap-3">
-                                                        <Avatar name={session.customer.fullName} />
-                                                        <div className="min-w-0">
-                                                            <div className="text-sm font-medium text-white truncate" title={session.customer.fullName}>{session.customer.fullName}</div>
-                                                            <div className="text-[10px] text-slate-500 truncate" title={session.customer.email}>{session.customer.email || 'NO_IDENTITY'}</div>
+                                                        <div className="w-20 shrink-0">
+                                                            <div className="font-mono-id text-white text-sm font-bold tracking-tight opacity-90 group-hover:opacity-100 dark:group-hover:text-[var(--dept-color)] transition-colors">
+                                                                {session.chatCode.startsWith('#') ? session.chatCode : `#${session.chatCode}`}
+                                                            </div>
+                                                            <div className="text-[10px] text-slate-500 font-medium">ID-SECURE</div>
                                                         </div>
-                                                    </div>
+
+                                                        <div className="w-48 shrink-0 flex items-center gap-3">
+                                                            <Avatar name={session.customer.fullName} />
+                                                            <div className="min-w-0">
+                                                                <div className="text-sm font-medium text-white truncate" title={session.customer.fullName}>{session.customer.fullName}</div>
+                                                                <div className="text-[10px] text-slate-500 truncate" title={session.customer.email}>{session.customer.email || 'NO_IDENTITY'}</div>
+                                                            </div>
+                                                        </div>
 
                                                     <div className="w-32 shrink-0 flex items-center gap-2">
                                                         <div className="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 text-slate-500 dark:text-slate-400 group-hover:text-primary-600 dark:group-hover:text-cyan-400 group-hover:border-primary-200 dark:group-hover:border-cyan-500/30 transition-all" title={`Agent: ${session.agent.name}`}>
                                                             <Bot className="w-3.5 h-3.5" />
                                                         </div>
-                                                        {(() => {
-                                                            const deptName = session.department.name;
-                                                            let abbr = 'OTH';
-                                                            let color = '';
-                                                            
-                                                            if (deptName.match(/Alston\s?Digital/i)) {
-                                                                abbr = 'AD';
-                                                                color = '#eb2226';
-                                                            } else if (deptName.match(/mySecondTeacher|mysecondTeacher/i)) {
-                                                                abbr = 'MST';
-                                                                color = '#7a50ec';
-                                                            } else if (deptName.match(/Home\s?School\s?Asia|Homeschool\.asia/i)) {
-                                                                abbr = 'HSA';
-                                                                color = '#55ca8f';
-                                                            } else {
-                                                                abbr = deptName.substring(0, 3).toUpperCase();
-                                                            }
-
-                                                            return (
-                                                                <div 
-                                                                    className="px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700/50 text-slate-600 dark:text-slate-500 text-[10px] font-bold tracking-tighter transition-all duration-300 dark:group-hover:text-[var(--dept-color)] dark:group-hover:border-[var(--dept-color)]/40 dark:group-hover:shadow-[0_0_12px_var(--dept-color)]"
-                                                                    style={{ '--dept-color': color } as React.CSSProperties}
-                                                                    title={`Department: ${deptName}`}
-                                                                >
-                                                                    {abbr}
-                                                                </div>
-                                                            );
-                                                        })()}
+                                                        <div 
+                                                            className="px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700/50 text-slate-600 dark:text-slate-500 text-[10px] font-bold tracking-tighter transition-all duration-300 dark:group-hover:text-[var(--dept-color)] dark:group-hover:border-[var(--dept-color)]/40 dark:group-hover:shadow-[0_0_12px_var(--dept-color)]"
+                                                            title={`Department: ${deptName}`}
+                                                        >
+                                                            {deptAbbr}
+                                                        </div>
                                                     </div>
 
                                                     <div className="flex-1 min-w-0 flex items-center gap-4">
@@ -688,9 +688,10 @@ export default function ChatLogsPage() {
                                                                 </div>
                                                             </>
                                                         )}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))}
+                                                );
+                                            })}
                                         </div>
                                     ))}
                                 </div>

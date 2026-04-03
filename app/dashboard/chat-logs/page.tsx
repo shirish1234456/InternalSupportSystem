@@ -607,12 +607,34 @@ export default function ChatLogsPage() {
                                                         <div className="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 text-slate-500 dark:text-slate-400 group-hover:text-primary-600 dark:group-hover:text-cyan-400 group-hover:border-primary-200 dark:group-hover:border-cyan-500/30 transition-all" title={`Agent: ${session.agent.name}`}>
                                                             <Bot className="w-3.5 h-3.5" />
                                                         </div>
-                                                        <div className="px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700/50 text-slate-600 dark:text-slate-500 text-[10px] font-bold tracking-tighter" title={`Department: ${session.department.name}`}>
-                                                            {session.department.name.match(/Alston\s?Digital/i) ? 'AD' : 
-                                                             session.department.name.match(/mySecondTeacher|mysecondTeacher/i) ? 'MST' : 
-                                                             session.department.name.match(/Home\s?School\s?Asia|Homeschool\.asia/i) ? 'HSA' : 
-                                                             session.department.name.substring(0, 3).toUpperCase()}
-                                                        </div>
+                                                        {(() => {
+                                                            const deptName = session.department.name;
+                                                            let abbr = 'OTH';
+                                                            let color = '';
+                                                            
+                                                            if (deptName.match(/Alston\s?Digital/i)) {
+                                                                abbr = 'AD';
+                                                                color = '#eb2226';
+                                                            } else if (deptName.match(/mySecondTeacher|mysecondTeacher/i)) {
+                                                                abbr = 'MST';
+                                                                color = '#7a50ec';
+                                                            } else if (deptName.match(/Home\s?School\s?Asia|Homeschool\.asia/i)) {
+                                                                abbr = 'HSA';
+                                                                color = '#55ca8f';
+                                                            } else {
+                                                                abbr = deptName.substring(0, 3).toUpperCase();
+                                                            }
+
+                                                            return (
+                                                                <div 
+                                                                    className="px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700/50 text-slate-600 dark:text-slate-500 text-[10px] font-bold tracking-tighter transition-all duration-300 dark:group-hover:text-[var(--dept-color)] dark:group-hover:border-[var(--dept-color)]/40 dark:group-hover:shadow-[0_0_12px_var(--dept-color)]"
+                                                                    style={{ '--dept-color': color } as React.CSSProperties}
+                                                                    title={`Department: ${deptName}`}
+                                                                >
+                                                                    {abbr}
+                                                                </div>
+                                                            );
+                                                        })()}
                                                     </div>
 
                                                     <div className="flex-1 min-w-0 flex items-center gap-4">

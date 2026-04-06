@@ -634,7 +634,7 @@ export default function ChatLogsPage() {
 
                                                     <div className="w-32 shrink-0 flex items-center gap-2">
                                                         <div className="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 text-slate-500 dark:text-slate-400 group-hover:text-primary-600 dark:group-hover:text-cyan-400 group-hover:border-primary-200 dark:group-hover:border-cyan-500/30 transition-all" title={`Agent: ${session.agent.name}`}>
-                                                            <Bot className="w-3.5 h-3.5" />
+                                                            {session.agent.name === 'Agent' ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
                                                         </div>
                                                         <div 
                                                             className="px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700/50 text-slate-600 dark:text-slate-500 text-[10px] font-bold tracking-tighter transition-all duration-300 dark:group-hover:text-[var(--dept-color)] dark:group-hover:border-[var(--dept-color)]/40 dark:group-hover:shadow-[0_0_12px_var(--dept-color)]"

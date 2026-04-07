@@ -519,11 +519,11 @@ export default function DashboardPage() {
                     </h3>
                     <div className="h-48 md:h-64 w-full">
                         <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={charts.chatSpikes} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                            <BarChart data={charts.chatSpikes} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
                                 <XAxis 
                                     dataKey="hour" 
-                                    tick={{ fontSize: 10 }} 
+                                    tick={{ fontSize: 10, fill: 'var(--chart-tick)' }} 
                                     tickMargin={10} 
                                     axisLine={false} 
                                     tickLine={false} 
@@ -534,9 +534,17 @@ export default function DashboardPage() {
                                         return `${h12}${ampm}`;
                                     }}
                                 />
-                                <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+                                <YAxis tick={{ fontSize: 12, fill: 'var(--chart-tick)' }} axisLine={false} tickLine={false} />
                                 <RechartsTooltip
-                                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                    contentStyle={{ 
+                                        backgroundColor: 'rgba(255,255,255,0.02)', 
+                                        backdropFilter: 'blur(12px)', 
+                                        borderRadius: '16px', 
+                                        border: '1px solid rgba(255,255,255,0.1)', 
+                                        boxShadow: '0 10px 40px rgba(0,0,0,0.4)',
+                                        padding: '12px'
+                                    }}
+                                    cursor={{ fill: 'rgba(245, 158, 11, 0.05)' }}
                                     formatter={(value: any) => [`${value}`, 'Sessions']}
                                     labelFormatter={(label) => {
                                         const h = parseInt(label, 10);
@@ -545,17 +553,14 @@ export default function DashboardPage() {
                                         return `Time: ${h12}:00 ${ampm}`;
                                     }}
                                 />
-                                <Line
-                                    type="monotone"
+                                <Bar
                                     dataKey="count"
-                                    stroke="#f59e0b"
-                                    strokeWidth={4}
-                                    dot={false}
-                                    activeDot={{ r: 6, strokeWidth: 0, fill: '#f59e0b' }}
+                                    fill="#f59e0b"
+                                    radius={[6, 6, 0, 0]}
                                     name="Sessions"
-                                    style={{ filter: `drop-shadow(0 0 10px #f59e0b)` }}
+                                    style={{ filter: `drop-shadow(0 0 12px rgba(245, 158, 11, 0.4))` }}
                                 />
-                            </LineChart>
+                            </BarChart>
                         </ResponsiveContainer>
                     </div>
                 </motion.div>

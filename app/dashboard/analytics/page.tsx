@@ -27,6 +27,7 @@ interface AnalyticsData {
         emailsSentByDept: { name: string; value: number }[];
         chatsByCountry: { name: string; value: number }[];
         chatsByRole: { name: string; value: number }[];
+        feedbackDistribution: { name: string; value: number }[];
     };
 }
 
@@ -254,6 +255,81 @@ export default function AnalyticsPage() {
                         ) : (
                             <div className="flex items-center justify-center h-full text-slate-500">
                                 No role data found for this period.
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* User Feedback Pie Chart */}
+                <div className="glass-card rounded-2xl shadow-antigravity hover:shadow-[0_20px_60px_rgba(16,185,129,0.2)] transition-all duration-500 col-span-1 lg:col-span-2 overflow-hidden group border border-emerald-500/10 hover:border-emerald-500/30">
+                    <div className="p-6 border-b border-white/10 flex items-center justify-between bg-white/5">
+                        <div className="flex items-center gap-2">
+                            <MessageSquare className="w-5 h-5 text-emerald-400 group-hover:text-emerald-300 transition-colors" />
+                            <h3 className="text-lg font-semibold text-slate-800 dark:text-white font-futuristic">Customer Satisfaction (CSAT)</h3>
+                        </div>
+                        <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                            <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald-500"></div> Happy</span>
+                            <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-amber-500"></div> Neutral</span>
+                            <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-rose-500"></div> Sad</span>
+                        </div>
+                    </div>
+                    <div className="h-96 p-8 relative">
+                        {charts.feedbackDistribution && charts.feedbackDistribution.length > 0 ? (
+                            <>
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <RechartsPieChart>
+                                        <Pie
+                                            data={charts.feedbackDistribution}
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius={80}
+                                            outerRadius={130}
+                                            paddingAngle={8}
+                                            dataKey="value"
+                                            stroke="none"
+                                        >
+                                            {charts.feedbackDistribution.map((entry: any, index: number) => {
+                                                let color = '#10b981'; // Happy
+                                                if (entry.name === 'Neutral') color = '#f59e0b';
+                                                if (entry.name === 'Sad') color = '#f43f5e';
+                                                return <Cell key={`cell-${index}`} fill={color} style={{ filter: `drop-shadow(0 0 12px ${color}44)` }} />;
+                                            })}
+                                        </Pie>
+                                        <RechartsTooltip
+                                            formatter={(value: any, name: any) => [`${value} interactions`, name]}
+                                            contentStyle={{ 
+                                                backgroundColor: 'rgba(15, 23, 42, 0.9)', 
+                                                backdropFilter: 'blur(12px)', 
+                                                borderRadius: '16px', 
+                                                border: '1px solid rgba(255,255,255,0.1)', 
+                                                boxShadow: '0 20px 40px rgba(0,0,0,0.6)',
+                                                color: '#fff'
+                                            }}
+                                            itemStyle={{ color: '#fff', fontSize: '12px' }}
+                                        />
+                                        <Legend 
+                                            verticalAlign="bottom" 
+                                            height={36} 
+                                            iconType="circle"
+                                            formatter={(value) => <span className="text-sm font-medium text-slate-400">{value}</span>}
+                                        />
+                                    </RechartsPieChart>
+                                </ResponsiveContainer>
+                                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-8">
+                                    <div className="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-bold mb-1">Overall Sentiment</div>
+                                    <div className="text-4xl font-black text-white glow-primary">
+                                        {(() => {
+                                            const happy = charts.feedbackDistribution.find(f => f.name === 'Happy')?.value || 0;
+                                            const total = charts.feedbackDistribution.reduce((acc, curr) => acc + curr.value, 0);
+                                            return total > 0 ? `${Math.round((happy/total) * 100)}%` : '0%';
+                                        })()}
+                                    </div>
+                                    <div className="text-[10px] font-bold text-emerald-500 tracking-tighter mt-1 italic">POSITIVE RESPONSE RATE</div>
+                                </div>
+                            </>
+                        ) : (
+                            <div className="flex items-center justify-center h-full text-slate-500">
+                                No feedback data found for this period.
                             </div>
                         )}
                     </div>

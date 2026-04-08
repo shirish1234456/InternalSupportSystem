@@ -152,7 +152,7 @@ export async function GET(req: NextRequest) {
         // Fetch chats for the whole selected date range to calculate hourly spikes, emails sent, and trends
         const allPeriodChats = await prisma.chatSession.findMany({
             where: dateFilter,
-            select: { createdAt: true, closedAt: true, status: true, emailSent: true, departmentId: true, customer: { select: { country: true, role: true } } }
+            select: { createdAt: true, closedAt: true, status: true, emailSent: true, departmentId: true, feedback: true, customer: { select: { country: true, role: true } } }
         });
 
         // Initialize maps for all departments + "All Departments" wrapper
@@ -287,6 +287,22 @@ export async function GET(req: NextRequest) {
             .map(([name, value]) => ({ name, value }))
             .sort((a, b) => b.value - a.value);
 
+        // Calculate Feedback Distribution
+        const feedbackMap = new Map<string, number>();
+        feedbackMap.set('Happy', 0);
+        feedbackMap.set('Neutral', 0);
+        feedbackMap.set('Sad', 0);
+
+        allPeriodChats.forEach((chat: any) => {
+            if (chat.feedback) {
+                feedbackMap.set(chat.feedback, (feedbackMap.get(chat.feedback) || 0) + 1);
+            }
+        });
+
+        const feedbackDistribution = Array.from(feedbackMap.entries())
+            .map(([name, value]) => ({ name, value }))
+            .filter(d => d.value > 0); // only include feedback types with actual data
+
         return NextResponse.json({
             summary: {
                 totalChats,
@@ -305,7 +321,8 @@ export async function GET(req: NextRequest) {
                 chatSpikes,
                 emailsSentByDept,
                 chatsByCountry,
-                chatsByRole
+                chatsByRole,
+                feedbackDistribution
             }
         });
 

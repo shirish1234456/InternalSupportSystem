@@ -265,7 +265,7 @@ export default function AnalyticsPage() {
                     <div className="p-6 border-b border-white/10 flex items-center justify-between bg-white/5">
                         <div className="flex items-center gap-2">
                             <MessageSquare className="w-5 h-5 text-emerald-400 group-hover:text-emerald-300 transition-colors" />
-                            <h3 className="text-lg font-semibold text-slate-800 dark:text-white font-futuristic">Customer Satisfaction (CSAT)</h3>
+                            <h3 className="text-lg font-semibold text-slate-800 dark:text-white font-futuristic">User Feedback</h3>
                         </div>
                         <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-slate-500">
                             <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald-500"></div> Happy</span>
@@ -329,7 +329,10 @@ export default function AnalyticsPage() {
                             </>
                         ) : (
                             <div className="flex items-center justify-center h-full text-slate-500">
-                                No feedback data found for this period.
+                                <div className="text-center">
+                                <p>No feedback data found for this period.</p>
+                                <p className="text-xs text-slate-400 mt-1">Feedback can be set on individual chat sessions in the Chat Logs.</p>
+                            </div>
                             </div>
                         )}
                     </div>

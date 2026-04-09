@@ -207,7 +207,10 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
-                    <Link href="/dashboard/analytics" className="hidden md:flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium shadow-sm">
+                    <Link
+                        href={`/dashboard/analytics?dateRange=${dateRange}${dateRange === 'custom' ? `&customStart=${customStart}&customEnd=${customEnd}` : ''}`}
+                        className="hidden md:flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium shadow-sm"
+                    >
                         View Extensive Analytics
                     </Link>
                     {dateRange === 'custom' && (

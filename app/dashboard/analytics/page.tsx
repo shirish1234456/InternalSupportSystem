@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { PieChart, Clock, Users, FileText, CheckCircle2, AlertTriangle, MessageSquare, Loader2, RefreshCw, ChevronLeft, Building2 } from 'lucide-react';
 import {
     LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend, PieChart as RechartsPieChart, Pie, Cell
@@ -38,9 +39,11 @@ export default function AnalyticsPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    const [dateRange, setDateRange] = useState('allTime');
-    const [customStart, setCustomStart] = useState('');
-    const [customEnd, setCustomEnd] = useState('');
+    const searchParams = useSearchParams();
+
+    const [dateRange, setDateRange] = useState(() => searchParams.get('dateRange') || 'allTime');
+    const [customStart, setCustomStart] = useState(() => searchParams.get('customStart') || '');
+    const [customEnd, setCustomEnd] = useState(() => searchParams.get('customEnd') || '');
 
     const fetchAnalytics = async () => {
         setLoading(true);
